@@ -16,6 +16,8 @@ return new class extends Migration
             $table->string('name', 255);
             $table->string('slug', 255);
             $table->text('description')->nullable();
+            $table->unsignedBigInteger('parent_id')->nullable();
+            $table->foreign('parent_id')->references('id')->on('categories')->onDelete('cascade');
 
             $table->boolean('is_active')->default(true);
             $table->integer('order')->default(0);
