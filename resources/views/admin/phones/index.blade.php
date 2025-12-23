@@ -1,14 +1,14 @@
-@extends('admin.layouts.app')
+@extends('admin.layouts')
 
-@section('title', 'Quản lý sản phẩm')
+@section('title', 'Quản lý điện thoại')
 
 @section('content')
 
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Danh sách sản phẩm</h1>
+        <h1 class="h3 mb-0 text-gray-800">Danh sách điện thoại</h1>
         <div>
-            <a href="{{ route('admin.products.create') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+            <a href="{{ route('admin.phones.create') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
                 <i class="fas fa-plus fa-sm text-white-50"></i> Thêm sản phẩm
             </a>
         </div>
@@ -35,7 +35,7 @@
             <h6 class="m-0 font-weight-bold text-primary">Tìm kiếm sản phẩm</h6>
         </div>
         <div class="card-body">
-            <form action="{{ route('admin.products.index') }}" method="GET" class="row g-3 align-items-center">
+            <form action="{{ route('admin.phones.index') }}" method="GET" class="row g-3 align-items-center">
                 <div class="col-auto">
                     <input type="text" name="search" class="form-control"
                         placeholder="Tìm theo tên sản phẩm, danh mục..." value="{{ request('search') }}">
@@ -45,7 +45,7 @@
                 </div>
                 @if (request('search'))
                     <div class="col-auto">
-                        <a href="{{ route('admin.products.index') }}" class="btn btn-secondary">Xóa tìm kiếm</a>
+                        <a href="{{ route('admin.phones.index') }}" class="btn btn-secondary">Xóa tìm kiếm</a>
                     </div>
                 @endif
             </form>
@@ -68,39 +68,39 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse ($products as $product)
+                        @forelse ($phones as $phone)
                             <tr>
-                                <td>{{ $product->id }}</td>
+                                <td>{{ $phone->id }}</td>
                                 <td>
-                                    @if ($product->main_image)
-                                        <img src="{{ Storage::url($product->main_image) }}" alt="{{ $product->name }}"
+                                    @if ($phone->main_image)
+                                        <img src="{{ Storage::url($phone->main_image) }}" alt="{{ $phone->name }}"
                                             width="50">
                                     @else
                                         N/A
                                     @endif
                                 </td>
-                                <td>{{ $product->name }}</td>
-                                <td>{{ $product->category->name ?? 'N/A' }}</td>
+                                <td>{{ $phone->name }}</td>
+                                <td>{{ $phone->category->name ?? 'N/A' }}</td>
                                 <td>
-                                    @if ($product->lowestPriceVariant)
-                                        {{ number_format($product->lowestPriceVariant->price, 0, ',', '.') }} VNĐ
+                                    @if ($phone->lowestPriceVariant)
+                                        {{ number_format($phone->lowestPriceVariant->price, 0, ',', '.') }} VNĐ
                                     @else
                                         N/A
                                     @endif
                                 </td>
                                 <td>
-                                    {{ $product->variants->sum('stock') }}
+                                    {{ $phone->variants->sum('stock') }}
                                 </td>
                                 <td>
-                                    <button class="btn btn-info btn-sm view-product-detail" data-id="{{ $product->id }}"
-                                        data-bs-toggle="modal" data-bs-target="#productDetailModal">
+                                    <button class="btn btn-info btn-sm view-phone-detail" data-id="{{ $phone->id }}"
+                                        data-bs-toggle="modal" data-bs-target="#phoneDetailModal">
                                         <i class="fas fa-eye"></i> Chi tiết
                                     </button>
-                                    <a href="{{ route('admin.products.edit', $product->id) }}"
+                                    <a href="{{ route('admin.phones.edit', $phone->id) }}"
                                         class="btn btn-warning btn-sm">
                                         <i class="fas fa-edit"></i> Sửa
                                     </a>
-                                    <form action="{{ route('admin.products.destroy', $product->id) }}" method="POST"
+                                    <form action="{{ route('admin.phones.destroy', $phone->id) }}" method="POST"
                                         class="d-inline-block">
                                         @csrf
                                         @method('DELETE')
@@ -121,21 +121,21 @@
             </div>
 
             <div class="d-flex justify-content-center">
-                {{ $products->links() }}
+                {{ $phones->links() }}
             </div>
         </div>
     </div>
 
-    <!-- Product Detail Modal -->
-    <div class="modal fade" id="productDetailModal" tabindex="-1" aria-labelledby="productDetailModalLabel"
+    <!-- phone Detail Modal -->
+    <div class="modal fade" id="phoneDetailModal" tabindex="-1" aria-labelledby="phoneDetailModalLabel"
         aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="productDetailModalLabel">Chi tiết sản phẩm</h5>
+                    <h5 class="modal-title" id="phoneDetailModalLabel">Chi tiết sản phẩm</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body" id="productDetailContent">
+                <div class="modal-body" id="phoneDetailContent">
                     <!-- Nội dung chi tiết sản phẩm sẽ được tải vào đây bằng AJAX -->
                     Đang tải...
                 </div>
@@ -150,14 +150,14 @@
         <script>
             // Script để xử lý hiển thị modal chi tiết sản phẩm bằng AJAX
             $(document).ready(function() {
-                $('.view-product-detail').on('click', function() {
-                    const productId = $(this).data('id');
-                    const modalBody = $('#productDetailContent');
+                $('.view-phone-detail').on('click', function() {
+                    const phoneId = $(this).data('id');
+                    const modalBody = $('#phoneDetailContent');
 
                     modalBody.html('<p>Đang tải chi tiết sản phẩm...</p>'); // Hiển thị trạng thái tải
 
                     $.ajax({
-                        url: `/products/${productId}`, // Sử dụng route show của ProductController
+                        url: `/phones/${phoneId}`, // Sử dụng route show của phoneController
                         method: 'GET',
                         success: function(response) {
                             // Cập nhật nội dung modal với dữ liệu từ response

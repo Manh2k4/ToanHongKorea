@@ -49,15 +49,6 @@ class PhoneController extends Controller
         return view('admin.phones.create', compact('categories', 'sizes', 'colors'));
     }
 
-    public function getVariantFormFields(Request $request)
-    {
-        $index = $request->query('index', 0); // Lấy index từ request, mặc định là 0
-        $sizes = Size::all();
-        $colors = Color::all();
-        // Đảm bảo partial view này nhận đủ dữ liệu và render chính xác
-        return view('admin.phones.variant_form_fields', compact('index', 'sizes', 'colors'))->render();
-    }
-
 
     /**
      * Store a newly created resource in storage.
@@ -141,6 +132,15 @@ class PhoneController extends Controller
         }
     }
 
+    public function getVariantFormFields(Request $request)
+    {
+        $index = $request->query('index', 0); // Lấy index từ request, mặc định là 0
+        $sizes = Size::all();
+        $colors = Color::all();
+        // Đảm bảo partial view này nhận đủ dữ liệu và render chính xác
+        return view('admin.phones.variant_form_fields', compact('index', 'sizes', 'colors'))->render();
+    }
+
     /**
      * Display the specified resource.
      */
@@ -152,7 +152,7 @@ class PhoneController extends Controller
             return view('admin.phones.show_modal_content', compact('phone'));
         }
 
-        return redirect()->route('phones.index')->with('info', 'Trang chi tiết sản phẩm không được hỗ trợ trực tiếp. Vui lòng sử dụng chức năng xem chi tiết');
+        return redirect()->route('admin.phones.index')->with('info', 'Trang chi tiết sản phẩm không được hỗ trợ trực tiếp. Vui lòng sử dụng chức năng xem chi tiết');
     }
 
     /**

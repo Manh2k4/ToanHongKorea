@@ -27,6 +27,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
     // Xóa vĩnh viễn
     Route::delete('/{id}/force-delete', [PhoneController::class, 'forceDelete'])->name('phones.forceDelete');
+    Route::get('/phones/get-variant-form-fields', [PhoneController::class, 'getVariantFormFields'])->name('phones.getVariantFormFields');
+
+
 
     Route::resource('phones', PhoneController::class)->names('phones');
 
