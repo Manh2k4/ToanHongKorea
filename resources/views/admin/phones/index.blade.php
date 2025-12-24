@@ -12,7 +12,7 @@
                 style="border-radius: 8px;">
                 <i class="fas fa-plus fa-sm text-white-50"></i> Thêm sản phẩm mới
             </a>
-            <a href="{{ route('admin.categories.trash') }}" class="btn btn-sm btn-outline-danger shadow-sm border-0"
+            <a href="{{ route('admin.categories.index') }}" class="btn btn-sm btn-outline-danger shadow-sm border-0"
                 style="border-radius: 8px;">
                 <i class="fas fa-trash-alt fa-sm"></i> Thùng rác ({{ $trashedCount }})
             </a>
