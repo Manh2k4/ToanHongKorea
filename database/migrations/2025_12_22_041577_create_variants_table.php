@@ -27,7 +27,7 @@ return new class extends Migration
 
             $table->decimal('price', 12, 2);
 
-            $table->unsignedInteger('quantity')->default(0);
+            $table->unsignedInteger('stock')->default(0);
             $table->unsignedTinyInteger('battery_health')->nullable();
 
             $table->enum('status', [

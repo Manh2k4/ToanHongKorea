@@ -6,151 +6,180 @@
 
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Danh sách Chuyên mục</h1>
-        <div class="">
-            <a href="{{ route('admin.categories.create') }}"
-                class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
-                <i class="fas fa-plus fa-sm text-white-50"></i> Thêm Mới
+        <h1 class="h3 mb-0 text-gray-800 font-weight-bold">Quản lý Chuyên mục</h1>
+        <div>
+            <a href="{{ route('admin.categories.create') }}" class="btn btn-sm btn-primary shadow-sm border-0" style="border-radius: 8px;">
+                <i class="fas fa-plus fa-sm text-white-50"></i> Thêm mới chuyên mục
             </a>
-            <a href="{{ route('admin.categories.trash') }}"
-                class="d-none d-sm-inline-block btn btn-sm btn-outline-danger shadow-sm">
-                <i class="fas fa-trash fa-sm"></i> Thùng rác ({{ $trashedCount }})
+            <a href="{{ route('admin.categories.trash') }}" class="btn btn-sm btn-outline-danger shadow-sm border-0" style="border-radius: 8px;">
+                <i class="fas fa-trash-alt fa-sm"></i> Thùng rác ({{ $trashedCount }})
             </a>
         </div>
-
     </div>
 
-    {{-- Hiển thị thông báo (Giữ nguyên) --}}
+    {{-- Hiển thị thông báo thành công/lỗi --}}
     @if (session('success'))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            {{ session('success') }}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    @endif
-    @if (session('error'))
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            {{ session('error') }}
+        <div class="alert alert-success alert-dismissible fade show border-0 shadow-sm" role="alert">
+            <i class="fas fa-check-circle mr-2"></i> {{ session('success') }}
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
     @endif
 
-    <!-- DataTales Example -->
-    <div class="card shadow mb-4">
-        <div class="card-header py-3">
+    @if (session('error'))
+        <div class="alert alert-danger alert-dismissible fade show border-0 shadow-sm" role="alert">
+            <i class="fas fa-exclamation-circle mr-2"></i> {{ session('error') }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    @endif
+
+    <!-- Bộ lọc tìm kiếm (Đồng bộ với trang Phones) -->
+    <div class="card shadow-sm mb-4 border-0">
+        <div class="card-body">
+            <form action="{{ route('admin.categories.index') }}" method="GET" class="row g-3">
+                <div class="col-md-10">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text bg-white border-right-0"><i class="fas fa-search text-muted"></i></span>
+                        </div>
+                        <input type="text" name="search" class="form-control border-left-0"
+                            placeholder="Tìm kiếm theo tên chuyên mục hoặc slug..." value="{{ request('search') }}">
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary btn-block shadow-sm">Tìm kiếm</button>
+                </div>
+            </form>
+        </div> 
+    </div>
+
+    <!-- Bảng danh sách Chuyên mục -->
+    <div class="card shadow-sm mb-4 border-0">
+        <div class="card-header py-3 bg-white border-bottom d-flex align-items-center justify-content-between">
             <h6 class="m-0 font-weight-bold text-primary">Dữ liệu Chuyên mục</h6>
         </div>
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
-                    <thead class="thead-light">
+                <table class="table table-hover align-middle" id="dataTable" width="100%" cellspacing="0">
+                    <thead class="bg-light text-secondary small text-uppercase">
                         <tr>
-                            <th>ID</th>
-                            <th>Tên Chuyên mục</th>
-                            <th>Chuyên mục cha</th>
-                            <th>Trạng thái</th>
-                            <th style="width: 130px;">Hành động</th> {{-- Tăng chiều rộng cho cột hành động --}}
+                            <th width="5%">ID</th>
+                            <th width="35%">Chuyên mục</th>
+                            <th width="25%">Chuyên mục cha</th>
+                            <th width="15%">Trạng thái</th>
+                            <th width="20%" class="text-center">Thao tác</th>
                         </tr>
                     </thead>
                     <tbody>
                         @forelse ($categories as $category)
                             <tr>
-                                <td>{{ $category->id }}</td>
-                                <td>
-                                    <strong>{{ $category->name }}</strong>
-                                    <br>
-                                    <small class="text-muted">/{{ $category->slug }}</small>
+                                <td class="align-middle font-weight-bold">#{{ $category->id }}</td>
+                                <td class="align-middle">
+                                    <div class="font-weight-bold text-dark mb-0">{{ $category->name }}</div>
+                                    <small class="text-muted"><i class="fas fa-link fa-xs"></i> /{{ $category->slug }}</small>
                                 </td>
-                                <td>{{ $category->parent->name ?? '—' }}</td>
-                                <td>
-                                    @if ($category->is_active)
-                                        <span class="badge badge-success">Hoạt động</span>
+                                <td class="align-middle">
+                                    @if($category->parent)
+                                        <span class="badge badge-light border px-2 py-1">
+                                            <i class="fas fa-level-up-alt fa-rotate-90 text-primary mr-1"></i>
+                                            {{ $category->parent->name }}
+                                        </span>
                                     @else
-                                        <span class="badge badge-secondary">Tạm ẩn</span>
+                                        <span class="text-muted small italic">Không có (Cấp cha)</span>
                                     @endif
                                 </td>
-                                <td>
-                                    {{-- NÚT XEM CHI TIẾT MỚI --}}
-                                    <button type="button" class="btn btn-success btn-sm" data-toggle="modal"
-                                        data-target="#categoryDetailModal" data-name="{{ $category->name }}"
-                                        data-slug="{{ $category->slug }}"
-                                        data-description="{{ $category->description ?? 'Không có mô tả.' }}"
-                                        data-parent="{{ $category->parent->name ?? '—' }}"
-                                        data-status="{{ $category->is_active ? 'Hoạt động' : 'Tạm ẩn' }}"
-                                        data-created="{{ $category->created_at->format('H:i:s d/m/Y') }}">
-                                        <i class="fas fa-eye"></i>
-                                    </button>
-
-                                    {{-- Nút Sửa --}}
-                                    <a href="{{ route('admin.categories.edit', $category->id) }}"
-                                        class="btn btn-info btn-sm">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
-
-                                    {{-- Nút Xóa --}}
-                                    <form action="{{ route('admin.categories.destroy', $category->id) }}" method="POST"
-                                        class="d-inline-block"
-                                        onsubmit="return confirm('Bạn có chắc chắn muốn xóa chuyên mục này không?');">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm">
-                                            <i class="fas fa-trash-alt"></i>
+                                <td class="align-middle">
+                                    @if ($category->is_active)
+                                        <span class="badge badge-success px-3 py-2" style="border-radius: 20px;">
+                                            <i class="fas fa-check-circle mr-1"></i> Hoạt động
+                                        </span>
+                                    @else
+                                        <span class="badge badge-secondary px-3 py-2" style="border-radius: 20px;">
+                                            <i class="fas fa-eye-slash mr-1"></i> Tạm ẩn
+                                        </span>
+                                    @endif
+                                </td>
+                                <td class="align-middle text-center">
+                                    <div class="btn-group shadow-sm" role="group">
+                                        {{-- Nút Xem chi tiết --}}
+                                        <button type="button" class="btn btn-white btn-sm" 
+                                            data-toggle="modal" data-target="#categoryDetailModal" 
+                                            data-name="{{ $category->name }}"
+                                            data-slug="{{ $category->slug }}"
+                                            data-description="{{ $category->description ?? 'Không có mô tả.' }}"
+                                            data-parent="{{ $category->parent->name ?? '—' }}"
+                                            data-status="{{ $category->is_active ? 'Hoạt động' : 'Tạm ẩn' }}"
+                                            data-created="{{ $category->created_at->format('H:i:s d/m/Y') }}"
+                                            title="Xem chi tiết">
+                                            <i class="fas fa-eye text-info"></i>
                                         </button>
-                                    </form>
+
+                                        {{-- Nút Sửa --}}
+                                        <a href="{{ route('admin.categories.edit', $category->id) }}"
+                                            class="btn btn-white btn-sm" title="Chỉnh sửa">
+                                            <i class="fas fa-edit text-warning"></i>
+                                        </a>
+
+                                        {{-- Nút Xóa --}}
+                                        <form action="{{ route('admin.categories.destroy', $category->id) }}" method="POST"
+                                            class="d-inline"
+                                            onsubmit="return confirm('Bạn có chắc chắn muốn xóa chuyên mục này không?');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-white btn-sm" title="Xóa">
+                                                <i class="fas fa-trash-alt text-danger"></i>
+                                            </button>
+                                        </form>
+                                    </div>
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="5" class="text-center">Chưa có dữ liệu chuyên mục.</td>
+                                <td colspan="5" class="text-center py-5 text-muted">
+                                    <i class="fas fa-folder-open fa-3x mb-3"></i>
+                                    <p>Chưa có dữ liệu chuyên mục.</p>
+                                </td>
                             </tr>
                         @endforelse
                     </tbody>
                 </table>
             </div>
 
-            <div class="d-flex justify-content-center mt-3">
-                {{ $categories->links() }}
+            <div class="d-flex justify-content-center mt-4">
+                {{ $categories->appends(request()->query())->links() }}
             </div>
         </div>
     </div>
 
-
-    {{-- THÊM MODAL HIỂN THỊ CHI TIẾT VÀO ĐÂY --}}
+    {{-- Import Modal chi tiết --}}
     @include('admin.categories.detail_modal')
 
 @endsection
 
-
-{{-- THÊM SCRIPT ĐỂ XỬ LÝ MODAL --}}
 @push('scripts')
     <script>
-        // Khi modal chuẩn bị được hiển thị
-        $('#categoryDetailModal').on('show.bs.modal', function(event) {
-            var button = $(event.relatedTarget); // Nút đã được click
+        $(document).ready(function() {
+            // Xử lý dữ liệu đổ vào Modal
+            $('#categoryDetailModal').on('show.bs.modal', function(event) {
+                var button = $(event.relatedTarget);
+                var modal = $(this);
 
-            // Trích xuất thông tin từ các thuộc tính data-*
-            var name = button.data('name');
-            var slug = button.data('slug');
-            var description = button.data('description');
-            var parent = button.data('parent');
-            var status = button.data('status');
-            var created = button.data('created');
-
-            // Cập nhật nội dung của modal
-            var modal = $(this);
-            modal.find('.modal-title').text('Chi tiết chuyên mục: ' + name);
-            modal.find('#modal-name').text(name);
-            modal.find('#modal-slug').text(slug);
-            modal.find('#modal-description').html(description.replace(/\n/g,
-                '<br>')); // Dùng .html() và thay a\n bằng <br> để hiển thị xuống dòng
-            modal.find('#modal-parent').text(parent);
-            modal.find('#modal-status').html(status === 'Hoạt động' ?
-                '<span class="badge badge-success">Hoạt động</span>' :
-                '<span class="badge badge-secondary">Tạm ẩn</span>');
-            modal.find('#modal-created').text(created);
+                modal.find('.modal-title').html('<i class="fas fa-folder-open mr-2"></i> Chi tiết: ' + button.data('name'));
+                modal.find('#modal-name').text(button.data('name'));
+                modal.find('#modal-slug').text(button.data('slug'));
+                modal.find('#modal-description').html(button.data('description').replace(/\n/g, '<br>'));
+                modal.find('#modal-parent').text(button.data('parent'));
+                
+                var statusHTML = button.data('status') === 'Hoạt động' ?
+                    '<span class="badge badge-success px-3 py-2" style="border-radius:20px;">Hoạt động</span>' :
+                    '<span class="badge badge-secondary px-3 py-2" style="border-radius:20px;">Tạm ẩn</span>';
+                
+                modal.find('#modal-status').html(statusHTML);
+                modal.find('#modal-created').text(button.data('created'));
+            });
         });
     </script>
 @endpush

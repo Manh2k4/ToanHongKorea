@@ -1,248 +1,160 @@
 @extends('admin.layouts')
-
-@section('title', 'Chỉnh sửa Điện Thoại')
+@section('title', 'Chỉnh sửa: ' . $phone->name)
 
 @section('content')
-
-    <!-- Page Heading -->
-    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Chỉnh sửa Điện Thoại: {{ $phone->name }}</h1>
-        <a href="{{ route('admin.phones.index') }}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm">
-            <i class="fas fa-arrow-left fa-sm text-white-50"></i> Quay lại Danh sách Điện Thoại
-        </a>
+<div class="card shadow mb-4">
+    <div class="card-header py-3 d-flex justify-content-between">
+        <h6 class="m-0 font-weight-bold text-primary">Chỉnh sửa sản phẩm: {{ $phone->name }}</h6>
+        <a href="{{ route('admin.phones.index') }}" class="btn btn-sm btn-secondary">Quay lại</a>
     </div>
+    <div class="card-body">
+        <form action="{{ route('admin.phones.update', $phone->id) }}" method="POST" enctype="multipart/form-data">
+            @csrf
+            @method('PUT')
 
-    @if ($errors->any())
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <strong>Có lỗi xảy ra!</strong> Vui lòng kiểm tra lại.
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Tên sản phẩm <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" id="name" value="{{ old('name', $phone->name) }}">
+                    @error('name') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Đường dẫn (Slug) <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control @error('slug') is-invalid @enderror" name="slug" id="slug" value="{{ old('slug', $phone->slug) }}">
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Danh mục <span class="text-danger">*</span></label>
+                <select class="form-control" name="categories_id">
+                    @foreach ($categories as $category)
+                        <option value="{{ $category->id }}" {{ old('categories_id', $phone->categories_id) == $category->id ? 'selected' : '' }}>
+                            {{ $category->name }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Mô tả ngắn</label>
+                <textarea class="form-control" name="short_description" rows="2">{{ old('short_description', $phone->short_description) }}</textarea>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Ảnh chính</label>
+                @if ($phone->main_image)
+                    <div class="mb-2">
+                        <img src="{{ Storage::url($phone->main_image) }}" width="100" class="img-thumbnail border-primary">
+                        <div class="form-check mt-1">
+                            <input type="checkbox" class="form-check-input" name="remove_main_image" id="remove_main_image">
+                            <label class="form-check-label text-danger" for="remove_main_image small">Xóa ảnh hiện tại và tải ảnh mới</label>
+                        </div>
+                    </div>
+                @endif
+                <input type="file" class="form-control" name="main_image">
+            </div>
+
+            <hr>
+            <h4 class="text-dark">Biến thể sản phẩm</h4>
+            <div id="phone-variants-container">
+                {{-- Lưu ý: Loop này sẽ tự lấy dữ liệu từ old() nếu có lỗi validation, nếu không sẽ lấy từ database --}}
+                @foreach (old('variants', $phone->variants) as $index => $variant)
+                    @include('admin.phones.variant_form_fields', [
+                        'index' => $index,
+                        'variant' => $variant,
+                        'sizes' => $sizes,
+                        'colors' => $colors
+                    ])
                 @endforeach
-            </ul>
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
+            </div>
+            
+            <button type="button" class="btn btn-outline-primary btn-sm mt-2" id="add-variant-btn">
+                <i class="fas fa-plus"></i> Thêm biến thể khác
             </button>
-        </div>
-    @endif
 
-    <div class="card shadow mb-4">
-        <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Thông tin Điện Thoại</h6>
-        </div>
-        <div class="card-body">
-            <form action="{{ route('admin.phones.update', $phone->id) }}" method="POST" enctype="multipart/form-data">
-                @csrf
-                @method('PUT') {{-- Bắt buộc phải có để gửi request PUT --}}
-
-                <div class="form-group">
-                    <label for="name">Tên Điện Thoại <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control @error('name') is-invalid @enderror" id="name"
-                        name="name" value="{{ old('name', $phone->name) }}" required>
-                    @error('name')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
-
-                <div class="form-group">
-                    <label for="brand_id">Thương hiệu <span class="text-danger">*</span></label>
-                    <select class="form-control @error('brand_id') is-invalid @enderror" id="brand_id" name="brand_id"
-                        required>
-                        <option value="">Chọn thương hiệu</option>
-                        @foreach ($brands as $brand)
-                            <option value="{{ $brand->id }}"
-                                {{ old('brand_id', $phone->brand_id) == $brand->id ? 'selected' : '' }}>
-                                {{ $brand->name }}
-                            </option>
-                        @endforeach
-                    </select>
-                    @error('brand_id')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
-
-                <div class="form-group">
-                    <label for="main_image">Ảnh chính</label>
-                    <input type="file" class="form-control-file @error('main_image') is-invalid @enderror"
-                        id="main_image" name="main_image" accept="image/*">
-                    @error('main_image')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                    <small class="form-text text-muted">Để trống nếu không muốn thay đổi ảnh. Kích thước đề xuất:
-                        400x600px</small>
-                    @if ($phone->main_image)
-                        <div class="mt-2">
-                            <img src="{{ asset('storage/' . $phone->main_image) }}" alt="Ảnh chính hiện tại"
-                                class="img-thumbnail" style="max-width: 150px;">
-                            <p class="text-muted small mt-1">Ảnh hiện tại</p>
-                        </div>
-                    @endif
-                </div>
-
-                <div class="form-group">
-                    <label for="short_description">Mô tả ngắn</label>
-                    <textarea class="form-control @error('short_description') is-invalid @enderror" id="short_description"
-                        name="short_description" rows="3">{{ old('short_description', $phone->short_description) }}</textarea>
-                    @error('short_description')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
-
-                <div class="form-group">
-                    <label for="long_description">Mô tả chi tiết</label>
-                    <textarea class="form-control @error('long_description') is-invalid @enderror" id="long_description"
-                        name="long_description" rows="5">{{ old('long_description', $phone->long_description) }}</textarea>
-                    @error('long_description')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group col-md-4">
-                        <label for="price">Giá bán <span class="text-danger">*</span></label>
-                        <input type="number" step="0.01" class="form-control @error('price') is-invalid @enderror"
-                            id="price" name="price" value="{{ old('price', $phone->price) }}" required
-                            min="0">
-                        @error('price')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                    <div class="form-group col-md-4">
-                        <label for="original_price">Giá gốc</label>
-                        <input type="number" step="0.01"
-                            class="form-control @error('original_price') is-invalid @enderror" id="original_price"
-                            name="original_price" value="{{ old('original_price', $phone->original_price) }}"
-                            min="0">
-                        @error('original_price')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                    <div class="form-group col-md-4">
-                        <label for="quantity">Số lượng tồn kho <span class="text-danger">*</span></label>
-                        <input type="number" class="form-control @error('quantity') is-invalid @enderror" id="quantity"
-                            name="quantity" value="{{ old('quantity', $phone->quantity) }}" required min="0">
-                        @error('quantity')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group col-md-6">
-                        <label for="storage_capacity">Dung lượng <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control @error('storage_capacity') is-invalid @enderror"
-                            id="storage_capacity" name="storage_capacity"
-                            value="{{ old('storage_capacity', $phone->storage_capacity) }}" required>
-                        @error('storage_capacity')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                    <div class="form-group col-md-6">
-                        <label for="color">Màu sắc</label>
-                        <input type="text" class="form-control @error('color') is-invalid @enderror" id="color"
-                            name="color" value="{{ old('color', $phone->color) }}">
-                        @error('color')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="serial_number">Số serial</label>
-                    <input type="text" class="form-control @error('serial_number') is-invalid @enderror"
-                        id="serial_number" name="serial_number"
-                        value="{{ old('serial_number', $phone->serial_number) }}">
-                    @error('serial_number')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
-
-                <div class="form-group">
-                    <label for="status">Trạng thái <span class="text-danger">*</span></label>
-                    <select class="form-control @error('status') is-invalid @enderror" id="status" name="status"
-                        required>
-                        <option value="available" {{ old('status', $phone->status) == 'available' ? 'selected' : '' }}>Còn
-                            hàng</option>
-                        <option value="out_of_stock"
-                            {{ old('status', $phone->status) == 'out_of_stock' ? 'selected' : '' }}>Hết hàng</option>
-                        <option value="upcoming" {{ old('status', $phone->status) == 'upcoming' ? 'selected' : '' }}>Sắp
-                            ra mắt</option>
-                        <option value="disabled" {{ old('status', $phone->status) == 'disabled' ? 'selected' : '' }}>Ngừng
-                            kinh doanh</option>
-                    </select>
-                    @error('status')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
-
-                <hr class="my-4">
-                <h6 class="m-0 font-weight-bold text-primary mb-3">Thông số kỹ thuật (Tùy chọn)</h6>
-                <div id="specifications-fields">
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label for="specs_os">Hệ điều hành</label>
-                            <input type="text" class="form-control @error('specs_os') is-invalid @enderror"
-                                id="specs_os" name="specs_os"
-                                value="{{ old('specs_os', $phone->specifications['os'] ?? '') }}">
-                            @error('specs_os')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label for="specs_chip">Chip xử lý</label>
-                            <input type="text" class="form-control @error('specs_chip') is-invalid @enderror"
-                                id="specs_chip" name="specs_chip"
-                                value="{{ old('specs_chip', $phone->specifications['chip'] ?? '') }}">
-                            @error('specs_chip')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
+            <hr>
+            <h4>Ảnh phụ sản phẩm</h4>
+            <div class="row bg-light p-3 rounded mx-0">
+                @foreach ($phone->images as $image)
+                    <div class="col-md-2 mb-3 text-center" id="image-item-{{ $image->id }}">
+                        <div class="position-relative">
+                            <img src="{{ Storage::url($image->image_path) }}" class="img-thumbnail mb-1" style="height: 100px; object-fit: cover;">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" name="existing_other_images[]" value="{{ $image->id }}" checked id="img_{{ $image->id }}">
+                                <label class="form-check-label small" for="img_{{ $image->id }}">Giữ lại</label>
+                            </div>
                         </div>
                     </div>
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label for="specs_camera">Camera</label>
-                            <input type="text" class="form-control @error('specs_camera') is-invalid @enderror"
-                                id="specs_camera" name="specs_camera"
-                                value="{{ old('specs_camera', $phone->specifications['camera'] ?? '') }}">
-                            @error('specs_camera')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label for="specs_screen">Màn hình</label>
-                            <input type="text" class="form-control @error('specs_screen') is-invalid @enderror"
-                                id="specs_screen" name="specs_screen"
-                                value="{{ old('specs_screen', $phone->specifications['screen'] ?? '') }}">
-                            @error('specs_screen')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label for="specs_battery">Pin</label>
-                            <input type="text" class="form-control @error('specs_battery') is-invalid @enderror"
-                                id="specs_battery" name="specs_battery"
-                                value="{{ old('specs_battery', $phone->specifications['battery'] ?? '') }}">
-                            @error('specs_battery')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        {{-- Thêm các trường specs_ khác ở đây nếu cần --}}
-                    </div>
-                </div>
+                @endforeach
+            </div>
+            <div class="mt-3">
+                <label class="form-label font-weight-bold">Thêm ảnh phụ mới</label>
+                <input type="file" class="form-control" name="other_images[]" multiple accept="image/*">
+            </div>
 
-                <button type="submit" class="btn btn-primary">Cập nhật Điện Thoại</button>
-            </form>
-        </div>
+            <div class="mt-5">
+                <button type="submit" class="btn btn-primary btn-lg btn-block shadow">
+                    <i class="fas fa-save"></i> CẬP NHẬT SẢN PHẨM
+                </button>
+            </div>
+        </form>
     </div>
-
+</div>
 @endsection
 
 @push('scripts')
-    {{-- Nếu bạn muốn dùng editor như CKEditor, TinyMCE cho long_description --}}
-    {{-- <script src="//cdn.ckeditor.com/4.16.2/standard/ckeditor.js"></script>
-    <script>
-        CKEDITOR.replace('long_description');
-    </script> --}}
+<script>
+    $(document).ready(function() {
+        // Khởi tạo index dựa trên số lượng biến thể đang có
+        let variantIndex = {{ count(old('variants', $phone->variants)) }};
+
+        // 1. Logic ẩn/hiện thông tin máy cũ (Dùng Event Delegation)
+        $(document).on('change', '.condition-select', function() {
+            let selectedValue = $(this).val();
+            let parentContainer = $(this).closest('.variant-item');
+            let usedSection = parentContainer.find('.used-details-container');
+
+            if (selectedValue === 'used') {
+                usedSection.slideDown(); 
+            } else {
+                usedSection.slideUp();
+                // Xóa trắng input máy cũ khi chuyển về máy mới để tránh gửi dữ liệu thừa
+                usedSection.find('input').val('');
+            }
+        });
+
+        // 2. Tự động tạo slug từ tên sản phẩm
+        $('#name').on('keyup', function() {
+            let title = $(this).val();
+            let slug = title.toLowerCase()
+                .replace(/[^a-z0-9 -]/g, '') 
+                .replace(/\s+/g, '-') 
+                .replace(/-+/g, '-');
+            $('#slug').val(slug);
+        });
+
+        // 3. AJAX Thêm biến thể mới
+        $('#add-variant-btn').on('click', function() {
+            $.ajax({
+                url: '{{ route('admin.phones.getVariantFormFields') }}',
+                type: 'GET',
+                data: { index: variantIndex },
+                success: function(data) {
+                    $('#phone-variants-container').append(data);
+                    variantIndex++;
+                },
+                error: function() {
+                    alert("Lỗi khi tải form biến thể.");
+                }
+            });
+        });
+
+        // 4. Xóa biến thể
+        $(document).on('click', '.remove-variant-btn', function() {
+            if(confirm('Bạn có chắc muốn xóa biến thể này? Lưu ý: Biến thể sẽ bị xóa hoàn toàn khi bạn nhấn Cập nhật.')) {
+                $(this).closest('.variant-item').remove();
+            }
+        });
+    });
+</script>
 @endpush

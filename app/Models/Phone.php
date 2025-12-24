@@ -15,12 +15,13 @@ class Phone extends Model
         'name',
         'slug',
         'short_description',
-        'status',
+        'is_active',
         'main_image',
     ];
 
     protected $casts = [
         'categories_id' => 'integer',
+        'is_active' => 'boolean',
     ];
 
     /**
@@ -46,6 +47,26 @@ class Phone extends Model
     {
         return $this->hasMany(Favorite::class);
     }
+
+    public function images()
+    {
+        return $this->hasMany(PhoneImage::class);
+    }
+
+
+    // Nếu bạn muốn lấy giá/trạng thái mặc định từ một biến thể nào đó
+    public function defaultVariant()
+    {
+        return $this->hasOne(Variant::class)->where('is_default', true);
+    }
+
+
+    // Hoặc nếu bạn muốn lấy giá thấp nhất từ các biến thể
+    public function lowestPriceVariant()
+    {
+        return $this->hasOne(Variant::class)->orderBy('price', 'asc');
+    }
+
 
     /**
      * Lấy danh sách màu sắc duy nhất của phone này thông qua bảng variants

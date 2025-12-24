@@ -1,293 +1,270 @@
 @extends('admin.layouts')
 
-@section('title', 'Quản lý Điện Thoại')
+@section('title', 'Quản lý điện thoại')
 
 @section('content')
 
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Danh sách Điện Thoại</h1>
+        <h1 class="h3 mb-0 text-gray-800 font-weight-bold">Quản lý sản phẩm Điện thoại</h1>
         <div>
-            <a href="{{ route('admin.phones.create') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
-                <i class="fas fa-plus fa-sm text-white-50"></i> Thêm Điện Thoại
+            <a href="{{ route('admin.phones.create') }}" class="btn btn-sm btn-primary shadow-sm border-0"
+                style="border-radius: 8px;">
+                <i class="fas fa-plus fa-sm text-white-50"></i> Thêm sản phẩm mới
             </a>
-
-            <a href="{{ route('admin.phones.trash') }}"
-                class="d-none d-sm-inline-block btn btn-sm btn-outline-danger shadow-sm mr-2">
-                <i class="fas fa-trash fa-sm"></i> Thùng rác ({{ $trashedCount }})
+            <a href="{{ route('admin.categories.index') }}" class="btn btn-sm btn-outline-danger shadow-sm border-0"
+                style="border-radius: 8px;">
+                <i class="fas fa-trash-alt fa-sm"></i> Thùng rác ({{ $trashedCount }})
             </a>
-
         </div>
-        
     </div>
 
-    {{-- Hiển thị thông báo --}}
+    {{-- Thông báo --}}
     @if (session('success'))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            {{ session('success') }}
+        <div class="alert alert-success alert-dismissible fade show border-0 shadow-sm" role="alert">
+            <i class="fas fa-check-circle mr-2"></i> {{ session('success') }}
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
     @endif
 
-    <!-- Search Form -->
-    <div class="card shadow mb-4">
-        <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Tìm kiếm Điện Thoại</h6>
-        </div>
+    <!-- Bộ lọc tìm kiếm -->
+    <div class="card shadow-sm mb-4 border-0">
         <div class="card-body">
-            <form action="{{ route('admin.phones.index') }}" method="GET">
-                <div class="input-group">
-                    <input type="text" class="form-control" name="search"
-                        placeholder="Nhập tên, mô tả hoặc số serial..." value="{{ request('search') }}">
-                    <div class="input-group-append">
-                        <button class="btn btn-primary" type="submit">
-                            <i class="fas fa-search fa-sm"></i> Tìm kiếm
-                        </button>
+            <form action="{{ route('admin.phones.index') }}" method="GET" class="row g-3">
+                <div class="col-md-10">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text bg-white border-right-0"><i
+                                    class="fas fa-search text-muted"></i></span>
+                        </div>
+                        <input type="text" name="search" class="form-control border-left-0"
+                            placeholder="Tìm kiếm theo tên sản phẩm hoặc danh mục..." value="{{ request('search') }}">
                     </div>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary btn-block">Tìm kiếm</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- DataTales Example -->
-    <div class="card shadow mb-4">
-        <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Dữ liệu Điện Thoại</h6>
+    <!-- Bảng danh sách -->
+    <div class="card shadow-sm mb-4 border-0">
+        <div class="card-header py-3 bg-white border-bottom">
+            <h6 class="m-0 font-weight-bold text-primary">Danh sách sản phẩm</h6>
         </div>
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
-                    <thead class="thead-light">
-                        <tr>
-                            <th style="width: 80px;">Ảnh chính</th>
-                            <th>Tên Điện Thoại</th>
-                            <th>Thương hiệu</th>
-                            <th>Giá</th>
-                            <th>Dung lượng</th>
-                            <th>Số lượng</th>
-                            <th>Trạng thái</th>
-                            <th style="width: 130px;">Hành động</th>
+                <table class="table table-hover align-middle" id="dataTable" width="100%" cellspacing="0">
+                    <thead class="bg-light">
+                        <tr class="text-secondary small text-uppercase">
+                            <th width="5%">ID</th>
+                            <th width="10%">Hình ảnh</th>
+                            <th width="25%">Sản phẩm</th>
+                            <th width="20%">Khoảng giá</th>
+                            <th width="15%">Kho hàng</th>
+                            <th width="10%">Tình trạng</th>
+                            <th width="10%" class="text-center">Hiển thị</th>
+                            <th width="15%" class="text-center">Thao tác</th>
                         </tr>
                     </thead>
                     <tbody>
                         @forelse ($phones as $phone)
                             <tr>
-                                <td>
-                                    <img src="{{ $phone->main_image ? asset('storage/' . $phone->main_image) : 'https://via.placeholder.com/80x120?text=No+Image' }}"
-                                        alt="{{ $phone->name }}" class="img-fluid"
-                                        style="width: 80px; height: 120px; object-fit: cover;">
+                                <td class="align-middle font-weight-bold">#{{ $phone->id }}</td>
+                                <td class="align-middle text-center">
+                                    @if ($phone->main_image)
+                                        <img src="{{ Storage::url($phone->main_image) }}" alt="{{ $phone->name }}"
+                                            width="60" class="rounded shadow-sm">
+                                    @else
+                                        <div class="bg-light rounded d-flex align-items-center justify-content-center"
+                                            style="width:60px; height:60px;">
+                                            <i class="fas fa-image text-muted"></i>
+                                        </div>
+                                    @endif
                                 </td>
-                                <td>
-                                    <strong>{{ $phone->name }}</strong>
-                                    <br>
-                                    <small class="text-muted">Màu: {{ $phone->color ?? 'N/A' }}</small>
-                                    <br>
-                                    <small class="text-muted">Ngày tạo:
-                                        {{ $phone->created_at->format('d/m/Y') }}</small>
+                                <td class="align-middle">
+                                    <div class="font-weight-bold text-dark mb-0">{{ $phone->name }}</div>
+                                    <small
+                                        class="badge badge-light border text-muted">{{ $phone->category->name ?? 'N/A' }}</small>
                                 </td>
-                                <td>{{ $phone->brand->name ?? 'N/A' }}</td>
-                                <td>{{ number_format($phone->price, 0, ',', '.') }} VNĐ</td>
-                                <td>{{ $phone->storage_capacity }}</td>
-                                <td>{{ $phone->quantity }}</td>
-                                <td>
-                                    @switch($phone->status)
-                                        @case('available')
-                                            <span class="badge badge-success">Còn hàng</span>
-                                        @break
-
-                                        @case('out_of_stock')
-                                            <span class="badge badge-danger">Hết hàng</span>
-                                        @break
-
-                                        @case('upcoming')
-                                            <span class="badge badge-info">Sắp ra mắt</span>
-                                        @break
-
-                                        @case('disabled')
-                                            <span class="badge badge-warning">Ngừng kinh doanh</span>
-                                        @break
-
-                                        @default
-                                            <span class="badge badge-secondary">{{ ucfirst($phone->status) }}</span>
-                                    @endswitch
+                                <td class="align-middle">
+                                    @if ($phone->variants->count() > 0)
+                                        <span class="text-danger font-weight-bold">
+                                            {{ number_format($phone->variants->min('price'), 0, ',', '.') }}đ
+                                        </span>
+                                        @if ($phone->variants->min('price') != $phone->variants->max('price'))
+                                            <small class="text-muted">-
+                                                {{ number_format($phone->variants->max('price'), 0, ',', '.') }}đ</small>
+                                        @endif
+                                    @else
+                                        <span class="text-muted small italic">Chưa có giá</span>
+                                    @endif
                                 </td>
-                                <td>
-                                    <button type="button" class="btn btn-success btn-sm" data-toggle="modal"
-                                        data-target="#phoneDetailModal" data-name="{{ $phone->name }}"
-                                        data-main_image="{{ $phone->main_image ? asset('storage/' . $phone->main_image) : 'https://via.placeholder.com/400x600?text=No+Image' }}"
-                                        {{-- Mã hóa mô tả ngắn và dài --}} data-short_description="{{ $phone->short_description }}"
-                                        data-long_description="{{ $phone->long_description }}"
-                                        data-price="{{ number_format($phone->price, 0, ',', '.') }} VNĐ"
-                                        data-original_price="{{ number_format($phone->original_price, 0, ',', '.') }} VNĐ"
-                                        data-quantity="{{ $phone->quantity }}" data-status="{{ $phone->status }}"
-                                        data-brand="{{ $phone->brand->name ?? 'N/A' }}"
-                                        data-storage_capacity="{{ $phone->storage_capacity }}"
-                                        data-color="{{ $phone->color }}"
-                                        data-serial_number="{{ $phone->serial_number ?? 'N/A' }}"
-                                        data-specifications="{{ json_encode($phone->specifications ?? []) }}"
-                                        data-created_at="{{ $phone->created_at->format('H:i:s d/m/Y') }}"
-                                        data-updated_at="{{ $phone->updated_at->format('H:i:s d/m/Y') }}">
-                                        <i class="fas fa-eye"></i>
-                                    </button>
+                                <td class="align-middle">
+                                    @php $totalStock = $phone->variants->sum('stock'); @endphp
+                                    <div class="mb-1">Tổng: <strong>{{ $totalStock }}</strong></div>
+                                    @if ($totalStock <= 0)
+                                        <span class="badge badge-danger">Hết hàng</span>
+                                    @elseif($totalStock <= 5)
+                                        <span class="badge badge-warning">Sắp hết hàng</span>
+                                    @else
+                                        <span class="badge badge-success">Còn hàng</span>
+                                    @endif
+                                </td>
+                                <td class="align-middle">
+                                    {{-- Hiển thị tóm tắt tình trạng máy --}}
+                                    @php
+                                        $hasNew = $phone->variants->where('condition', 'new')->count();
+                                        $hasUsed = $phone->variants->where('condition', 'used')->count();
+                                    @endphp
+                                    @if ($hasNew)
+                                        <div class="small text-success"><i class="fas fa-check-circle"></i> Máy mới</div>
+                                    @endif
+                                    @if ($hasUsed)
+                                        <div class="small text-warning"><i class="fas fa-history"></i> Máy cũ</div>
+                                    @endif
+                                </td>
 
-                                    <a href="{{ route('admin.phones.edit', $phone->id) }}" class="btn btn-info btn-sm">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
+                                <td class="align-middle text-center">
+                                    <div class="custom-control custom-switch">
+                                        <input type="checkbox" class="custom-control-input change-status"
+                                            id="customSwitch{{ $phone->id }}" data-id="{{ $phone->id }}"
+                                            {{ $phone->is_active ? 'checked' : '' }}>
+                                        <label class="custom-control-label" for="customSwitch{{ $phone->id }}"></label>
+                                    </div>
+                                </td>
 
-                                    <form action="{{ route('admin.phones.destroy', $phone->id) }}" method="POST"
-                                        class="d-inline-block"
-                                        onsubmit="return confirm('Bạn có chắc chắn muốn xóa điện thoại này vĩnh viễn?');">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm">
-                                            <i class="fas fa-trash-alt"></i>
+                                <td class="align-middle text-center">
+                                    <div class="btn-group shadow-sm" role="group">
+                                        <button class="btn btn-white btn-sm view-phone-detail"
+                                            data-id="{{ $phone->id }}" title="Xem chi tiết" data-toggle="modal"
+                                            data-target="#phoneDetailModal">
+                                            <i class="fas fa-eye text-info"></i>
                                         </button>
-                                    </form>
+                                        <a href="{{ route('admin.phones.edit', $phone->id) }}"
+                                            class="btn btn-white btn-sm" title="Chỉnh sửa">
+                                            <i class="fas fa-edit text-warning"></i>
+                                        </a>
+                                        <form action="{{ route('admin.phones.destroy', $phone->id) }}" method="POST"
+                                            class="d-inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-white btn-sm" title="Xóa"
+                                                onclick="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này không?')">
+                                                <i class="fas fa-trash text-danger"></i>
+                                            </button>
+                                        </form>
+                                    </div>
                                 </td>
                             </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="8" class="text-center">
-                                        @if (request('search'))
-                                            Không tìm thấy điện thoại nào với từ khóa "{{ request('search') }}".
-                                        @else
-                                            Chưa có điện thoại nào trong cửa hàng.
-                                        @endif
-                                    </td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
-                </div>
+                        @empty
+                            <tr>
+                                <td colspan="7" class="text-center py-5 text-muted">
+                                    <i class="fas fa-box-open fa-3x mb-3"></i>
+                                    <p>Không tìm thấy sản phẩm nào.</p>
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
 
-                <div class="d-flex justify-content-center mt-3">
-                    {{ $phones->links() }}
+            <div class="mt-4">
+                {{ $phones->appends(request()->query())->links() }}
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Chi tiết -->
+    <div class="modal fade" id="phoneDetailModal" tabindex="-1" role="dialog" aria-labelledby="phoneDetailModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable" style="max-width: 70%; min-height: 70%;"
+            role="document">
+            <div class="modal-content border-0 shadow-lg">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="phoneDetailModalLabel"><i class="fas fa-info-circle mr-2"></i> Chi tiết
+                        sản phẩm</h5>
+                    <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body bg-light" id="phoneDetailContent">
+                    <div class="text-center py-5">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="sr-only">Đang tải...</span>
+                        </div>
+                        <p class="mt-2 text-muted">Đang lấy dữ liệu từ hệ thống...</p>
+                    </div>
+                </div>
+                <div class="modal-footer bg-white border-0">
+                    <button type="button" class="btn btn-secondary shadow-sm" data-dismiss="modal">Đóng</button>
                 </div>
             </div>
         </div>
+    </div>
 
-        {{-- Include Modal --}}
-        @include('admin.phones.detail_modal')
+@endsection
 
-    @endsection
+@push('scripts')
+    <script>
+        $(document).ready(function() {
+            // Xử lý click xem chi tiết
+            $('.view-phone-detail').on('click', function() {
+                const phoneId = $(this).data('id');
+                const modalBody = $('#phoneDetailContent');
 
-    @push('scripts')
-        <script>
-            $('#phoneDetailModal').on('show.bs.modal', function(event) {
-                var button = $(event.relatedTarget);
+                // Reset modal về trạng thái loading
+                modalBody.html(`
+                    <div class="text-center py-5">
+                        <div class="spinner-border text-primary" role="status"></div>
+                        <p class="mt-2 text-muted">Đang tải chi tiết sản phẩm...</p>
+                    </div>
+                `);
 
-                var name = button.data('name');
-                var main_image = button.data('main_image');
-                // Lấy trực tiếp dữ liệu, không cần giải mã
-                var short_description = button.data('short_description');
-                var long_description = button.data('long_description');
-
-                var price = button.data('price');
-                var original_price = button.data('original_price');
-                var quantity = button.data('quantity');
-                var status = button.data('status');
-                var brand = button.data('brand');
-                var storage_capacity = button.data('storage_capacity');
-                var color = button.data('color');
-                var serial_number = button.data('serial_number');
-                var specifications = button.data('specifications'); // Đây là JSON string
-                console.log('Giá trị specifications nhận được:', specifications);
-                var created_at = button.data('created_at');
-                var updated_at = button.data('updated_at');
-
-                var modal = $(this);
-                modal.find('.modal-title').text('Chi tiết Điện Thoại: ' + name);
-                modal.find('#modal-phone-main_image').attr('src', main_image);
-                modal.find('#modal-phone-name').text(name);
-                modal.find('#modal-phone-short_description').html(short_description); // Dùng .html()
-                modal.find('#modal-phone-long_description').html(long_description); // Dùng .html()
-                modal.find('#modal-phone-price').text(price);
-                modal.find('#modal-phone-original_price').text(original_price);
-                modal.find('#modal-phone-quantity').text(quantity);
-                modal.find('#modal-phone-brand').text(brand);
-                modal.find('#modal-phone-storage_capacity').text(storage_capacity);
-                modal.find('#modal-phone-color').text(color);
-                modal.find('#modal-phone-serial_number').text(serial_number);
-                modal.find('#modal-phone-created_at').text(created_at);
-                modal.find('#modal-phone-updated_at').text(updated_at);
-
-                // Xử lý specifications
-                var specsHtml = '';
-                if (specifications) { // specifications đã là một đối tượng JavaScript
-                    var parsedSpecs = specifications; // Sử dụng trực tiếp biến specifications
-
-                    // Kiểm tra xem đối tượng có rỗng không (ví dụ: {})
-                    if (Object.keys(parsedSpecs).length > 0) {
-                        specsHtml +=
-                            '<ul class="list-group list-group-flush">'; // Sử dụng list-group của Bootstrap cho đẹp
-                        for (var key in parsedSpecs) {
-                            // Đảm bảo chỉ lặp qua các thuộc tính riêng của đối tượng, không phải từ prototype chain
-                            if (parsedSpecs.hasOwnProperty(key)) {
-                                // Định dạng key cho dễ đọc (ví dụ: 'os' -> 'Hệ điều hành')
-                                var displayKey = '';
-                                switch (key) {
-                                    case 'os':
-                                        displayKey = 'Hệ điều hành';
-                                        break;
-                                    case 'chip':
-                                        displayKey = 'Chip xử lý';
-                                        break;
-                                    case 'camera':
-                                        displayKey = 'Camera';
-                                        break;
-                                    case 'screen':
-                                        displayKey = 'Màn hình';
-                                        break;
-                                    case 'battery':
-                                        displayKey = 'Pin';
-                                        break;
-                                        // Thêm các trường khác nếu có
-                                    default:
-                                        // Chuyển đổi từ 'some_key' thành 'Some Key'
-                                        displayKey = key.replace(/_/g, ' ').replace(/\b\w/g, function(l) {
-                                            return l.toUpperCase()
-                                        });
-                                        break;
-                                }
-                                specsHtml += `<li class="list-group-item d-flex justify-content-between align-items-center">
-                                <strong>${displayKey}:</strong>
-                                <span>${parsedSpecs[key]}</span>
-                              </li>`;
-                            }
-                        }
-                        specsHtml += '</ul>';
-                    } else {
-                        specsHtml = 'Không có thông số kỹ thuật.';
+                // Gọi AJAX
+                $.ajax({
+                    url: `/admin/phones/${phoneId}`,
+                    method: 'GET',
+                    success: function(response) {
+                        // Chèn HTML nhận được từ server vào modal body
+                        modalBody.html(response);
+                    },
+                    error: function(xhr) {
+                        modalBody.html(`
+                            <div class="alert alert-danger m-3">
+                                <i class="fas fa-exclamation-triangle mr-2"></i>
+                                Không thể tải thông tin. Lỗi: ${xhr.status} - ${xhr.statusText}
+                            </div>
+                        `);
                     }
-                } else {
-                    // Điều này sẽ xảy ra nếu specifications là null hoặc undefined
-                    specsHtml = 'Không có thông số kỹ thuật.';
-                }
-                modal.find('#modal-phone-specifications').html(specsHtml);
-
-
-                // Xử lý badge cho status
-                var statusBadge = '';
-                switch (status) {
-                    case 'available':
-                        statusBadge = '<span class="badge badge-success">Còn hàng</span>';
-                        break;
-                    case 'out_of_stock':
-                        statusBadge = '<span class="badge badge-danger">Hết hàng</span>';
-                        break;
-                    case 'upcoming':
-                        statusBadge = '<span class="badge badge-info">Sắp ra mắt</span>';
-                        break;
-                    case 'disabled':
-                        statusBadge = '<span class="badge badge-warning">Ngừng kinh doanh</span>';
-                        break;
-                    default:
-                        statusBadge = '<span class="badge badge-secondary">' + status.charAt(0).toUpperCase() + status
-                            .slice(1) + '</span>';
-                }
-                modal.find('#modal-phone-status').html(statusBadge);
+                });
             });
-        </script>
-    @endpush
+            $('.change-status').on('change', function() {
+                const phoneId = $(this).data('id');
+                const isChecked = $(this).is(':checked');
+
+                $.ajax({
+                    url: `/admin/phones/${phoneId}/change-status`,
+                    method: 'PATCH',
+                    data: {
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            // Hiển thị thông báo nhỏ (Toast) nếu muốn
+                            console.log(response.message);
+                        }
+                    },
+                    error: function() {
+                        alert('Không thể cập nhật trạng thái. Vui lòng thử lại!');
+                        // Trả lại trạng thái cũ nếu lỗi
+                        $(this).prop('checked', !isChecked);
+                    }
+                });
+            });
+        });
+    </script>
+@endpush
