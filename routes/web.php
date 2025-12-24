@@ -39,7 +39,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
     // Các route cho thùng rác phải đặt TRƯỚC resource
     Route::get('packages/trash', [PackageController::class, 'trash'])->name('packages.trash');
-    Route::patch('packages/{id}/restore', [PackageController::class, 'restore'])->name('packages.restore');
+    Route::post('packages/{id}/restore', [PackageController::class, 'restore'])->name('packages.restore');
     Route::delete('packages/{id}/force-delete', [PackageController::class, 'forceDelete'])->name('packages.forceDelete');
 
 
