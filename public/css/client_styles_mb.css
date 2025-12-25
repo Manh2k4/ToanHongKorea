@@ -252,12 +252,17 @@
 /* Khi mở menu (Class active sẽ do JS thêm vào) */
 .has-dropdown.open > .dropdown-menu,
 .has-submenu.open > .submenu {
-    display: block;
+    display: block !important;
 }
 
 .has-dropdown.open > .nav-link-wrapper .arrow-toggle,
 .has-submenu.open > .nav-link-wrapper .arrow-toggle {
     transform: rotate(90deg); /* Xoay mũi tên xuống */
+}
+
+/* Để icon xoay mượt */
+.arrow-toggle {
+    transition: all 0.3s ease;
 }
 
 /* =====================================footer=============================================================== */

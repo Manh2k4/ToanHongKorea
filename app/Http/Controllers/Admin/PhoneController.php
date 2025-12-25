@@ -18,6 +18,8 @@ use Illuminate\Support\Facades\Log;
 use App\Models\Variant;
 use Illuminate\Support\Facades\DB;
 
+use function Laravel\Prompts\alert;
+
 class PhoneController extends Controller
 {
     /**
@@ -350,6 +352,19 @@ class PhoneController extends Controller
     /**
      * Remove the specified resource from storage.
      */
+
+    public function trash()
+    {
+        // Lấy danh sách điện thoại đã xóa mềm, nạp kèm các quan hệ để hiển thị thông tin
+        $trashPhones = Phone::onlyTrashed()
+            ->with(['category', 'variants'])
+            ->latest('deleted_at')
+            ->paginate(10); // Sử dụng paginate thay vì get để hiển thị được phân trang
+
+        return view('admin.phones.trash', compact('trashPhones'));
+    }
+
+
     public function destroy(Phone $phone)
     {
         DB::beginTransaction();
@@ -367,12 +382,12 @@ class PhoneController extends Controller
             $phone->delete();
 
             DB::commit();
-            return redirect()->route('admin.phones.index')
-                ->with('success', 'Sản phẩm đã được chuyển vào thùng rác thành công!');
+            Alert::success('Sản phẩm đã trong thùng rác');
+            return redirect()->route('admin.phones.index');
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->back()
-                ->with('error', 'Có lỗi xảy ra khi xóa sản phẩm: ' . $e->getMessage());
+            Alert::error('Xóa thất bại'. $e->getMessage());
+            return redirect()->back();
         }
     }
 
@@ -386,7 +401,8 @@ class PhoneController extends Controller
             // Khôi phục luôn các biến thể liên quan
             $phone->variants()->restore();
 
-            return redirect()->back()->with('success', 'Đã khôi phục sản phẩm thành công!');
+            Alert::success('Khôi phục điện thoại thành công');
+            return redirect()->back();
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Lỗi khôi phục: ' . $e->getMessage());
         }

@@ -21,7 +21,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     // Route resource chuẩn
     Route::resource('categories', CategoryController::class);
 
-    Route::get('/trash', [PhoneController::class, 'trash'])->name('phones.trash');
+    Route::get('phones/trash', [PhoneController::class, 'trash'])->name('phones.trash');
 
     // Khôi phục
     Route::patch('/{id}/restore', [PhoneController::class, 'restore'])->name('phones.restore');
@@ -49,7 +49,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('users', [AccountController::class, 'indexUsers'])->name('accounts.users.index');
     Route::patch('accounts/{account}/toggle-status', [AccountController::class, 'toggleStatus'])->name('accounts.toggleStatus');
     Route::resource('accounts', AccountController::class);
-
 
 });
 
