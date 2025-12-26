@@ -76,5 +76,3 @@
 </footer>
 
 <!-- Thêm FontAwesome nếu web bạn chưa có để hiện icon -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-<link rel="stylesheet" href="{{ asset('css/client_styles.css') }}">

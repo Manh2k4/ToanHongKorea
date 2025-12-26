@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
-    
+
     // 1. Khởi tạo Swiper ngay khi trang load xong (Không đợi click)
     const swiper = new Swiper('.banner-swiper', {
         loop: true,
@@ -19,6 +19,33 @@ document.addEventListener('DOMContentLoaded', function () {
         speed: 800,
     });
 
+    // 2. Swiper cho Sản phẩm nổi bật (MỚI)
+    const productSwiper = new Swiper('.product-swiper', {
+        slidesPerView: 2,      // Mặc định cho mobile
+        spaceBetween: 10,      // Khoảng cách giữa các sp
+        slidesPerGroup: 2,     // Mỗi lần bấm nhảy 2 cái
+        loop: false,           // Tắt loop để tránh lỗi hiển thị khi ít sp
+        navigation: {
+            nextEl: '.slider-nav.next',
+            prevEl: '.slider-nav.prev',
+        },
+        // Điểm dừng responsive
+        breakpoints: {
+            768: {             // Máy tính bảng
+                slidesPerView: 3,
+                spaceBetween: 12,
+                slidesPerGroup: 3,
+            },
+            1024: {            // Desktop
+                slidesPerView: 5,
+                spaceBetween: 12,
+                slidesPerGroup: 5,
+            }
+        },
+        // Thêm hiệu ứng di chuyển mượt mà
+        speed: 600,
+    });
+
     // 2. Xử lý sự kiện Click (Chỉ dành cho các logic đóng/mở menu)
     document.addEventListener('click', function (event) {
         const dropdown = document.querySelector('.user-dropdown-content');
@@ -29,21 +56,22 @@ document.addEventListener('DOMContentLoaded', function () {
             if (!trigger.contains(event.target) && !dropdown.contains(event.target)) {
                 // Ví dụ: dropdown.classList.remove('active');
                 // Hoặc ẩn dropdown tùy theo cách bạn code CSS
-                dropdown.style.display = 'none'; 
+                dropdown.style.display = 'none';
             }
         }
     });
 
     // 3. Logic mở menu khi click vào trigger (Nếu bạn không dùng hover)
     const triggerBtn = document.querySelector('.dropdown-trigger');
-    if(triggerBtn) {
-        triggerBtn.addEventListener('click', function(e) {
+    if (triggerBtn) {
+        triggerBtn.addEventListener('click', function (e) {
             e.preventDefault();
             const dropdown = document.querySelector('.user-dropdown-content');
-            if(dropdown) {
+            if (dropdown) {
                 dropdown.style.display = (dropdown.style.display === 'block') ? 'none' : 'block';
             }
         });
     }
+
 
 });
