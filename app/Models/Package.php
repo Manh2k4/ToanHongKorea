@@ -13,6 +13,7 @@ class Package extends Model
 
     protected $fillable = [
         'name',
+        'category_id',
         'slug',
         'duration_days',
         'price',
@@ -65,6 +66,12 @@ class Package extends Model
             }
         });
     }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
+
 
     /**
      * Quan hệ: Một gói cước có thể được áp dụng cho nhiều SIM

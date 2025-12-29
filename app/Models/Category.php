@@ -33,6 +33,12 @@ class Category extends Model
         return $this->hasMany(Phone::class);
     }
 
+    public function packages()
+    {
+        return $this->hasMany(Package::class);
+    }
+
+
     /**
      * Quan hệ: Category con → Category cha.
      */
@@ -47,6 +53,15 @@ class Category extends Model
     public function children()
     {
         return $this->hasMany(Category::class, 'parent_id');
+    }
+
+    public function getAllChildIds()
+    {
+        $ids = [$this->id];
+        foreach ($this->children as $child) {
+            $ids = array_merge($ids, $child->getAllChildIds());
+        }
+        return $ids;
     }
 
     /**

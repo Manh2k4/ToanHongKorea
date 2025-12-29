@@ -20,18 +20,22 @@
             <div class="row g-4 product-list">
                 @foreach ($samsungs as $samsung)
                     <div class="col-6 col-md-4 col-lg-3 product-item">
-                        <div class="ss-card">
+                        <div class="product-card">
                             {{-- Hiển thị badge 'Mới' nếu sản phẩm mới đăng trong vòng 7 ngày --}}
                             @if ($samsung->created_at >= now()->subDays(7))
-                                <div class="ss-badge-new">Mới</div>
+                                {{-- <div class="ss-badge-new">Mới</div> --}}
                             @endif
 
-                            <button class="ss-wishlist-btn"><i class="fa-regular fa-heart"></i></button>
+                            <div class="product-badge">
+                                <button class="spc-heart-btn" title="Thêm vào yêu thích">
+                                    <i class="fa-regular fa-heart"></i>
+                                </button>
+                            </div>
 
-                            <div class="ss-image-box">
+                            <div class="product-image">
                                 <a href="#">
                                     <img src="{{ asset('storage/' . $samsung->main_image) }}" alt="{{ $samsung->name }}"
-                                        onerror="this.src='{{ asset('images/default-samsung.png') }}'">
+                                        onerror="this.src=#">
                                 </a>
                             </div>
 
@@ -49,7 +53,7 @@
                                 <div class="ss-price">
                                     @if ($samsung->variants->isNotEmpty())
                                         {{ number_format($samsung->variants->first()->price, 0, ',', '.') }}
-                                        <span class="ss-currency">VNĐ</span>
+                                        <span class="ss-currency">won</span>
                                     @else
                                         Liên hệ
                                     @endif

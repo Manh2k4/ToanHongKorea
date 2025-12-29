@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Models\Package;
 use App\Models\Phone;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -59,7 +60,7 @@ class HomeController extends Controller
                 'phones.short_description',
                 'phones.is_active',
                 'phones.main_image',
-                'phones.created_at',
+                'phones.created_at',    
                 'phones.updated_at',
                 'phones.deleted_at'
             )
@@ -80,7 +81,7 @@ class HomeController extends Controller
                 $q->where('status', 'còn_hàng');
             })
             ->with(['variants' => function ($q) {
-                $q->where('status', 'còn_hàng')->orderBy('price', 'asc');
+                $q->where('status', 'còn_hàng')->orderBy('price', 'asc');   
             }])
             ->latest() // Hoặc inRandomOrder() tùy bạn
             ->get(); // Thay paginate(8) bằng get() để lấy hết
@@ -100,6 +101,11 @@ class HomeController extends Controller
             ->latest()
             ->get();
 
+        // 6. Lấy danh sách gói cước (Chỉ lấy các gói đang hoạt động)
+        $packages = Package::active()
+            ->latest()
+            ->get();
+
         return view(
             'home.home',
             compact(
@@ -109,7 +115,8 @@ class HomeController extends Controller
                 'categories_iphone',
                 'iphones',
                 'samsungs',
-                'categories_samsung'
+                'categories_samsung',
+                'packages' // Đẩy biến packages ra view
             )
         );
     }

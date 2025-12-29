@@ -37,7 +37,7 @@
                                         <img src="{{ asset('storage/' . $phone->main_image) }}" 
                                              alt="{{ $phone->name }}" 
                                              class="img-fluid"
-                                             onerror="this.src='https://via.placeholder.com/358x358?text=No+Image'">
+                                             onerror="this.src='#'">
                                     </a>
                                     <div class="promo-banner-bottom">
                                        
@@ -52,7 +52,7 @@
                                         </a>
                                     </h3>
                                     <div class="card-price-main">
-                                        {{ number_format($currentPrice, 0, ',', '.') }}đ
+                                        {{ number_format($currentPrice, 0, ',', '.') }} won
                                     </div>
                                     <div class="card-price-sub">
                                         <span class="old-price">{{ number_format($oldPrice, 0, ',', '.') }}đ</span>
