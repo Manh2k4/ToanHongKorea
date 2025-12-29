@@ -168,6 +168,29 @@
                                     </select>
                                 </div>
 
+                                <div class="form-group">
+                                    <label class="font-weight-bold" for="category_id">
+                                        Danh mục <span class="text-danger">*</span>
+                                    </label>
+                                    <select name="category_id" id="category_id"
+                                        class="form-control @error('category_id') is-invalid @enderror" required>
+                                        <option value="">-- Chọn danh mục --</option>
+                                        @foreach ($categories as $category)
+                                            <option value="{{ $category->id }}"
+                                                {{ old('category_id', $package->category_id) == $category->id ? 'selected' : '' }}>
+                                                {{ $category->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+
+                                    {{-- Hiển thị thông báo lỗi nếu validate thất bại --}}
+                                    @error('category_id')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+
                                 <hr>
 
                                 <div class="form-group">

@@ -65,7 +65,7 @@
 
                                     <!-- Giá & Kho -->
                                     <td>
-                                        <div class="text-danger font-weight-bold">{{ number_format($variant->price, 0, ',', '.') }} đ</div>
+                                        <div class="text-danger font-weight-bold">{{ number_format($variant->price, 0, ',', '.') }} w</div>
                                         <div class="small text-muted">Kho: {{ $variant->stock }}</div>
                                         @if($variant->is_default) <span class="badge badge-dark">Mặc định</span> @endif
                                     </td>

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Package;
 use App\Http\Requests\StorePackageRequest;
 use App\Http\Requests\UpdatePackageRequest;
+use App\Models\Category;
 use Exception;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Http\Request;
@@ -39,7 +40,8 @@ class PackageController extends Controller
      */
     public function create()
     {
-        return view('admin.packages.create');
+        $categories = Category::all();
+        return view('admin.packages.create', compact('categories'));
     }
 
     /**
@@ -77,7 +79,8 @@ class PackageController extends Controller
      */
     public function edit(Package $package)
     {
-        return view('admin.packages.edit', compact('package'));
+         $categories = Category::all();
+        return view('admin.packages.edit', compact('package','categories'));
     }
 
     /**

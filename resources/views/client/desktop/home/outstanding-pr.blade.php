@@ -41,7 +41,7 @@
                             <div class="product-image">
                                 <a href="#"> {{-- Giả sử bạn có route này --}}
                                     <img src="{{ asset('storage/' . $phone->main_image) }}" alt="{{ $phone->name }}"
-                                        onerror="this.src='{{ asset('images/default-phone.png') }}'">
+                                        onerror="this.src=#">
                                 </a>
                             </div>
 
@@ -57,7 +57,7 @@
                                     {{-- Lấy giá của biến thể đầu tiên (vì đã sắp xếp asc trong controller) --}}
                                     @if ($phone->variants->isNotEmpty())
                                         {{ number_format($phone->variants->first()->price, 0, ',', '.') }}
-                                        <span class="currency">VNĐ</span>
+                                        <span class="currency">won</span>
                                     @else
                                         Liên hệ
                                     @endif

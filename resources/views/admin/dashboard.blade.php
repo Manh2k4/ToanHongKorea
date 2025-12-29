@@ -304,7 +304,7 @@
                                 <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
                                     Tổng doanh thu đã hoàn thành</div>
                                 <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                    {{ number_format($totalRevenue, 0, ',', '.') }} VNĐ</div>
+                                    {{ number_format($totalRevenue, 0, ',', '.') }} won</div>
                             </div>
                             <div class="col-auto">
                                 <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
@@ -367,7 +367,7 @@
                                             <tr>
                                                 <td>#{{ $order->id }}</td>
                                                 <td>{{ $order->user->name ?? 'Khách vãng lai' }}</td>
-                                                <td>{{ number_format($order->total_amount, 0, ',', '.') }} VNĐ</td>
+                                                <td>{{ number_format($order->total_amount, 0, ',', '.') }} won</td>
                                                 <td>
                                                     <span class="badge badge-{{ strtolower($order->status) }}">
                                                         {{ $order->status }}
@@ -522,7 +522,7 @@
                             padding: 10,
                             fontColor: 'var(--text-muted)',
                             callback: function(value, index, values) {
-                                return number_format(value) + ' VNĐ';
+                                return number_format(value) + ' won';
                             }
                         },
                         gridLines: {
@@ -554,7 +554,7 @@
                     callbacks: {
                         label: function(tooltipItem, chart) {
                             var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
-                            return datasetLabel + ': ' + number_format(tooltipItem.yLabel) + ' VNĐ';
+                            return datasetLabel + ': ' + number_format(tooltipItem.yLabel) + ' won';
                         },
                         title: function(tooltipItem, chart) {
                             return 'Tháng ' + tooltipItem[0].label; // Customize title to show 'Tháng'

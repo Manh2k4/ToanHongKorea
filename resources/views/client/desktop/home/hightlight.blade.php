@@ -33,7 +33,7 @@
                             <a href="#" class="product-img">
                                 <img src="{{ asset('storage/' . $phone->main_image) }}"
                                     alt="{{ $phone->name }}"
-                                    onerror="this.src='https://via.placeholder.com/358x358?text=No+Image'">
+                                    onerror="this.src='#'">
                             </a>
 
                             <div class="product-info">

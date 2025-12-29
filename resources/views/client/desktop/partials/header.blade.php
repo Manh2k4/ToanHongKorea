@@ -61,14 +61,16 @@
                     <li><a href="/">Trang Chủ</a></li>
 
                     <!-- Menu iPhone -->
+                    <!-- Menu iPhone -->
                     @if ($menuIphones->isNotEmpty())
                         <li class="has-dropdown">
-                            <a href="/iphone">
+                            <a href="/iphone"> <!-- Giữ link tổng cho iPhone -->
                                 <img src="{{ asset('logo/logo_apple.png') }}" alt="Apple" class="nav-icon_apple">
                                 iPhone <i class="fa-solid fa-chevron-right arrow-icon"></i>
                             </a>
                             <ul class="dropdown-menu">
                                 @foreach ($menuIphones as $series)
+                                    <!-- Lúc này $series đã là iPhone 16, 15... -->
                                     <li class="{{ $series->children->isNotEmpty() ? 'has-submenu' : '' }}">
                                         <a href="{{ url($series->slug) }}">
                                             {{ $series->name }}
@@ -89,13 +91,12 @@
                         </li>
                     @endif
 
-                    <!-- Menu Samsung -->
+                    <!-- Menu Samsung (Tương tự) -->
                     @if ($menuSamsungs->isNotEmpty())
                         <li class="has-dropdown">
                             <a href="/samsung">
                                 <img src="{{ asset('logo/logo_samsung.png') }}" alt="Samsung"
-                                    class="nav-icon_samsung">
-                                <i class="fa-solid fa-chevron-right arrow-icon" style="margin-top: 6px"></i>
+                                    class="nav-icon_samsung"> <i class="fa-solid fa-chevron-right arrow-icon" style="margin-top: 6px"></i>
                             </a>
                             <ul class="dropdown-menu">
                                 @foreach ($menuSamsungs as $series)
@@ -120,13 +121,14 @@
                     @endif
 
                     <!-- Menu Dịch vụ Sim -->
-                    @if ($menuSims)
+                    @if ($menuSims->isNotEmpty())
                         <li class="has-dropdown">
-                            <a href="{{ url($menuSims->slug) }}">
-                                {{ $menuSims->name }} <i class="fa-solid fa-chevron-right arrow-icon"></i>
+                            <a href="/goi-cuoc"> <!-- Link tổng cho Sim -->
+                                Dịch vụ Sim <i class="fa-solid fa-chevron-right arrow-icon"></i>
                             </a>
                             <ul class="dropdown-menu">
-                                @foreach ($menuSims->children as $type)
+                                @foreach ($menuSims as $type)
+                                    <!-- $type là Vina, Viettel... -->
                                     <li class="{{ $type->children->isNotEmpty() ? 'has-submenu' : '' }}">
                                         <a href="{{ url($type->slug) }}">
                                             {{ $type->name }}

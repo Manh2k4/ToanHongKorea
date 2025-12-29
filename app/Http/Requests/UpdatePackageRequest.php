@@ -25,6 +25,7 @@ class UpdatePackageRequest extends FormRequest
 
         return [
             'name' => 'required|string|max:255|unique:packages,name,' . $id,
+            'category_id' => 'required|exists:categories,id', // Thêm dòng này
             'duration_days' => 'required|integer|min:1',
             'price' => 'required|numeric|min:0',
             'specifications' => 'nullable|array',

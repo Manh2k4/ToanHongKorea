@@ -25,6 +25,7 @@ class StorePackageRequest extends FormRequest
 
         return [
             'name' => 'required|string|max:255',
+            'category_id' => 'required|exists:categories,id', // Thêm dòng này
             'slug' => 'nullable|string|unique:packages,slug',
             'price' => 'required|numeric|min:0',
             'duration_days' => 'required|integer|min:1',

@@ -151,12 +151,25 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label class="font-weight-bold">Trình trạng hàng</label>
+                                    <label class="font-weight-bold">Tình trạng hàng</label>
                                     <select class="form-control" name="status">
                                         <option value="con_hang" {{ old('status') == 'con_hang' ? 'selected' : '' }}>Còn
                                             hàng</option>
                                         <option value="het_hang" {{ old('status') == 'het_hang' ? 'selected' : '' }}>Hết
                                             hàng</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="font-weight-bold" for="category_id">Danh mục</label>
+                                    <select name="category_id" id="category_id" class="form-control" required>
+                                        <option value="">-- Chọn danh mục --</option>
+                                        @foreach ($categories as $category)
+                                            <option value="{{ $category->id }}"
+                                                {{ (isset($package) && $package->category_id == $category->id) || old('category_id') == $category->id ? 'selected' : '' }}>
+                                                {{ $category->name }}
+                                            </option>
+                                        @endforeach
                                     </select>
                                 </div>
 
