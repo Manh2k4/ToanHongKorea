@@ -28,10 +28,9 @@ Route::get('auth/register', [AuthController::class, 'showRegistrationForm'])->na
 Route::post('auth/register', [AuthController::class, 'register']);
 Route::post('auth/logout', [AuthController::class, 'logout'])->name('logout');
 
-Route::get('/header', function () {
+Route::get('/test/page', function () {
     return view('client.desktop.partials.header');
 });
-
 
 Route::prefix('admin')->name('admin.')->group(function () {
 

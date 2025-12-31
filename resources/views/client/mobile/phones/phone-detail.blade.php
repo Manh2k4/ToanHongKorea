@@ -18,7 +18,7 @@
                         @endforeach
                     </div>
                 </div>
-
+                
                 <!-- Cột phải: Thông tin -->
                 <div class="ss-pd-col-info">
                     <nav class="ss-pd-breadcrumb">Trang chủ / {{ $phone->category->name }} / {{ $phone->name }}</nav>
