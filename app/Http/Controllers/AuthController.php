@@ -115,22 +115,22 @@ class AuthController extends Controller
             $facebookUser = Socialite::driver('facebook')->user();
 
             // Kiểm tra xem user này đã tồn tại trong DB chưa
-            $user = User::where('facebook_id', $facebookUser->id)
-                ->orWhere('email', $facebookUser->email)
+            $user = User::where('facebook_id', $facebookUser->getId())
+                ->orWhere('email', $facebookUser->getEmail())
                 ->first();
 
             if ($user) {
                 // Nếu đã có user, cập nhật facebook_id nếu chưa có và đăng nhập
                 if (!$user->facebook_id) {
-                    $user->update(['facebook_id' => $facebookUser->id]);
+                    $user->update(['facebook_id' => $facebookUser->getId()]);
                 }
                 Auth::login($user);
             } else {
                 // Nếu chưa có, tạo user mới
                 $newUser = User::create([
-                    'name' => $facebookUser->name,
-                    'email' => $facebookUser->email,
-                    'facebook_id' => $facebookUser->id,
+                    'name' => $facebookUser->getName(),
+                    'email' => $facebookUser->getEmail(),
+                    'facebook_id' => $facebookUser->getId(),
                     'password' => null, // Đăng nhập MXH không cần pass
                     'role_id' => 3,     // Mặc định là Customer như bạn quy định
                     'is_active' => true,
