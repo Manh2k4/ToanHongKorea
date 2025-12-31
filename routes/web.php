@@ -21,7 +21,16 @@ Route::get('/phone/{slug}', [PhoneClientController::class, 'phoneDetail'])->name
 Route::get('/{slug}', [PhoneClientController::class, 'listByCategory'])->name('category.show');
 
 
+// Hiển thị form đăng nhập
+Route::get('auth/login', [AuthController::class, 'showLoginForm'])->name('login');
+Route::post('auth/login', [AuthController::class, 'login']);
+Route::get('auth/register', [AuthController::class, 'showRegistrationForm'])->name('register');
+Route::post('auth/register', [AuthController::class, 'register']);
+Route::post('auth/logout', [AuthController::class, 'logout'])->name('logout');
 
+Route::get('/header', function () {
+    return view('client.desktop.partials.header');
+});
 
 
 Route::prefix('admin')->name('admin.')->group(function () {
@@ -64,13 +73,5 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::resource('accounts', AccountController::class);
 });
 
-// Hiển thị form đăng nhập
-Route::get('login', [AuthController::class, 'showLoginForm'])->name('login');
-Route::post('login', [AuthController::class, 'login']);
-Route::get('register', [AuthController::class, 'showRegistrationForm'])->name('register');
-Route::post('register', [AuthController::class, 'register']);
-Route::post('logout', [AuthController::class, 'logout'])->name('logout');
 
-Route::get('/header', function () {
-    return view('client.desktop.partials.header');
-});
+
