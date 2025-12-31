@@ -8,8 +8,8 @@
         <h2>Tạo tài khoản mới</h2>
         <p class="social-prompt">Đăng ký nhanh bằng tài khoản mạng xã hội</p>
         <div class="social-login">
+            <a href="#" class="facebook"><i class="fab fa-facebook-f"></i></a>
             <a href="#" class="google"><i class="fab fa-google-plus-g"></i></a>
-            <a href="#" class="apple"><i class="fab fa-apple"></i></a>
         </div>
         <div class="divider">Hoặc</div>
 
