@@ -104,7 +104,7 @@
         </div>
 
         <!-- Sản phẩm liên quan -->
-        {{-- @include('client.mobile.phones.relate-phone') --}}
+        @include('client.mobile.phones.relate-phone')
 
         <!-- 6. Sticky Footer Actions -->
         <div class="m-pd-sticky-actions">

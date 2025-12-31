@@ -21,10 +21,8 @@
                 <!-- Ảnh sản phẩm -->
                 <div class="m-rel-p-img-box">
                     <a href="{{ route('phone.detail', $relPhone->slug) }}">
-                        <img src="{{ asset('storage/' . $relPhone->main_image) }}" 
-                             alt="{{ $relPhone->name }}" 
-                             class="m-rel-p-img"
-                             onerror="this.src='{{ asset('images/no-image.png') }}'">
+                        <img src="{{ asset('storage/' . $relPhone->main_image) }}" alt="{{ $relPhone->name }}"
+                            class="m-rel-p-img" onerror="this.src='{{ asset('images/no-image.png') }}'">
                     </a>
                 </div>
 
@@ -70,7 +68,8 @@
         padding: 25px 0;
         background: #fff;
         margin-top: 10px;
-        border-top: 8px solid #f2f2f2; /* Tạo khoảng cách giữa các phần */
+        border-top: 8px solid #f2f2f2;
+        /* Tạo khoảng cách giữa các phần */
     }
 
     /* Header */
@@ -111,16 +110,19 @@
         gap: 12px;
         padding: 5px 15px 15px 15px;
         scroll-snap-type: x mandatory;
-        scrollbar-width: none; /* Ẩn scrollbar Firefox */
+        scrollbar-width: none;
+        /* Ẩn scrollbar Firefox */
     }
 
     .m-rel-p-scroll-container::-webkit-scrollbar {
-        display: none; /* Ẩn scrollbar Chrome/Safari */
+        display: none;
+        /* Ẩn scrollbar Chrome/Safari */
     }
 
     /* Card Style */
     .m-rel-p-card {
-        min-width: 160px; /* Độ rộng cố định để lướt ngang */
+        min-width: 160px;
+        /* Độ rộng cố định để lướt ngang */
         max-width: 160px;
         background: #fff;
         border-radius: 12px;
@@ -129,7 +131,7 @@
         scroll-snap-align: start;
         display: flex;
         flex-direction: column;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
     }
 
     /* Heart Button */
@@ -138,7 +140,7 @@
         top: 8px;
         right: 8px;
         z-index: 5;
-        background: rgba(255,255,255,0.8);
+        background: rgba(255, 255, 255, 0.8);
         border: none;
         width: 28px;
         height: 28px;
