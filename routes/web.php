@@ -28,6 +28,10 @@ Route::get('auth/register', [AuthController::class, 'showRegistrationForm'])->na
 Route::post('auth/register', [AuthController::class, 'register']);
 Route::post('auth/logout', [AuthController::class, 'logout'])->name('logout');
 
+// Facebook Login
+Route::get('auth/facebook', [AuthController::class, 'redirectToFacebook'])->name('facebook.login');
+Route::get('auth/facebook/callback', [AuthController::class, 'handleFacebookCallback']);
+
 Route::get('/test/page', function () {
     return view('client.desktop.partials.header');
 });
@@ -71,6 +75,3 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::patch('accounts/{account}/toggle-status', [AccountController::class, 'toggleStatus'])->name('accounts.toggleStatus');
     Route::resource('accounts', AccountController::class);
 });
-
-
-

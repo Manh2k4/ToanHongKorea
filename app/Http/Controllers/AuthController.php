@@ -6,10 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;    // Import LoginRequest
 use App\Http\Requests\RegisterRequest; // Import RegisterRequest
 use App\Models\User;
+use Exception;
+use GrahamCampbell\ResultType\Success;
+use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException; // Đã import
+use Laravel\Socialite\Socialite;
 
 class AuthController extends Controller
 {
@@ -91,6 +95,54 @@ class AuthController extends Controller
 
         // Chuyển hướng về trang chủ
         return redirect('/')->with('success', 'Đăng ký tài khoản thành công!');
+    }
+
+
+    /**
+     * Chuyển hướng người dùng sang trang login của Facebook
+     */
+    public function redirectToFacebook()
+    {
+        return Socialite::driver('facebook')->redirect();
+    }
+
+    /**
+     * Xử lý dữ liệu trả về từ Facebook
+     */
+    public function handleFacebookCallback()
+    {
+        try {
+            $facebookUser = Socialite::driver('facebook')->user();
+
+            // Kiểm tra xem user này đã tồn tại trong DB chưa
+            $user = User::where('facebook_id', $facebookUser->id)
+                ->orWhere('email', $facebookUser->email)
+                ->first();
+
+            if ($user) {
+                // Nếu đã có user, cập nhật facebook_id nếu chưa có và đăng nhập
+                if (!$user->facebook_id) {
+                    $user->update(['facebook_id' => $facebookUser->id]);
+                }
+                Auth::login($user);
+            } else {
+                // Nếu chưa có, tạo user mới
+                $newUser = User::create([
+                    'name' => $facebookUser->name,
+                    'email' => $facebookUser->email,
+                    'facebook_id' => $facebookUser->id,
+                    'password' => null, // Đăng nhập MXH không cần pass
+                    'role_id' => 3,     // Mặc định là Customer như bạn quy định
+                    'is_active' => true,
+                ]);
+
+                Auth::login($newUser);
+            }
+            Alert::Success('Đăng nhập với facebook thành công !');
+            return redirect('/');
+        } catch (Exception $e) {
+            return redirect('/auth/login')->with('error', 'Có lỗi xảy ra: ' . $e->getMessage());
+        }
     }
 
     /**
