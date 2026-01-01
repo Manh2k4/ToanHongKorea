@@ -30,7 +30,7 @@ Route::prefix('auth')->controller(AuthController::class)->group(function () {
     // Facebook Login
     Route::get('facebook', [AuthController::class, 'redirectToFacebook'])->name('facebook.login');
     Route::get('facebook/callback', [AuthController::class, 'handleFacebookCallback']);
-
+    // Github Login
     // Google Login
     Route::get('google', [AuthController::class, 'redirectToGoogle'])->name('google.login');
     Route::get('google/callback', [AuthController::class, 'handleGoogleCallback']);
