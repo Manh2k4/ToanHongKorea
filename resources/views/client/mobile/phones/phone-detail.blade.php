@@ -102,7 +102,6 @@
                 </ul>
             </div>
         </div>
-
         <!-- Sản phẩm liên quan -->
         @include('client.mobile.phones.relate-phone')
 
