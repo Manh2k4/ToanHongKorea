@@ -52,8 +52,6 @@
         </p>
     </div>
 
-    <!-- Cột Ảnh -->
-
     {{-- Nếu KHÔNG PHẢI mobile (tức là desktop) thì mới hiển thị --}}
     @if (!$isMobile)
         <div class="auth-image-column">
