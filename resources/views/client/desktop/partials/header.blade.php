@@ -96,7 +96,8 @@
                         <li class="has-dropdown">
                             <a href="/samsung">
                                 <img src="{{ asset('logo/logo_samsung.png') }}" alt="Samsung"
-                                    class="nav-icon_samsung"> <i class="fa-solid fa-chevron-right arrow-icon" style="margin-top: 6px"></i>
+                                    class="nav-icon_samsung"> <i class="fa-solid fa-chevron-right arrow-icon"
+                                    style="margin-top: 6px"></i>
                             </a>
                             <ul class="dropdown-menu">
                                 @foreach ($menuSamsungs as $series)
@@ -123,23 +124,30 @@
                     <!-- Menu Dịch vụ Sim -->
                     @if ($menuSims->isNotEmpty())
                         <li class="has-dropdown">
-                            <a href="/goi-cuoc"> <!-- Link tổng cho Sim -->
+                            <a href="/goi-cuoc/goi-cuoc"> <!-- Link này có thể trỏ về trang tổng hợp gói cước -->
                                 Dịch vụ Sim <i class="fa-solid fa-chevron-right arrow-icon"></i>
                             </a>
                             <ul class="dropdown-menu">
                                 @foreach ($menuSims as $type)
-                                    <!-- $type là Vina, Viettel... -->
+                                    {{-- Cấp 1: Vina, Viettel... --}}
                                     <li class="{{ $type->children->isNotEmpty() ? 'has-submenu' : '' }}">
-                                        <a href="{{ url($type->slug) }}">
+                                        {{-- SỬA Ở ĐÂY: Thêm tiền tố /goi-cuoc/ --}}
+                                        <a href="{{ route('package.category', $type->slug) }}">
                                             {{ $type->name }}
                                             @if ($type->children->isNotEmpty())
                                                 <i class="fa-solid fa-chevron-right"></i>
                                             @endif
                                         </a>
+
                                         @if ($type->children->isNotEmpty())
                                             <ul class="submenu">
                                                 @foreach ($type->children as $subType)
-                                                    <li><a href="{{ url($subType->slug) }}">{{ $subType->name }}</a>
+                                                    {{-- Cấp 2: Gói 4G, Gói Thoại... --}}
+                                                    <li>
+                                                        {{-- SỬA Ở ĐÂY: Thêm tiền tố /goi-cuoc/ --}}
+                                                        <a href="{{ route('package.category', $subType->slug) }}">
+                                                            {{ $subType->name }}
+                                                        </a>
                                                     </li>
                                                 @endforeach
                                             </ul>
