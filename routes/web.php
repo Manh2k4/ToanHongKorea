@@ -6,7 +6,6 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Client\HomeController;
 use App\Http\Controllers\Admin\PackageController;
 use App\Http\Controllers\Admin\PhoneController;
-use App\Http\Controllers\Admin\SimController;
 use App\Http\Controllers\Client\PackageClientController;
 use App\Http\Controllers\Client\PhoneClientController;
 use Illuminate\Support\Facades\Route;

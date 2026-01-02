@@ -1,4 +1,4 @@
-@extends('layouts.client')
+@extends('layouts.app')
 
 @section('content')
 <div class="container mt-4">
@@ -6,7 +6,6 @@
         <!-- Sidebar lọc (Nếu có) -->
         <div class="col-md-3">
             <div class="filter-sidebar">
-                <h4>Danh mục</h4>
                 <ul class="list-group">
                     @foreach($subCategories as $sub)
                         <li class="list-group-item">
