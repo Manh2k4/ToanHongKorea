@@ -99,7 +99,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Lưu ý: Sử dụng dấu cách thay vì xuống dòng quá nhiều nếu vẫn lỗi
         let message = `Mua: ${phoneName}\n`;
         message += `- ${conditionText}, ${sizeText}, ${colorText}\n`;
-        message += `- Gia: ${priceEl.innerText}\n`;
+        message += `- Giá: ${priceEl.innerText}\n`;
         message += `- Link: ${currentUrl}`;
 
         const encodedMessage = encodeURIComponent(message);
