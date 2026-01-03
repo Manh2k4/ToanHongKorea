@@ -29,7 +29,7 @@ class Sim extends Model
     {
         return $this->belongsTo(Package::class, 'package_id');
     }
-
+    
     /**
      * Scope: Lọc SIM theo nhà mạng (sk, kt, lgu)
      */
