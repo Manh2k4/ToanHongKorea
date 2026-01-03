@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\AccountController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Client\ContactController;
 use App\Http\Controllers\Client\HomeController;
 use App\Http\Controllers\Admin\PackageController;
 use App\Http\Controllers\Admin\PhoneController;
@@ -12,6 +13,7 @@ use Illuminate\Support\Facades\Route;
 
 // 1. Trang chủ
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/lien-he',[ContactController::class, 'index'])->name('contact');
 
 // 2. Chi tiết sản phẩm (Ưu tiên khớp route này trước)
 Route::get('/phone/{slug}', [PhoneClientController::class, 'phoneDetail'])->name('phone.detail');

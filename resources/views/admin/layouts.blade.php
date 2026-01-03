@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Winbanks Express - @yield('title', 'Dashboard')</title>
+    <title>Toàn Hồng - @yield('title', 'Dashboard')</title>
     <title>@yield('title', 'ToanHong Admin')</title>
 
     <!-- Custom fonts for this template-->

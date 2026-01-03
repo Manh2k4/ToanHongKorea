@@ -3,10 +3,7 @@
 
     <!-- Sidebar - Brand -->
     <a class="sidebar-brand d-flex align-items-center justify-content-center">
-        <div class="sidebar-brand-icon rotate-n-15">
-            <i class="fas fa-newspaper"></i>
-        </div>
-        <div class="sidebar-brand-text mx-3">MobiTech</div>
+            <img src="{{asset('logo/logo_remove.png')}}" alt="Logo" width="90%">
     </a>
 
     <!-- Divider -->
