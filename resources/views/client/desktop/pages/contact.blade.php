@@ -62,7 +62,7 @@
                         </div>
                         <div class="info-item">
                             <i class="fa-solid fa-phone"></i>
-                            <span>0909 123 456</span>
+                            <span></span>
                         </div>
                     </div>
                 </div>
