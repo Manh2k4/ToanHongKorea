@@ -1,10 +1,10 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container mt-4 dflex justify-content"  style="max-width: 1200px;">
+    <div class="container mt-4 dflex justify-content">
         <div class="row" style="align-content: center !important;">
             <!-- Danh sách gói cước -->
-            <div class="col-md-9">
+            <div class="col-md-9" style="min-width: 1200px;!important">
                 <div class="spc-section-container">
                     <div class="spc-section-header">
                         <h2 class="spc-main-title">{{ $currentCategory->name }}</h2>
@@ -14,7 +14,7 @@
                     <div class="spc-pagination-outer">
                         <div class="row" id="spc-list-track">
                             @foreach ($packages as $package)
-                                <div class="col-md-4 mb-4"> {{-- Thêm grid để chia cột --}}
+                                <div class="col-md-3 mb-4"> {{-- Thêm grid để chia cột --}}
                                     <div class="spc-card-container">
                                         <!-- Header -->
                                         <div class="spc-card-head">
@@ -69,11 +69,14 @@
                                         </div>
 
                                         <div class="spc-card-foot">
-                                            <a href="https://m.me/yourpage" target="_blank" class="spc-btn-buy">
+                                            <button type="button" class="spc-btn-buy btn-buy-package"
+                                                data-name="{{ $package->name }}"
+                                                data-price="{{ number_format($package->price) }}đ"
+                                                data-duration="{{ $package->duration_days }}"
+                                                data-carrier="{{ strtoupper($package->carrier) }}"
+                                                data-sim="{{ $package->sim_type == 'hop_phap' ? 'Hợp pháp' : 'Khác' }}">
                                                 <i class="fa-brands fa-facebook-messenger"></i> MUA NGAY
-                                            </a>
-                                            <a href="{{ url('chi-tiet-goi/' . $package->slug) }}" class="spc-btn-detail">CHI
-                                                TIẾT</a>
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -87,3 +90,4 @@
 @endsection
 
 @include('packages.lib')
+@include('packages.buy-mess')

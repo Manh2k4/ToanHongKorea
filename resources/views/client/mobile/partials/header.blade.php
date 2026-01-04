@@ -161,22 +161,28 @@
                 @if ($menuSims->isNotEmpty())
                     <li class="has-dropdown">
                         <div class="nav-link-wrapper">
-                            <a href="/goi-cuoc" class="main-link">Dịch vụ Sim</a>
+                            <a href="/goi-cuoc/goi-cuoc" class="main-link">Dịch vụ Sim</a>
                             <span class="arrow-toggle"><i class="fa-solid fa-chevron-right"></i></span>
                         </div>
                         <ul class="dropdown-menu">
                             @foreach ($menuSims as $type)
                                 <li class="{{ $type->children->isNotEmpty() ? 'has-submenu' : '' }}">
                                     <div class="nav-link-wrapper">
-                                        <a href="{{ url($type->slug) }}">{{ $type->name }}</a>
-                                        @if ($type->children->isNotEmpty())
-                                            <span class="arrow-toggle"><i class="fa-solid fa-chevron-right"></i></span>
-                                        @endif
+                                        <a href="{{ route('package.category', $type->slug) }}">
+                                            {{ $type->name }}
+                                            @if ($type->children->isNotEmpty())
+                                                <i class="fa-solid fa-chevron-right"></i>
+                                            @endif
+                                        </a>
                                     </div>
                                     @if ($type->children->isNotEmpty())
                                         <ul class="submenu">
                                             @foreach ($type->children as $subType)
-                                                <li><a href="{{ url($subType->slug) }}">{{ $subType->name }}</a></li>
+                                                <li>
+                                                    <a href="{{ route('package.category', $subType->slug) }}">
+                                                        {{ $subType->name }}
+                                                    </a>
+                                                </li>
                                             @endforeach
                                         </ul>
                                     @endif

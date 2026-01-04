@@ -165,5 +165,4 @@ class PhoneClientController extends Controller
         ));
     }
 
-    
 }

@@ -66,19 +66,21 @@
 
                     <!-- Nút hành động -->
                     <div class="spc-card-foot">
-                        {{-- Đường dẫn có thể trỏ tới trang chi tiết dựa trên slug --}}
-                        <a href="https://m.me/yourpage" target="_blank" class="spc-btn-buy">
+                        <button type="button" class="spc-btn-buy btn-buy-package" data-name="{{ $package->name }}"
+                            data-price="{{ number_format($package->price) }}đ"
+                            data-duration="{{ $package->duration_days }}"
+                            data-carrier="{{ strtoupper($package->carrier) }}"
+                            data-sim="{{ $package->sim_type == 'hop_phap' ? 'Hợp pháp' : 'Khác' }}">
                             <i class="fa-brands fa-facebook-messenger"></i> MUA NGAY
-                        </a>
-                        <a href="#" class="spc-btn-detail">CHI TIẾT</a>
+                        </button>
                     </div>
                 </div>
             @endforeach
         </div>
     </div>
 
-    {{-- Thanh điều hướng phân trang (JS sẽ tự tạo dots dựa trên số lượng card) --}}
     <div class="spc-pagination-controls" id="spc-pagination-dots"></div>
 </div>
 
 @include('client.desktop.home.package-lib')
+@include('client.desktop.packages.buy-mess')

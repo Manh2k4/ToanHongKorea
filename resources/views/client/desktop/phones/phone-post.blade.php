@@ -1,20 +1,16 @@
 <script>
-    // Hàm mở Messenger
-    function openMessenger() {
-        const pageId = "100090503628117";
-        window.open(`https://m.me/${pageId}`, '_blank');
-    }
-
     document.addEventListener('DOMContentLoaded', function() {
         let selectedCondition = null,
             selectedSize = null,
             selectedColor = null,
             currentVariant = null;
 
+        // --- CẤU HÌNH ---
         const pageId = "100090503628117";
+
         const phoneName = "{{ $phone->name }}";
 
-        // Logic chọn biến thể
+        // 1. Logic chọn biến thể (Giữ nguyên của bạn)
         const items = document.querySelectorAll('.ss-pd-v-item');
         items.forEach(item => {
             item.addEventListener('click', function() {
@@ -29,22 +25,22 @@
                 if (type === 'size') selectedSize = value;
                 if (type === 'color') selectedColor = value;
 
-                // Tìm variant tương ứng
                 currentVariant = VARIANT_DATA.find(v =>
                     v.condition === selectedCondition &&
                     v.size_id == selectedSize &&
                     v.color_id == selectedColor
                 );
 
-                // Gọi hàm cập nhật UI của bạn ở đây (nếu có)
                 if (typeof updateDisplay === "function") updateDisplay();
             });
         });
 
-        // XỬ LÝ NÚT MUA NGAY
+        // 2. XỬ LÝ NÚT MUA NGAY
         const buyBtn = document.getElementById('btn-buy-now');
         if (buyBtn) {
-            buyBtn.onclick = function() {
+            buyBtn.onclick = function(e) {
+                e.preventDefault();
+
                 // Kiểm tra đã chọn đủ chưa
                 if (!selectedCondition || !selectedSize || !selectedColor || !currentVariant) {
                     Swal.fire({
@@ -56,54 +52,56 @@
                     return;
                 }
 
+                // Lấy thông tin text từ giao diện
                 const sizeText = document.querySelector(`.ss-pd-v-item[data-type="size"].active`).innerText
                     .trim();
                 const colorText = document.querySelector(`.ss-pd-v-item[data-type="color"].active`)
                     .innerText.trim();
                 const price = document.getElementById('ss-pd-main-price').innerText;
 
-                // Nội dung gửi Shop
-                let message = `Chào Shop, mình muốn mua:\n`;
+                // 3. TẠO NỘI DUNG TIN NHẮN
+                let message = `Chào Shop, mình muốn mua điện thoại:\n`;
                 message += `📱 Sản phẩm: ${phoneName}\n`;
                 message += `✨ Tình trạng: ${selectedCondition == 'new' ? 'Mới 100%' : 'Like New'}\n`;
                 message += `💾 Cấu hình: ${sizeText} - ${colorText}\n`;
                 message += `💰 Giá: ${price}\n`;
                 message += `🔗 Link: ${window.location.href}`;
 
-                // Bước 1: Copy vào bộ nhớ đệm
-                copyToClipboard(message);
+                // Mã hóa tin nhắn để đưa vào URL
+                const encodedMessage = encodeURIComponent(message);
+                const messengerUrl = `https://m.me/${pageId}?text=${encodedMessage}`;
 
-                // Bước 2: Hiện dòng chữ hướng dẫn (Sửa lỗi logic của bạn - giờ nó mới hiện)
-                const guide = document.getElementById('copy-guide');
-                if (guide) {
-                    guide.style.display = 'inline-block';
-                }
-
-                // Bước 3: Hiện thông báo xịn sò
+                // 4. HIỂN THỊ THÔNG BÁO XÁC NHẬN
                 Swal.fire({
-                    title: 'Đã sao chép đơn hàng!',
-                    html: 'Thông tin sản phẩm đã được copy. <br>Bạn chỉ cần <b>Dán (Ctrl+V)</b> vào khung chat nhé!',
-                    icon: 'success',
+                    title: 'Xác nhận đơn hàng',
+                    html: `Hệ thống sẽ mở Messenger để gửi đơn hàng:<br><b>${phoneName} (${sizeText})</b>`,
+                    icon: 'info',
                     showCancelButton: true,
                     confirmButtonColor: '#0084FF',
                     cancelButtonColor: '#6e7881',
                     confirmButtonText: 'Mở Messenger ngay',
-                    cancelButtonText: 'Đóng'
+                    cancelButtonText: 'Để sau',
+                    showClass: {
+                        popup: ''
+                    }, // Tắt hiệu ứng để mượt hơn trên mobile
+                    hideClass: {
+                        popup: ''
+                    }
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        openMessenger();
+                        // Kiểm tra thiết bị để có cách mở phù hợp
+                        const isIphone = navigator.userAgent.match(/iPhone|iPad|iPod/i);
+
+                        if (isIphone) {
+                            // iPhone dùng href để kích hoạt App trực tiếp
+                            window.location.href = messengerUrl;
+                        } else {
+                            // Desktop/Android dùng window.open
+                            window.open(messengerUrl, '_blank');
+                        }
                     }
                 });
             };
-        }
-
-        function copyToClipboard(text) {
-            const temp = document.createElement("textarea");
-            temp.value = text;
-            document.body.appendChild(temp);
-            temp.select();
-            document.execCommand("copy");
-            document.body.removeChild(temp);
         }
     });
 </script>

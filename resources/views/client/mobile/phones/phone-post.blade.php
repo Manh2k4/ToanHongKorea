@@ -4,9 +4,8 @@
         let selectedSize = null;
         let selectedColor = null;
         let currentVariant = null;
-        
 
-        const pageId = "100095174172336";
+        const pageId = "100095174172336"; 
         const phoneName = "{{ $phone->name }}";
         const currentUrl = window.location.href;
 
@@ -17,6 +16,8 @@
         const buyBtn = document.getElementById('btn-add-to-cart');
 
         function updateDisplay() {
+            if (typeof VARIANT_DATA === 'undefined') return;
+
             currentVariant = VARIANT_DATA.find(v =>
                 v.condition === selectedCondition &&
                 v.size_id == selectedSize &&
@@ -28,11 +29,22 @@
                     style: 'currency',
                     currency: 'VND'
                 }).format(currentVariant.price);
+
                 if (skuEl) skuEl.innerText = currentVariant.sku || 'N/A';
                 if (stockEl) {
-                    stockEl.innerText = currentVariant.stock > 0 ? `Còn hàng (${currentVariant.stock})` :
-                        'Hết hàng';
+                    stockEl.innerText = currentVariant.stock > 0 ? `Còn hàng (${currentVariant.stock})` : 'Hết hàng';
                     stockEl.style.color = currentVariant.stock > 0 ? '#27ae60' : '#e74c3c';
+                }
+
+                const usedInfo = document.getElementById('ss-pd-used-info');
+                if (selectedCondition !== 'new' && usedInfo) {
+                    usedInfo.style.display = 'flex';
+                    const pin = document.getElementById('val-pin');
+                    const sac = document.getElementById('val-sac');
+                    if(pin) pin.innerText = (currentVariant.battery_health || '99') + '%';
+                    if(sac) sac.innerText = currentVariant.charging_count || '0';
+                } else if (usedInfo) {
+                    usedInfo.style.display = 'none';
                 }
             }
         }
@@ -42,78 +54,82 @@
                 const type = this.getAttribute('data-type');
                 const value = this.getAttribute('data-value');
                 const parentGroup = this.closest('.m-v-list');
-                parentGroup.querySelectorAll('.ss-pd-v-item').forEach(btn => btn.classList
-                    .remove('active'));
+                
+                if (parentGroup) {
+                    parentGroup.querySelectorAll('.ss-pd-v-item').forEach(btn => btn.classList.remove('active'));
+                }
                 this.classList.add('active');
 
                 if (type === 'condition') selectedCondition = value;
                 if (type === 'size') selectedSize = value;
                 if (type === 'color') selectedColor = value;
+
                 updateDisplay();
             });
         });
 
-        // Hàm hỗ trợ copy nội dung cho iPhone (Dự phòng khi Messenger không tự điền tin nhắn)
-        function copyToClipboard(text) {
-            const tempInput = document.createElement("textarea");
-            tempInput.value = text;
-            document.body.appendChild(tempInput);
-            tempInput.select();
-            document.execCommand("copy");
-            document.body.removeChild(tempInput);
-        }
+        if (buyBtn) {
+            buyBtn.addEventListener('click', function(e) {
+                e.preventDefault();
 
-        buyBtn.addEventListener('click', function(e) {
-            e.preventDefault();
+                // Kiểm tra đủ điều kiện
+                if (!selectedCondition || !selectedSize || !selectedColor || !currentVariant) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Thông báo',
+                        text: 'Vui lòng chọn đầy đủ Tình trạng, Dung lượng và Màu sắc!',
+                        confirmButtonColor: '#0084FF'
+                    });
+                    return;
+                }
 
-            if (!selectedCondition || !selectedSize || !selectedColor || !currentVariant) {
-                alert('Vui lòng chọn đầy đủ tùy chọn!');
-                return;
-            }
+                // FIX LỖI SELECTOR: Lấy text trực tiếp từ các item đang có class active
+                // Không dùng .selector-size vì có thể class đó không tồn tại trong HTML mobile của bạn
+                let sizeText = "";
+                let colorText = "";
+                
+                document.querySelectorAll('.ss-pd-v-item.active').forEach(el => {
+                    if(el.getAttribute('data-type') === 'size') sizeText = el.innerText.trim();
+                    if(el.getAttribute('data-type') === 'color') colorText = el.innerText.trim();
+                });
 
-            const sizeText = document.querySelector(`.selector-size .ss-pd-v-item.active`).innerText
-                .trim();
-            const colorText = document.querySelector(`.selector-color .ss-pd-v-item.active`).innerText
-                .trim();
-            const conditionText = selectedCondition === 'new' ? 'Máy mới' : 'Máy cũ';
+                const conditionText = selectedCondition === 'new' ? 'Máy mới 100%' : 'Máy cũ/Like New';
+                const price = priceEl.innerText;
+                const sku = currentVariant.sku || 'N/A';
 
-            // Tối ưu tin nhắn cho iOS: Không dùng ký tự lạ, hạn chế xuống dòng
-            let message =
-                `Mua: ${phoneName} (${conditionText}, ${sizeText}, ${colorText}). Gia: ${priceEl.innerText}. Link: ${currentUrl}`;
-            const encodedMessage = encodeURIComponent(message);
+                let message = `Chào Shop, mình muốn mua điện thoại:\n`;
+                message += `📱 Sản phẩm: ${phoneName}\n`;
+                message += `✨ Tình trạng: ${conditionText}\n`;
+                message += `💾 Dung lượng: ${sizeText}\n`;
+                message += `🎨 Màu sắc: ${colorText}\n`;
+                message += `💰 Giá: ${price}\n`;
+                message += `🆔 SKU: ${sku}\n`;
+                message += `🔗 Link: ${currentUrl}`;
 
-            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-
-            if (isIOS) {
-                // 1. Copy nội dung vào bộ nhớ đệm (Trường hợp Messenger mở ra mà không có chữ, khách chỉ cần dán)
-                copyToClipboard(message);
-
-                // 2. Sử dụng URL Scheme đặc biệt cho iPhone để ép mở LUỒNG CHAT THẬT (Fix lỗi Ghost Chat)
-                // fb-messenger://user-thread/ là cách an toàn nhất trên iOS
-                const nativeUrl = `fb-messenger://user-thread/${pageId}`;
-                const webUrl = `https://www.messenger.com/t/${pageId}/?text=${encodedMessage}`;
-
-                // Thử mở App trước
-                window.location.href = nativeUrl;
-
-                // Fallback: Nếu 1 giây sau không thấy chuyển động, mở bản web messenger
-                setTimeout(function() {
-                    if (document.hasFocus()) {
-                        window.location.href = webUrl;
-                    }
-                }, 1000);
-
-                // Thông báo nhỏ cho khách hàng iPhone
-                console.log("iOS Detected: Thread forced. Message copied to clipboard.");
-            } else {
-                // Android và Desktop dùng m.me vẫn là tốt nhất
+                const encodedMessage = encodeURIComponent(message);
                 const messengerUrl = `https://m.me/${pageId}?text=${encodedMessage}`;
-                window.location.href = messengerUrl;
-            }
-        });
+
+                // Tối ưu Swal: Tắt animation để hiện nhanh, tránh khựng
+                Swal.fire({
+                    title: 'Xác nhận đơn hàng',
+                    html: `Bạn đang chọn mua <b>${phoneName}</b>.<br>Hệ thống sẽ mở Messenger để gửi đơn hàng!`,
+                    icon: 'info',
+                    showCancelButton: false,
+                    allowOutsideClick: false,
+                    confirmButtonColor: '#0084FF',
+                    confirmButtonText: 'Gửi ngay',
+                    showClass: { popup: '' }, // Tắt hiệu ứng hiện để mượt hơn
+                    hideClass: { popup: '' }  // Tắt hiệu ứng ẩn
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Dùng location.assign để trình duyệt mobile xử lý tốt hơn href
+                        window.location.assign(messengerUrl);
+                    }
+                });
+            });
+        }
     });
 </script>
-
 <style>
     /* Highlight nút khi được chọn */
     .ss-pd-v-item.active {
