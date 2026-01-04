@@ -21,7 +21,7 @@ class ContactController extends Controller
 
     public function store(StoreContactRequest $request): RedirectResponse
     {
-        dd($request->toArray());
+        // dd($request->toArray());
         try {
             // Dữ liệu đã được validate tự động bởi StoreContactRequest
             Contact::create($request->validated());
