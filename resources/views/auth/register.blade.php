@@ -66,7 +66,6 @@
 
     </div>
 
-    <!-- Cột Ảnh -->
     <div class="auth-image-column">
         {{-- Thay thế ảnh minh họa bằng ảnh nội thất sang trọng --}}
         <img src="{{ asset('logo/logo_remove.png') }}" alt="ToanHongKorea Interior">

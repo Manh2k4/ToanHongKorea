@@ -23,7 +23,6 @@
                         <div class="product-card">
                             {{-- Hiển thị badge 'Mới' nếu sản phẩm mới đăng trong vòng 7 ngày --}}
                             @if ($samsung->created_at >= now()->subDays(7))
-                                {{-- <div class="ss-badge-new">Mới</div> --}}
                             @endif
 
                             <div class="product-badge">
@@ -81,7 +80,6 @@
                 @endforeach
             </div>
 
-            {{-- Nếu bạn muốn phân trang bằng Laravel thì dùng dòng dưới, nếu dùng JS/Frontend thì để trống --}}
             <div class="pagination-wrapper d-flex justify-content-center mt-5">
                 <nav>
                     <ul class="pagination custom-pagination"></ul>

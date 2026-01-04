@@ -30,7 +30,6 @@
                 <small class="error-text">{{ $message }}</small>
             @enderror
 
-
             <div class="form-group">
                 <i class="fas fa-lock input-icon"></i>
                 <input type="password" name="password" placeholder="Mật khẩu"
@@ -52,8 +51,6 @@
             Chưa có tài khoản? <a href="{{ route('register') }}">Đăng ký ngay</a>
         </p>
     </div>
-
-    <!-- Cột Ảnh -->
 
     {{-- Nếu KHÔNG PHẢI mobile (tức là desktop) thì mới hiển thị --}}
     @if (!$isMobile)
