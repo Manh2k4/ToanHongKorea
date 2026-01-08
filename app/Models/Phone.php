@@ -33,15 +33,13 @@ class Phone extends Model
     {
         return $this->hasMany(Variant::class);
     }
-
+    public function favorites()
+    {
+        return $this->morphMany(Favorite::class, 'favoritable');
+    }
     /**
      * Quan hệ: Một phone có nhiều người yêu thích
      */
-    public function favorites()
-    {
-        return $this->hasMany(Favorite::class);
-    }
-
     public function images()
     {
         return $this->hasMany(PhoneImage::class);

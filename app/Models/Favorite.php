@@ -8,16 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Favorite extends Model
 {
     use HasFactory;
+    protected $fillable = ['user_id', 'favoritable_id', 'favoritable_type'];
 
-     protected $fillable = ['user_id', 'phone_id'];
-
-    public function user()
+    public function favoritable()
     {
-        return $this->belongsTo(User::class);
-    }
-
-    public function phone()
-    {
-        return $this->belongsTo(Phone::class);
+        return $this->morphTo();
     }
 }

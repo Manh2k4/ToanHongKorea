@@ -11,20 +11,7 @@ class Package extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillable = [
-        'name',
-        'category_id',
-        'slug',
-        'duration_days',
-        'price',
-        'carrier',
-        'payment_type',
-        'sim_type',
-        'status',
-        'is_active',
-        'specifications',
-        'description',
-    ];
+    protected $fillable = ['name', 'category_id', 'slug', 'duration_days', 'price', 'carrier', 'payment_type', 'sim_type', 'status', 'is_active', 'specifications', 'description'];
 
     /**
      * Tự động cast dữ liệu về kiểu dữ liệu tương ứng trong PHP
@@ -33,11 +20,11 @@ class Package extends Model
         'duration_days' => 'integer',
         'price' => 'integer',
         'specifications' => 'array', // Cast JSON sang Array
-        'is_active' => 'boolean',     // Cast tinyint sang Boolean
+        'is_active' => 'boolean', // Cast tinyint sang Boolean
     ];
 
     /**
-     * Các hằng số (Constants) cho các giá trị Enum 
+     * Các hằng số (Constants) cho các giá trị Enum
      * Giúp tránh viết sai chính tả khi gọi trong Code
      */
     const CARRIER_SK = 'sk';
@@ -72,13 +59,17 @@ class Package extends Model
         return $this->belongsTo(Category::class);
     }
 
-
     /**
      * Quan hệ: Một gói cước có thể được áp dụng cho nhiều SIM
      */
     public function sims()
     {
         return $this->hasMany(Sim::class, 'package_id');
+    }
+
+    public function favorites()
+    {
+        return $this->morphMany(Favorite::class, 'favoritable');
     }
 
     /**
