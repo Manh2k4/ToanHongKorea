@@ -1,6 +1,6 @@
-<div id="contact-widget-desktop" class="contact-fixed-pc active"> <!-- Bỏ active nếu muốn mặc định đóng -->
-    <!-- 1. Danh sách nút con -->
-    <div class="contact-list-pc" id="contact-list-pc">
+<div id="contact-widget-desktop" class="contact-fixed-pc">
+    <!-- Danh sách nút con -->
+    <div class="contact-list-pc">
         <a href="javascript:void(0)" class="contact-bubble-pc messenger-color" onclick="openMessengerPC()">
             <img src="https://upload.wikimedia.org/wikipedia/commons/b/be/Facebook_Messenger_logo_2020.svg"
                 alt="Messenger">
@@ -24,19 +24,22 @@
         </a>
     </div>
 
-    <!-- 2. Nút Toggle chính và Tooltip -->
+    <!-- Nút chính và Tooltip -->
     <div class="toggle-wrapper-pc">
         <div class="contact-tooltip-pc" id="tooltip-pc">Liên hệ với chúng tôi!</div>
         <div class="contact-bubble-pc toggle-main-pc" onclick="toggleContactPC()">
             <div class="icon-open-pc">
-                <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"
+                    stroke-linejoin="round">
                     <path
                         d="M21 11.5C21 16.1944 16.9706 20 12 20C10.5181 20 9.12457 19.6582 7.90616 19.055L3 20L4.10312 15.6841C3.39174 14.4578 3 13.0235 3 11.5C3 6.80558 7.02944 3 12 3C16.9706 3 21 6.80558 21 11.5Z" />
                 </svg>
             </div>
             <div class="icon-close-pc" style="display: none;">
-                <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
-                    <path d="M18 6L6 18M6 6L18 18" />
+                <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
                 </svg>
             </div>
         </div>
@@ -54,7 +57,6 @@
         align-items: flex-end;
         gap: 15px;
         pointer-events: none;
-        /* Tránh đè vùng click của web */
     }
 
     .contact-list-pc {
@@ -68,7 +70,6 @@
         transition: all 0.3s ease;
     }
 
-    /* Mở danh sách */
     .contact-fixed-pc.active .contact-list-pc {
         opacity: 1;
         visibility: visible;
@@ -76,38 +77,7 @@
         pointer-events: auto;
     }
 
-    /* Tooltip xử lý đặc biệt */
-    .toggle-wrapper-pc {
-        position: relative;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .contact-tooltip-pc {
-        position: absolute;
-        right: 70px;
-        /* Đẩy sang trái của nút chính */
-        background: rgba(0, 0, 0, 0.8);
-        color: #fff;
-        padding: 8px 15px;
-        border-radius: 8px;
-        font-size: 13px;
-        white-space: nowrap;
-        pointer-events: none;
-        transition: all 0.3s ease;
-        opacity: 1;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    }
-
-    /* Khi đang MỞ menu (active) thì phải ẨN tooltip */
-    .contact-fixed-pc.active .contact-tooltip-pc {
-        opacity: 0;
-        transform: translateX(10px);
-        visibility: hidden;
-    }
-
-    /* Các nút Bubble */
+    /* Bubble chung */
     .contact-bubble-pc {
         width: 55px;
         height: 55px;
@@ -115,6 +85,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        /* Luôn giữa icon mặc định */
         background: #fff;
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         cursor: pointer;
@@ -125,9 +96,9 @@
         position: relative;
     }
 
-    .contact-bubble-pc:hover:not(.toggle-main-pc) {
+    /* Hiệu ứng giãn cho các nút liên hệ (trừ nút Toggle) */
+    .contact-bubble-pc:not(.toggle-main-pc):hover {
         width: 200px;
-        /* Giãn nút mượt mà */
         border-radius: 30px;
         justify-content: flex-start;
         padding-left: 15px;
@@ -139,43 +110,74 @@
         opacity: 0;
         white-space: nowrap;
         font-weight: 600;
+        color: inherit;
         transition: opacity 0.2s;
-        color: #333;
     }
 
-    .contact-bubble-pc:hover .label-text {
+    .contact-bubble-pc:not(.toggle-main-pc):hover .label-text {
         opacity: 1;
     }
 
-    .phone-color .label-text {
+    /* Màu sắc */
+    .phone-color {
+        background: #4CAF50;
         color: #fff;
     }
 
-    .phone-color {
-        background: #4CAF50;
+    .messenger-color {
+        background: #fff;
+        color: #0084FF;
     }
 
-    .messenger-color img {
-        width: 32px;
-        height: 32px;
+    .contact-bubble-pc svg,
+    .contact-bubble-pc img {
+        width: 30px;
+        height: 30px;
+        flex-shrink: 0;
     }
 
-    .phone-color svg {
-        width: 28px;
-        height: 28px;
-    }
-
-    /* Nút đỏ Toggle */
+    /* NÚT TOGGLE CHÍNH (Sửa lỗi mất icon) */
     .toggle-main-pc {
-        background: #FF4757;
+        background: #0084FF;
+        /* Màu xanh lúc đóng */
+        z-index: 2;
         border: 2px solid #fff;
     }
 
-    /* Hiệu ứng xoay icon */
+    /* Khi Mở: Đổi màu nút đỏ và icon dấu X */
     .contact-fixed-pc.active .toggle-main-pc {
-        transform: rotate(135deg);
-        /* Xoay tạo dấu X */
-        background: #333;
+        background: #FF4757 !important;
+        transform: rotate(0deg);
+        /* Không cần xoay cả nút, chỉ cần hiện X */
+    }
+
+    .icon-open-pc,
+    .icon-close-pc {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+    }
+
+    /* Tooltip */
+    .contact-tooltip-pc {
+        position: absolute;
+        right: 70px;
+        background: rgba(0, 0, 0, 0.8);
+        color: #fff;
+        padding: 8px 15px;
+        border-radius: 8px;
+        font-size: 13px;
+        white-space: nowrap;
+        pointer-events: none;
+        transition: 0.3s;
+        opacity: 1;
+    }
+
+    .contact-fixed-pc.active .contact-tooltip-pc {
+        opacity: 0;
+        visibility: hidden;
     }
 </style>
 
@@ -187,17 +189,14 @@
 
         const isActive = widget.classList.toggle('active');
 
-        // Logic thay đổi Icon (Nếu bạn không dùng hiệu ứng xoay CSS)
         if (isActive) {
-            if (iconOpen) iconOpen.style.display = 'none';
-            if (iconClose) iconClose.style.display = 'block';
+            // Đang mở: Hiện X, ẩn Talk
+            iconOpen.style.display = 'none';
+            iconClose.style.display = 'flex'; // Dùng flex để icon căn giữa
         } else {
-            if (iconOpen) iconOpen.style.display = 'block';
-            if (iconClose) iconClose.style.display = 'none';
+            // Đang đóng: Hiện Talk, ẩn X
+            iconOpen.style.display = 'flex';
+            iconClose.style.display = 'none';
         }
-    }
-
-    function openMessengerPC() {
-        window.open('https://m.me/hanofarmer', '_blank');
     }
 </script>
