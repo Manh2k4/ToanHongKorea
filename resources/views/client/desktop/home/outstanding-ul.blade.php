@@ -10,13 +10,13 @@
 
                 <div class="ss-category-tabs">
                     <a href="#" class="ss-tab-item active">Tất cả</a>
-                   @foreach ($categories_samsung as $cat)
-                            <a href="{{ route('category.show', $cat->slug) }}"
-                                class="ss-tab-item {{ request()->is('category/' . $cat->slug) ? 'active' : '' }}"
-                                data-filter="cat-{{ $cat->id }}">
-                                {{ $cat->name }}
-                            </a>
-                        @endforeach
+                    @foreach ($categories_samsung as $cat)
+                        <a href="{{ route('category.show', $cat->slug) }}"
+                            class="ss-tab-item {{ request()->is('category/' . $cat->slug) ? 'active' : '' }}"
+                            data-filter="cat-{{ $cat->id }}">
+                            {{ $cat->name }}
+                        </a>
+                    @endforeach
                 </div>
             </div>
 
@@ -30,8 +30,9 @@
                             @endif
 
                             <div class="product-badge">
-                                <button class="spc-heart-btn" title="Thêm vào yêu thích">
-                                    <i class="fa-regular fa-heart"></i>
+                                <button class="spc-heart-btn {{ $samsung->isFavorited() ? 'active' : '' }}"
+                                    data-id="{{ $samsung->id }}" data-type="phone">
+                                    <i class="{{ $samsung->isFavorited() ? 'fa-solid' : 'fa-regular' }} fa-heart"></i>
                                 </button>
                             </div>
 
@@ -68,11 +69,12 @@
                                             class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
                                             class="fa-solid fa-star"></i>
                                     </div>
-                                    <span class="count">(45)</span>
+                                    <span class="count">(100+)</span>
                                 </div>
 
                                 <div class="product-actions">
-                                    <a href="{{ route('phone.detail', $samsung->slug) }}" target="_blank" class="btn-messenger">
+                                    <a href="{{ route('phone.detail', $samsung->slug) }}" target="_blank"
+                                        class="btn-messenger">
                                         <i class="fa-brands fa-facebook-messenger"></i> MUA NGAY
                                     </a>
                                     <a href="{{ route('phone.detail', $samsung->slug) }}" class="btn-detail">CHI

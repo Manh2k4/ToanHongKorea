@@ -3,10 +3,12 @@
 namespace App\Providers;
 
 use App\Models\Category;
+use App\Models\Favorite;
 use Carbon\Carbon;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\View;
 
 class AppServiceProvider extends ServiceProvider
@@ -31,11 +33,18 @@ class AppServiceProvider extends ServiceProvider
             $allCategories = Category::active()
                 ->ordered()
                 ->whereNull('parent_id')
-                ->with(['children' => function ($query) {
-                    $query->active()->ordered()->with(['children' => function ($q) {
-                        $q->active()->ordered();
-                    }]);
-                }])
+                ->with([
+                    'children' => function ($query) {
+                        $query
+                            ->active()
+                            ->ordered()
+                            ->with([
+                                'children' => function ($q) {
+                                    $q->active()->ordered();
+                                },
+                            ]);
+                    },
+                ])
                 ->get();
 
             // Tìm category gốc iPhone
@@ -50,7 +59,14 @@ class AppServiceProvider extends ServiceProvider
             // Với Sim, lấy con của 'goi-cuoc'
             $simRoot = $allCategories->where('slug', 'goi-cuoc')->first();
             $view->with('menuSims', $simRoot ? $simRoot->children : collect());
-            
+
+            $wishlistCount = 0;
+            if (auth()->check()) {
+                $wishlistCount = Favorite::where('user_id', auth()->id())->count();
+            } else {
+                $wishlistCount = count(Session::get('favorites', []));
+            }
+            $view->with('globalWishlistCount', $wishlistCount);
         });
     }
 }

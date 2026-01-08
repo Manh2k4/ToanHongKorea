@@ -12,9 +12,11 @@
                     <a href="#" class="top-tab-item active">Tất cả</a>
                     
                     @foreach($categories as $cat)
-                        <a href="#" class="top-tab-item">
-                            {{ $cat->name }}
-                        </a>
+                         <a href="{{ route('category.show', $cat->slug) }}"
+                                class="top-tab-item {{ request()->is('category/' . $cat->slug) ? 'active' : '' }}"
+                                data-filter="cat-{{ $cat->id }}">
+                                {{ $cat->name }}
+                            </a>
                     @endforeach
                 </div>
 

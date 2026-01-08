@@ -72,6 +72,17 @@ class Package extends Model
         return $this->morphMany(Favorite::class, 'favoritable');
     }
 
+    public function isFavorited()
+    {
+        if (auth()->check()) {
+            return $this->favorites()
+                ->where('user_id', auth()->id())
+                ->exists();
+        }
+
+        $sessionFavs = session()->get('favorites', []);
+        return isset($sessionFavs['package_' . $this->id]);
+    }
     /**
      * Scope: Chỉ lấy các gói đang hoạt động
      */

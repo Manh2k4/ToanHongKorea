@@ -1,6 +1,6 @@
 <a href="{{ route('wishlist.index') }}" class="wishlist-btn">
     <i class="fa-regular fa-heart" style=""></i>
-    <span class="wishlist-count">0</span>
+    <span class="wishlist-count">{{ $globalWishlistCount }}</span>
 </a>
 
 <style>

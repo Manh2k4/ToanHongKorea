@@ -49,7 +49,7 @@
                                     <i class="fa-solid fa-star"></i>
                                     <i class="fa-solid fa-star"></i>
                                     <i class="fa-solid fa-star"></i>
-                                    <span class="rating-count">(12)</span>
+                                    <span class="rating-count">(100+)</span>
                                 </div>
 
                                 <div class="product-actions">
@@ -84,7 +84,7 @@
                                         @for ($i = 1; $i <= 5; $i++)
                                             <i class="fa-solid fa-star"></i>
                                         @endfor
-                                        <span class="spc-rating-text">(12)</span>
+                                        <span class="spc-rating-text">(100+)</span>
                                     </div>
                                     <button class="spc-heart-btn"><i class="fa-regular fa-heart"></i></button>
                                 </div>

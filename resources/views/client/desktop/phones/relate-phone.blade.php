@@ -18,11 +18,10 @@
                     <div class="col-6 col-md-4 col-lg-3">
                         <div class="rel-p-card">
                             <!-- Nút yêu thích -->
-                            <div class="rel-p-wishlist">
-                                <button class="rel-p-heart-btn" title="Thêm vào yêu thích">
-                                    <i class="fa-regular fa-heart"></i>
-                                </button>
-                            </div>
+                            <button class="spc-heart-btn {{ $relPhone->isFavorited() ? 'active' : '' }}"
+                                data-id="{{ $relPhone->id }}" data-type="phone">
+                                <i class="{{ $relPhone->isFavorited() ? 'fa-solid' : 'fa-regular' }} fa-heart"></i>
+                            </button>
 
                             <!-- Ảnh sản phẩm -->
                             <div class="rel-p-img-container">
@@ -80,8 +79,9 @@
 <style>
     /* Reset & Container */
     .rel-p-section {
-        padding-right: 25px !important; 
+        padding-right: 25px !important;
     }
+
     .rel-p-wrapper {
         background: #ffffff;
         border-radius: 16px;

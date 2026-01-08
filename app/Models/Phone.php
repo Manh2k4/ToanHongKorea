@@ -37,6 +37,17 @@ class Phone extends Model
     {
         return $this->morphMany(Favorite::class, 'favoritable');
     }
+    public function isFavorited()
+    {
+        if (auth()->check()) {
+            return $this->favorites()
+                ->where('user_id', auth()->id())
+                ->exists();
+        }
+
+        $sessionFavs = session()->get('favorites', []);
+        return isset($sessionFavs['phone_' . $this->id]);
+    }
     /**
      * Quan hệ: Một phone có nhiều người yêu thích
      */
