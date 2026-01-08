@@ -14,7 +14,6 @@
                         <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
                     </form>
                 </div>
-
                 @include('partials.user-nav')
             </div>
 
@@ -22,7 +21,7 @@
             <nav class="main-navigation">
                 <ul class="nav-list">
                     <li><a href="/">Trang Chủ</a></li>
-                    
+
                     @if ($menuIphones->isNotEmpty())
                         <li class="has-dropdown">
                             <a href="/iphone"> <!-- Giữ link tổng cho iPhone -->

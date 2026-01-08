@@ -1,5 +1,6 @@
 <div class="header-user-actions">
     @auth
+        @include('partials.wishlist')
         <div class="user-dropdown">
             <!-- Nút kích hoạt -->
             <div class="user-trigger">
