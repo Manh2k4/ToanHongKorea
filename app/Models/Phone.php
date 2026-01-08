@@ -10,17 +10,10 @@ class Phone extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillable = [
-        'categories_id',
-        'name',
-        'slug',
-        'short_description',
-        'is_active',
-        'main_image',
-    ];
+    protected $fillable = ['category_id', 'name', 'slug', 'short_description', 'is_active', 'main_image'];
 
     protected $casts = [
-        'categories_id' => 'integer',
+        'category_id' => 'integer',
         'is_active' => 'boolean',
     ];
 
@@ -29,7 +22,8 @@ class Phone extends Model
      */
     public function category()
     {
-        return $this->belongsTo(Category::class, 'categories_id');
+        // return $this->belongsTo(Category::class, 'category_id');
+        return $this->belongsTo(Category::class, 'category_id');
     }
 
     /**
@@ -39,20 +33,28 @@ class Phone extends Model
     {
         return $this->hasMany(Variant::class);
     }
+    public function favorites()
+    {
+        return $this->morphMany(Favorite::class, 'favoritable');
+    }
+    public function isFavorited()
+    {
+        if (auth()->check()) {
+            return $this->favorites()
+                ->where('user_id', auth()->id())
+                ->exists();
+        }
 
+        $sessionFavs = session()->get('favorites', []);
+        return isset($sessionFavs['phone_' . $this->id]);
+    }
     /**
      * Quan hệ: Một phone có nhiều người yêu thích
      */
-    public function favorites()
-    {
-        return $this->hasMany(Favorite::class);
-    }
-
     public function images()
     {
         return $this->hasMany(PhoneImage::class);
     }
-
 
     // Nếu bạn muốn lấy giá/trạng thái mặc định từ một biến thể nào đó
     public function defaultVariant()
@@ -60,13 +62,11 @@ class Phone extends Model
         return $this->hasOne(Variant::class)->where('is_default', true);
     }
 
-
     // Hoặc nếu bạn muốn lấy giá thấp nhất từ các biến thể
     public function lowestPriceVariant()
     {
         return $this->hasOne(Variant::class)->orderBy('price', 'asc');
     }
-
 
     /**
      * Lấy danh sách màu sắc duy nhất của phone này thông qua bảng variants

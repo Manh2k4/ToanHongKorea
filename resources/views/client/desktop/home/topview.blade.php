@@ -12,9 +12,11 @@
                     <a href="#" class="top-tab-item active">Tất cả</a>
                     
                     @foreach($categories as $cat)
-                        <a href="#" class="top-tab-item">
-                            {{ $cat->name }}
-                        </a>
+                         <a href="{{ route('category.show', $cat->slug) }}"
+                                class="top-tab-item {{ request()->is('category/' . $cat->slug) ? 'active' : '' }}"
+                                data-filter="cat-{{ $cat->id }}">
+                                {{ $cat->name }}
+                            </a>
                     @endforeach
                 </div>
 
@@ -55,7 +57,7 @@
                                         {{ number_format($currentPrice, 0, ',', '.') }} won
                                     </div>
                                     <div class="card-price-sub">
-                                        <span class="old-price">{{ number_format($oldPrice, 0, ',', '.') }}đ</span>
+                                        <span class="old-price">{{ number_format($oldPrice, 0, ',', '.') }}w</span>
                                         <span class="sale-percent">-{{ $salePercent }}%</span>
                                     </div>
                                 </div>

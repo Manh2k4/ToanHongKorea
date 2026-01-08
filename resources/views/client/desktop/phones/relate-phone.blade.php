@@ -17,12 +17,6 @@
                 @forelse ($relatedPhones as $relPhone)
                     <div class="col-6 col-md-4 col-lg-3">
                         <div class="rel-p-card">
-                            <!-- Nút yêu thích -->
-                            <div class="rel-p-wishlist">
-                                <button class="rel-p-heart-btn" title="Thêm vào yêu thích">
-                                    <i class="fa-regular fa-heart"></i>
-                                </button>
-                            </div>
 
                             <!-- Ảnh sản phẩm -->
                             <div class="rel-p-img-container">
@@ -38,10 +32,15 @@
                             <!-- Nội dung -->
                             <div class="rel-p-body">
                                 <span class="rel-p-category">{{ $relPhone->category->name }}</span>
-                                <h4 class="rel-p-name">
+                                <h4 class="rel-p-name d-flex justify-content-between ">
                                     <a href="{{ route('phone.detail', $relPhone->slug) }}">
                                         {{ $relPhone->name }}
                                     </a>
+                                    <button class="spc-heart-btn {{ $relPhone->isFavorited() ? 'active' : '' }}"
+                                        data-id="{{ $relPhone->id }}" data-type="phone">
+                                        <i
+                                            class="{{ $relPhone->isFavorited() ? 'fa-solid' : 'fa-regular' }} fa-heart"></i>
+                                    </button>
                                 </h4>
 
                                 <div class="rel-p-price-row">
@@ -78,10 +77,25 @@
 </section>
 
 <style>
+    .spc-heart-btn {
+        background: none;
+        border: none;
+        font-size: 18px;
+        color: #ff4757;
+        cursor: pointer;
+        transition: transform 0.2s;
+        padding: 0;
+    }
+
+    .spc-heart-btn:hover {
+        transform: scale(1.2);
+    }
+
     /* Reset & Container */
     .rel-p-section {
-        padding-right: 25px !important; 
+        padding-right: 25px !important;
     }
+
     .rel-p-wrapper {
         background: #ffffff;
         border-radius: 16px;

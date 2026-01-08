@@ -65,24 +65,82 @@
             text-transform: uppercase;
         }
 
+        /* Tối ưu danh sách ảnh nhỏ */
         .ss-pd-thumb-list {
             display: flex;
-            gap: 10px;
+            gap: 12px;
             overflow-x: auto;
+            padding: 10px 5px;
+            /* Tạo khoảng trống để không bị cắt shadow */
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
+            /* Cho Firefox */
+            scrollbar-color: #d1d1d1 transparent;
+            /* Cho Firefox */
         }
 
+        /* Custom thanh cuộn cho Chrome, Safari, Edge */
+        .ss-pd-thumb-list::-webkit-scrollbar {
+            height: 4px;
+            /* Thanh cuộn cực mỏng */
+        }
+
+        .ss-pd-thumb-list::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .ss-pd-thumb-list::-webkit-scrollbar-thumb {
+            background: #ccc;
+            border-radius: 10px;
+            transition: all 0.3s;
+        }
+
+        .ss-pd-thumb-list:hover::-webkit-scrollbar-thumb {
+            background: #d70018;
+            /* Hiện màu đỏ khi rê chuột vào vùng ảnh */
+        }
+
+        /* Nâng cấp ảnh Thumbnail */
         .ss-pd-thumb-list img {
-            width: 70px;
-            height: 70px;
-            object-fit: cover;
-            border: 2px solid #eee;
-            border-radius: 6px;
+            width: 75px;
+            height: 75px;
+            min-width: 75px;
+            /* Đảm bảo ảnh không bị co lại */
+            object-fit: contain;
+            /* Giữ nguyên tỉ lệ ảnh iPhone */
+            background: #fff;
+            border: 1px solid #eee;
+            border-radius: 10px;
+            /* Bo góc hiện đại */
             cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 5px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+        }
+
+        .ss-pd-thumb-list img:hover {
+            transform: translateY(-3px);
+            /* Nhấc nhẹ lên khi hover */
+            border-color: #d70018;
+            box-shadow: 0 5px 12px rgba(0, 0, 0, 0.08);
+            opacity: 1;
         }
 
         .ss-pd-thumb-list img.active {
-            border-color: #007bff;
+            border: 2px solid #d70018 !important;
+            opacity: 1;
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(215, 0, 24, 0.15);
         }
+
+        /* Hiệu ứng mờ dần ở 2 đầu để báo hiệu còn ảnh (tùy chọn) */
+        .ss-pd-col-image {
+            position: relative;
+        }
+
+        /* Bạn có thể thêm một mask mờ ở 2 đầu nếu muốn trông "art" hơn */
 
         /* Cột thông tin */
         .ss-pd-col-info {
@@ -303,7 +361,7 @@
             position: absolute;
             top: -8px;
             right: -8px;
-            background: #fff;
+            background: #ff0000;
             border-radius: 50%;
             font-size: 14px;
         }
@@ -336,15 +394,19 @@
             color: String(VARIANT_DATA[0].color_id)
         };
 
-        // --- 1. XỬ LÝ CHUYỂN ẢNH KHI CLICK THUMBNAIL ---
+        // Tìm đoạn xử lý click thumb trong script của bạn và thêm dòng scroll
         thumbs.forEach(thumb => {
             thumb.addEventListener('click', function() {
-                // Đổi ảnh chính
                 mainImg.src = this.getAttribute('data-full');
-
-                // Active thumb
                 thumbs.forEach(t => t.classList.remove('active'));
                 this.classList.add('active');
+
+                // THÊM DÒNG NÀY: Tự động cuộn ảnh được chọn vào giữa thanh kéo
+                this.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'nearest',
+                    inline: 'center'
+                });
             });
         });
 

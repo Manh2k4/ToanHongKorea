@@ -53,3 +53,51 @@
 </body>
 
 </html>
+<style>
+    .spc-heart-btn.active i { color: #ff4757; animation: heartPop 0.3s linear; }
+    @keyframes heartPop {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.4); }
+        100% { transform: scale(1); }
+    }
+</style>
+
+<script>
+document.addEventListener('click', function (e) {
+    // Kiểm tra nếu click vào nút heart hoặc icon bên trong nó
+    const btn = e.target.closest('.spc-heart-btn');
+    if (!btn) return;
+
+    e.preventDefault();
+    const id = btn.dataset.id;
+    const type = btn.dataset.type;
+    const icon = btn.querySelector('i');
+
+    fetch('{{ route("wishlist.toggle") }}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+        },
+        body: JSON.stringify({ id, type })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === 'added') {
+            btn.classList.add('active');
+            icon.classList.replace('fa-regular', 'fa-solid');
+        } else {
+            btn.classList.remove('active');
+            icon.classList.replace('fa-solid', 'fa-regular');
+            // Nếu đang đứng ở trang wishlist thì có thể ẩn item đó đi
+            if (window.location.pathname === '/wishlist') {
+                btn.closest('.product-item').remove();
+            }
+        }
+        // Cập nhật số lượng trên icon trái tim menu
+        const badge = document.querySelector('.wishlist-count');
+        if (badge) badge.innerText = data.count;
+    })
+    .catch(err => console.error('Error:', err));
+});
+</script>

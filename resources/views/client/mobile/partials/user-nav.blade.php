@@ -1,6 +1,5 @@
 <div class="header-user-actions">
     @auth
-        @include('partials.wishlist')
         <div class="user-dropdown">
             <!-- Nút kích hoạt -->
             <div class="user-trigger">
@@ -44,7 +43,6 @@
     @endauth
 
     @guest
-        @include('partials.wishlist')
         <div class="guest-group">
             <a href="{{ route('login') }}" class="action-item">
                 <i class="fa-regular fa-circle-user"></i> Đăng nhập

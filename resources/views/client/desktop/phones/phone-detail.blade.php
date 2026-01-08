@@ -7,7 +7,7 @@
             <div class="ss-pd-row">
                 <!-- Cột trái: Hình ảnh -->
                 <div class="ss-pd-col-image" style="max-width: 530px">
-                    <div class="ss-pd-main-img-box" style="min-height: 600px !important;max-height: 600px !important;">
+                    <div class="ss-pd-main-img-box" style="min-height: 550px !important;max-height: 600px !important;">
                         <img id="ss-pd-main-view" src="{{ asset('storage/' . $phone->main_image) }}" alt="{{ $phone->name }}">
                         <span class="ss-pd-badge-condition" id="ss-pd-current-status">Đang chọn...</span>
                     </div>
@@ -38,11 +38,16 @@
                             @endfor
                         </div>
                         <span class="ss-pd-review-count">(5.0/5 - 100% khách hàng hài lòng)</span>
+                        <button class="spc-heart-btn {{ $phone->isFavorited() ? 'active' : '' }}"
+                            data-id="{{ $phone->id }}" data-type="phone">
+                            <i class="{{ $phone->isFavorited() ? 'fa-solid' : 'fa-regular' }} fa-heart"></i>
+                        </button>
+                        <span>Yêu thích</span>
                     </div>
 
                     <div class="ss-pd-price-area">
                         <span id="ss-pd-main-price"
-                            class="ss-pd-price-new">{{ number_format($phone->variants->min('price')) }}đ</span>
+                            class="ss-pd-price-new">{{ number_format($phone->variants->min('price')) }}w</span>
                         <span class="ss-pd-stock-label" id="ss-pd-stock-status">Vui lòng chọn biến thể</span>
                     </div>
 
@@ -91,7 +96,7 @@
 
                     <!-- KHỐI ƯU ĐÃI (Giữ nguyên phong cách chuyên nghiệp) -->
                     <div class="ss-pd-promo-box">
-                        <div class="promo-title"><i class="fas fa-gift"></i> ĐẶC QUYỀN KHI MUA TẠI STORE</div>
+                        <div class="promo-title"><i class="fas fa-gift"></i> ĐẶC QUYỀN KHI MUA TẠI TOANHONG KOREA</div>
                         <ul class="promo-list">
                             <li><i class="check-icon">✓</i> <strong>Bộ phụ kiện:</strong> Tặng Sạc nhanh, Ốp lưng thời
                                 trang, Dán màn hình PPF.</li>
@@ -107,7 +112,7 @@
                         <button class="ss-pd-btn-buy" id="btn-buy-now">
                             <i class="fab fa-facebook-messenger"></i> MUA NGAY QUA MESSENGER
                         </button>
-                        <button class="ss-pd-btn-cart">LIÊN HỆ TƯ VẤN</button>
+                        <button class="ss-pd-btn-cart" onclick="openMessengerPC()">LIÊN HỆ TƯ VẤN</button>
                     </div>
                     <span id="copy-guide" class="ms-3" style="color: rgb(193, 0, 0); font-weight: 500; display: none;">
                         <i class="fas fa-info-circle"></i> Hệ thống đã tự động sao chép, bạn hãy <strong>Dán
@@ -123,6 +128,11 @@
     <!-- DATA BRIDGE: Truyền dữ liệu sang JS -->
     <script>
         const VARIANT_DATA = @json($variants);
+
+        function openMessengerPC() {
+            const pageId = "100095174172336";
+            window.open('https://m.me/' + pageId, '_blank');
+        }
     </script>
 @endsection
 @include('client.desktop.phones.lib-detail')
