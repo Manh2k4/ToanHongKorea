@@ -37,7 +37,7 @@ Route::get('/chi-tiet-goi/{slug}', [PackageClientController::class, 'detail'])->
 Route::get('/search/products', [SearchController::class, 'index'])->name('search');
 
 
-Route::get('/wishlist', [FavoriteController::class, 'index'])->name('wishlist.index');
+Route::get('/wishlist/list', [FavoriteController::class, 'index'])->name('wishlist.index');
 Route::post('/wishlist/toggle', [FavoriteController::class, 'toggle'])->name('wishlist.toggle');
 
 // Hiển thị form đăng nhập
