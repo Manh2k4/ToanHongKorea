@@ -21,7 +21,7 @@
                             <h3 class="m-spc-package-name">{{ $package->name }}</h3>
                             <div class="m-spc-rating">
                                 <i class="fa-solid fa-star"></i>
-                                <span>(100+)</span>
+                                <span>(99+)</span>
                             </div>
                         </div>
 

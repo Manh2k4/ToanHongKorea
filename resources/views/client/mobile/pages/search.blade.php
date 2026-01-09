@@ -49,7 +49,7 @@
                                     <i class="fa-solid fa-star"></i>
                                     <i class="fa-solid fa-star"></i>
                                     <i class="fa-solid fa-star"></i>
-                                    <span class="rating-count">(100+)</span>
+                                    <span class="rating-count">(99+)</span>
                                 </div>
 
                                 <div class="product-actions">
@@ -85,7 +85,7 @@
                                     <i class="fa-solid fa-star"></i>
                                     <i class="fa-solid fa-star"></i>
                                     <i class="fa-solid fa-star"></i>
-                                    <span class="hpk-rating-count">(100+)</span>
+                                    <span class="hpk-rating-count">(99+)</span>
                                 </div>
                                 <button class="hpk-wishlist" title="Yêu thích">
                                     <i class="fa-regular fa-heart"></i>

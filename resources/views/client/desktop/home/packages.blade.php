@@ -18,7 +18,7 @@
                                 <i class="fa-solid fa-star"></i>
                                 <i class="fa-solid fa-star"></i>
                                 <i class="fa-solid fa-star"></i>
-                                <span class="spc-rating-text">(100+)</span>
+                                <span class="spc-rating-text">(99+)</span>
                             </div>
                             <button class="spc-heart-btn {{ $package->isFavorited() ? 'active' : '' }}"
                                 data-id="{{ $package->id }}" data-type="package">
