@@ -1,109 +1,109 @@
 @extends('client.mobile.layouts.app')
 
 @section('content')
-    <div class="container py-5">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h3 class="fw-bold">Danh sách yêu thích của bạn</h3>
-            <span class="badge bg-danger rounded-pill">{{ $items->count() }} sản phẩm</span>
+    <div class="wl-mobile-wrapper">
+        <!-- Header Section -->
+        <div class="wl-header">
+            <div class="wl-header-title">
+                <h3>Danh sách yêu thích</h3>
+                <span class="wl-count-badge">{{ $items->count() }} mục</span>
+            </div>
         </div>
 
         @if ($items->isEmpty())
-            <div class="text-center py-5 shadow-sm bg-white rounded-3">
-                <img src="https://cdn-icons-png.flaticon.com/512/10542/10542152.png" width="100" class="mb-3"
-                    alt="Empty">
-                <p class="text-muted">Danh sách yêu thích đang trống.</p>
-                <a href="/" class="btn btn-primary px-4">Tiếp tục khám phá</a>
+            <!-- Empty State chuyên nghiệp -->
+            <div class="wl-empty-state">
+                <div class="wl-empty-icon">
+                    <i class="fa-regular fa-heart"></i>
+                </div>
+                <h4>Chưa có mục yêu thích</h4>
+                <p>Hãy thả tim những sản phẩm bạn ưng ý để xem lại sau nhé!</p>
+                <a href="/" class="wl-btn-primary">Khám phá ngay</a>
             </div>
         @else
-            {{-- LỌC DỮ LIỆU --}}
             @php
-                // Lọc ra các sản phẩm là Điện thoại (Phone)
-                $phones = $items->filter(function ($item) {
-                    return $item instanceof \App\Models\Phone;
-                });
-
-                // Lọc ra các sản phẩm là Gói cước (Package)
-                $packages = $items->filter(function ($item) {
-                    return $item instanceof \App\Models\Package;
-                });
+                $phones = $items->filter(fn($item) => $item instanceof \App\Models\Phone);
+                $packages = $items->filter(fn($item) => $item instanceof \App\Models\Package);
             @endphp
 
-            {{-- PHẦN 1: THIẾT BỊ ĐIỆN THOẠI --}}
-            @if ($phones->isNotEmpty())
-                <div class="wishlist-section mb-5">
-                    <h4 class="section-title mb-3"><i class="fa-solid fa-mobile-screen-button me-2"></i> Điện thoại </h4>
-                    <div class="row g-3">
-                        @foreach ($phones as $item)
-                            <div class="col-md-3 product-item">
-                                <div class="card h-100 border-0 shadow-sm position-relative">
-                                    {{-- Nút xóa nhanh --}}
-                                    <button class="btn-favorite btn-remove" data-id="{{ $item->id }}" data-type="phone">
-                                        <i class="fa-solid fa-circle-xmark"></i>
+            <div class="wl-content">
+                {{-- PHẦN 1: ĐIỆN THOẠI (Grid 2 cột) --}}
+                @if ($phones->isNotEmpty())
+                    <div class="wl-section">
+                        <div class="wl-section-header">
+                            <i class="fa-solid fa-mobile-screen-button"></i>
+                            <span>Điện thoại đã lưu</span>
+                        </div>
+
+                        <div class="wl-phone-grid">
+                            @foreach ($phones as $item)
+                                <div class="wl-phone-card">
+                                    <!-- Nút xóa nhanh -->
+                                    <button class="wl-remove-btn btn-favorite" data-id="{{ $item->id }}"
+                                        data-type="phone">
+                                        <i class="fa-solid fa-xmark"></i>
                                     </button>
-                                    <a href="{{ route('phone.detail', $item->slug) }}">
-                                        <img src="{{ asset('storage/' . $item->main_image) }}" class="card-img p-3"
-                                            alt="{{ $item->name }}" style="object-fit: contain; height: 200px;"></a>
 
-                                    <div class="card-body">
-                                        <a href="{{ route('phone.detail', $item->slug) }}" style="text-decoration: none; color: black;">
-                                            <h6 class="card-title fw-bold text-truncate">{{ $item->name }}</h6>
-                                            <p class="text-danger fw-bold mb-3">
-                                                {{ number_format($item->variants->first()->price ?? 0) }} won</p>
-                                        </a>
-
-                                        <a href="{{ route('phone.detail', $item->slug) }}"
-                                            class="btn btn-outline-primary w-100 btn-sm rounded-pill">
-                                            <i class="fab fa-facebook-messenger me-1"></i> Chi tiết máy
-                                        </a>
+                                    <a href="{{ route('phone.detail', $item->slug) }}" class="wl-card-link">
+                                        <div class="wl-card-img">
+                                            <img src="{{ asset('storage/' . $item->main_image) }}"
+                                                alt="{{ $item->name }}">
+                                        </div>
+                                        <div class="wl-card-info">
+                                            <h4 class="wl-item-name">{{ $item->name }}</h4>
+                                            <p class="wl-item-price">
+                                                {{ number_format($item->variants->first()->price ?? 0) }} <span>won</span>
+                                            </p>
+                                        </div>
+                                    </a>
+                                    <div class="wl-card-footer">
+                                        <a href="{{ route('phone.detail', $item->slug) }}" class="wl-btn-detail">Chi
+                                            tiết</a>
                                     </div>
                                 </div>
-                            </div>
-                        @endforeach
+                            @endforeach
+                        </div>
                     </div>
-                </div>
-            @endif
+                @endif
 
-            @include('pages.favorite-lib')
+                {{-- PHẦN 2: GÓI CƯỚC (Dạng List ngang) --}}
+                @if ($packages->isNotEmpty())
+                    <div class="wl-section mt-4">
+                        <div class="wl-section-header">
+                            <i class="fa-solid fa-sim-card"></i>
+                            <span>Gói cước quan tâm</span>
+                        </div>
 
+                        <div class="wl-package-list">
+                            @foreach ($packages as $item)
+                                <div class="wl-package-item">
+                                    <button class="wl-remove-btn btn-favorite" data-id="{{ $item->id }}"
+                                        data-type="package">
+                                        <i class="fa-solid fa-xmark"></i>
+                                    </button>
+
+                                    <div class="wl-pkg-icon">
+                                        <i class="fa-solid fa-wifi"></i>
+                                    </div>
+
+                                    <div class="wl-pkg-info">
+                                        <h4 class="wl-pkg-name">{{ $item->name }}</h4>
+                                        <p class="wl-pkg-network">{{ $item->network ?? 'Tất cả nhà mạng' }}</p>
+                                        <p class="wl-pkg-price">{{ number_format($item->price) }} won/tháng</p>
+                                    </div>
+
+                                    <a href="https://m.me/100063769254777?text={{ urlencode('Tôi muốn đăng ký gói cước: ' . $item->name) }}"
+                                        class="wl-pkg-chat">
+                                        <i class="fa-brands fa-facebook-messenger"></i>
+                                    </a>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                @endif
+            </div>
         @endif
     </div>
 
-    <style>
-        .bg-light-blue {
-            background-color: #f0f7ff;
-            border: 1px solid #d0e8ff;
-        }
-
-        .section-title {
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: #333;
-            border-left: 4px solid #d70018;
-            padding-left: 15px;
-        }
-
-        .btn-remove {
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            background: transparent;
-            border: none;
-            color: #ccc;
-            font-size: 20px;
-            z-index: 10;
-            transition: color 0.3s;
-        }
-
-        .btn-remove:hover {
-            color: #ff4757;
-        }
-
-        .product-item .card {
-            transition: transform 0.3s;
-        }
-
-        .product-item .card:hover {
-            transform: translateY(-5px);
-        }
-    </style>
+    @include('pages.favorite-lib')
 @endsection

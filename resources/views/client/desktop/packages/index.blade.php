@@ -75,7 +75,7 @@
                                         <div class="spc-card-foot">
                                             <button type="button" class="spc-btn-buy btn-buy-package"
                                                 data-name="{{ $package->name }}"
-                                                data-price="{{ number_format($package->price) }}đ"
+                                                data-price="{{ number_format($package->price) }}w"
                                                 data-duration="{{ $package->duration_days }}"
                                                 data-carrier="{{ strtoupper($package->carrier) }}"
                                                 data-sim="{{ $package->sim_type == 'hop_phap' ? 'Hợp pháp' : 'Khác' }}"
