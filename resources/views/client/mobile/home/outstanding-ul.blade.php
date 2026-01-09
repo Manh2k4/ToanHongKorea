@@ -21,9 +21,9 @@
                         @endif
 
                         <div class="product-badge">
-                            <button class="spc-heart-btn {{ $phone->isFavorited() ? 'active' : '' }}"
-                                data-id="{{ $phone->id }}" data-type="phone">
-                                <i class="{{ $phone->isFavorited() ? 'fa-solid' : 'fa-regular' }} fa-heart"></i>
+                            <button class="spc-heart-btn {{ $samsung->isFavorited() ? 'active' : '' }}"
+                                data-id="{{ $samsung->id }}" data-type="phone">
+                                <i class="{{ $samsung->isFavorited() ? 'fa-solid' : 'fa-regular' }} fa-heart"></i>
                             </button>
                         </div>
 

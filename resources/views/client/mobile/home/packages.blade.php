@@ -20,8 +20,9 @@
                                 <i class="fa-solid fa-star"></i>
                                 <span class="hpk-rating-count">(99+)</span>
                             </div>
-                            <button class="hpk-wishlist" title="Yêu thích">
-                                <i class="fa-regular fa-heart"></i>
+                            <button class="spc-heart-btn {{ $package->isFavorited() ? 'active' : '' }}"
+                                data-id="{{ $package->id }}" data-type="package">
+                                <i class="{{ $package->isFavorited() ? 'fa-solid' : 'fa-regular' }} fa-heart"></i>
                             </button>
                         </div>
                     </div>
@@ -61,7 +62,8 @@
                     </div>
 
                     <div class="hpk-card-foot" style="margin-left: 60px;">
-                        <button style="background-color: rgb(63, 63, 229); color:white" type="button" class="btn m-btn-primary btn-buy-package" data-name="{{ $package->name }}"
+                        <button style="background-color: rgb(63, 63, 229); color:white" type="button"
+                            class="btn m-btn-primary btn-buy-package" data-name="{{ $package->name }}"
                             data-price="{{ number_format($package->price) }}w"
                             data-duration="{{ $package->duration_days }}"
                             data-carrier="{{ strtoupper($package->carrier) }}"
@@ -80,4 +82,3 @@
 
 @include('client.mobile.home.package-lib')
 @include('packages.buy-mess')
-

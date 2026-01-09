@@ -87,6 +87,7 @@
         font-weight: 700;
         color: #333;
         margin-bottom: 15px;
+        margin-top: 25px;
     }
 
     .wl-section-header i {
