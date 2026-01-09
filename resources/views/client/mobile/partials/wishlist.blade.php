@@ -1,4 +1,4 @@
-<a href="{{ route('wishlist.index') }}" class="wishlist-btn" style="margin-top: 5px !important">
+<a href="{{ route('wishlist.index') }}" class="wishlist-btn" style="margin-top: 9px">
     <i class="fa-regular fa-heart" style=""></i>
     <span class="wishlist-count">{{ $globalWishlistCount }}</span>
 </a>

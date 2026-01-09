@@ -258,6 +258,7 @@
     .card-image-wrapper img.img-fluid {
         transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
         max-height: 180px;
+        min-height: 180px !important;
     }
 
     /* Hiệu ứng vệt sáng */

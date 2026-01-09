@@ -89,7 +89,8 @@
         }
 
         .featured-products {
-            padding: 60px 0;
+            padding-top: 10px;
+            padding-bottom: 20px;
             background-color: #fff;
         }
 
