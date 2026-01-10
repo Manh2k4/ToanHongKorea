@@ -189,4 +189,99 @@
         font-size: 10px;
         transition: 0.3s;
     }
+
+    /* Container tổng của cụm icon góc phải */
+    .th-user-nav {
+        display: flex;
+        align-items: center;
+        gap: 25px;
+        /* Khoảng cách giữa wishlist và login */
+    }
+
+    /* --- Style cho Nút Wishlist (Trái tim) --- */
+    .th-wishlist-btn {
+        position: relative;
+        color: #ffffff;
+        font-size: 22px;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+    }
+
+    .th-wishlist-btn:hover {
+        color: #ff4d6d;
+        /* Màu hồng đỏ khi hover */
+        transform: translateY(-2px);
+    }
+
+    /* Badge số lượng (Số 0 trong ảnh của bạn) */
+    .th-wishlist-count {
+        position: absolute;
+        top: -5px;
+        right: -10px;
+        background-color: #ff4d6d;
+        /* Màu đỏ nổi bật */
+        color: #fff;
+        font-size: 10px;
+        font-weight: 800;
+        padding: 2px 6px;
+        border-radius: 20px;
+        border: 2px solid #1a222d;
+        /* Viền trùng màu nền header để tạo độ tách khối */
+        min-width: 18px;
+        text-align: center;
+    }
+
+    /* --- Style cho Nút Đăng nhập (Guest Group) --- */
+    .guest-group .action-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        /* Khoảng cách icon và chữ */
+        color: #ffffff;
+        text-decoration: none !important;
+        /* Bỏ gạch chân mặc định */
+        font-weight: 600;
+        font-size: 14px;
+        transition: all 0.3s ease;
+    }
+
+    .guest-group .action-item i {
+        font-size: 20px;
+        color: #ffffff;
+        transition: 0.3s;
+    }
+
+    /* Hiệu ứng khi di chuột vào Đăng nhập */
+    .guest-group .action-item:hover {
+        color: #ff4d6d;
+        /* Chuyển chữ sang hồng đỏ */
+    }
+
+    .guest-group .action-item:hover i {
+        color: #ff4d6d;
+        /* Chuyển icon sang hồng đỏ */
+        transform: rotate(15deg);
+        /* Xoay nhẹ icon cho sinh động */
+    }
+
+    /* Animation nhẹ cho badge khi có thay đổi (Option) */
+    @keyframes heartBeat {
+        0% {
+            transform: scale(1);
+        }
+
+        50% {
+            transform: scale(1.2);
+        }
+
+        100% {
+            transform: scale(1);
+        }
+    }
+
+    .th-wishlist-btn:hover .th-wishlist-count {
+        animation: heartBeat 0.5s infinite;
+    }
 </style>

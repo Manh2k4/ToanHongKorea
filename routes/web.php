@@ -39,6 +39,10 @@ Route::get('/{slug}', [PhoneClientController::class, 'listByCategory'])->name('c
 Route::get('toanhongkorea/404', [HTTPStatusController::class, 'http404'])->name('404');
 Route::get('toanhongkorea/403', [HTTPStatusController::class, 'http403'])->name('403');
 
+// Wishlist web ưu tiên không cần đăng nhập
+Route::get('/wishlist/list', [FavoriteController::class, 'index'])->name('wishlist.index');
+Route::post('/wishlist/toggle', [FavoriteController::class, 'toggle'])->name('wishlist.toggle');
+
 /*
 |--------------------------------------------------------------------------
 | 2. AUTH ROUTES (Đăng nhập, đăng ký, social)
@@ -66,10 +70,6 @@ Route::prefix('auth')
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth'])->group(function () {
-    // Wishlist
-    Route::get('/wishlist/list', [FavoriteController::class, 'index'])->name('wishlist.index');
-    Route::post('/wishlist/toggle', [FavoriteController::class, 'toggle'])->name('wishlist.toggle');
-    
     // Profile cá nhân
     Route::get('/profile/user', [ProfileController::class, 'index'])->name('profile.index');
     Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');

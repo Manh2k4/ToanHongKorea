@@ -22,7 +22,7 @@
             <div class="dropdown-menu-container">
                 <div class="dropdown-inner">
                     <div class="user-info-header">
-                        <p class="role-badge">{{ auth()->user()->role_id == 1 ? 'Quản trị viên' : 'Khách hàng' }}   </p>
+                        <p class="role-badge">{{ auth()->user()->role_id == 1 ? 'Quản trị viên' : 'Khách hàng' }} </p>
                         <p class="user-email">{{ auth()->user()->email }}</p>
                     </div>
 
@@ -53,11 +53,17 @@
     @endauth
 
     @guest
-        @include('partials.wishlist')
-        <div class="guest-group">
-            <a href="{{ route('login') }}" class="action-item">
-                <i class="fa-regular fa-circle-user"></i> Đăng nhập
-            </a>
+        <div class="th-user-nav">
+            <!-- Nút Wishlist -->
+            @include('partials.wishlist')
+
+            <!-- Cụm Guest (Đăng nhập) -->
+            <div class="guest-group">
+                <a href="{{ route('login') }}" class="action-item">
+                    <i class="fa-regular fa-circle-user"></i>
+                    <span>Đăng nhập</span>
+                </a>
+            </div>
         </div>
     @endguest
 </div>
