@@ -461,18 +461,18 @@
         });
 
         // Nút kéo sang trái/phải
-        btnRight.addEventListener('click', () => {
-            tagContainer.scrollBy({
-                left: 200,
-                behavior: 'smooth'
-            });
-        });
+        // btnRight.addEventListener('click', () => {
+        //     tagContainer.scrollBy({
+        //         left: 200,
+        //         behavior: 'smooth'
+        //     });
+        // });
 
-        btnLeft.addEventListener('click', () => {
-            tagContainer.scrollBy({
-                left: -200,
-                behavior: 'smooth'
-            });
-        });
+        // btnLeft.addEventListener('click', () => {
+        //     tagContainer.scrollBy({
+        //         left: -200,
+        //         behavior: 'smooth'
+        //     });
+        // });
     });
 </script>

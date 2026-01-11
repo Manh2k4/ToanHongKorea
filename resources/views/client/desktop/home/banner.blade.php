@@ -29,10 +29,48 @@
             </div>
 
             <!-- Banner phải cố định -->
+            <!-- Banner phải cố định (Premium Version) -->
             <div class="x-hero-static-aside">
-                <a href="{{ url('phone/iphone-17-pro-max') }}">
-                    <img src="{{ asset('images/banner_right.png') }}" alt="Banner Right">
+                <a href="{{ url('phone/iphone-17-pro-max') }}" class="x-aside-premium">
+                    <!-- Lớp chữ nền (Watermark) -->
+                    <div class="x-aside-bg-text">IPHONE</div>
+
+                    <!-- Khối chứa ảnh -->
+                    <div class="x-aside-img-box" style="border-radius: 5px !important;">
+                        <img src="{{ asset('images/banner_right.png') }}" alt="iPhone 17 Pro Max"
+                            style="border-radius: 5px !important;">
+                        <!-- Lớp phủ ánh sáng (Shine Effect) -->
+                        <div class="x-aside-glint"></div>
+                    </div>
+
+                    <!-- Lớp nội dung bổ trợ (Glassmorphism) -->
+                    <div class="x-aside-overlay">
+                        <div class="x-aside-info">
+                            <span class="badge-new">NEW GENERATION</span>
+                            <h3>TITANIUM ORANGE</h3>
+                            <p>Khám phá sức mạnh chip A19 Pro</p>
+                        </div>
+                    </div>
                 </a>
+
+                <a href="{{ url('phone/samsung-galaxy-s25-ultra') }}" class="x-aside-premium1">
+
+                    <!-- Khối chứa ảnh -->
+                    <div class="x-aside-img-box" style="width: 310px; height: 146px; margin-top: 7px;">
+                        <img src="{{ asset('images/maxresdefault 10.png') }}" alt="iPhone 17 Pro Max"
+                            style="border-radius: 5px !important;">
+                    </div>
+
+                    <!-- Lớp nội dung bổ trợ (Glassmorphism) -->
+                    <div class="x-aside-overlay">
+                        <div class="x-aside-info">
+                            <span class="badge-new">NEW GENERATION</span>
+                            <h3>TITANIUM BLACK</h3>
+                            <p>Khám phá sức mạnh chip Snapdragon 8 Gen 4</p>
+                        </div>
+                    </div>
+                </a>
+
             </div>
         </div>
 
