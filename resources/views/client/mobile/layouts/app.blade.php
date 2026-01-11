@@ -47,6 +47,7 @@
     @include('client.mobile.partials.footer')
     @include('layouts.lib.wishlist')
     @stack('scripts')
+    @include('sweetalert::alert')
 </body>
 
 </html>

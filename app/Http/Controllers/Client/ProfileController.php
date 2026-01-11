@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
+use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -11,6 +12,9 @@ class ProfileController extends Controller
 {
     public function index()
     {
+        if (!auth()->check()) {
+            return redirect()->route('auth.login')->with('error', 'Vui lòng đăng nhập để tiếp tục.');
+        }
         $user = Auth::user();
         return view('pages.profile', compact('user'));
     }
@@ -23,7 +27,7 @@ class ProfileController extends Controller
             'name' => 'required|string|max:255',
             'phone_number' => 'nullable|string|max:15',
             'address' => 'nullable|string|max:500',
-            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:20048',
         ]);
 
         $data = $request->only(['name', 'phone_number', 'address']);
@@ -38,7 +42,7 @@ class ProfileController extends Controller
         }
 
         $user->update($data);
-
-        return back()->with('success', 'Cập nhật hồ sơ thành công!');
+        Alert::success('Cập nhật thông tin thành công');
+        return back();
     }
 }

@@ -1,6 +1,11 @@
 @extends('client.mobile.layouts.app')
 
 @section('content')
+@auth
+    {{-- Nếu đã đăng nhập, hiển thị nội dung hồ sơ --}}
+    @php
+        $user = auth()->user(); // Lấy trực tiếp từ auth() để đảm bảo an toàn
+    @endphp
 <div class="up-container">
     <!-- Header Profile -->
     <div class="up-header">
@@ -85,6 +90,14 @@
         </form>
     </div>
 </div>
+@else
+    {{-- Nếu chưa đăng nhập (Session hết hạn), đẩy về trang Login ngay lập tức --}}
+    <script>window.location.href = "{{ route('login') }}";</script>
+    <div style="padding: 50px; text-align: center;">
+        <p>Phiên đăng nhập đã hết hạn. Đang chuyển hướng...</p>
+        <a href="{{ route('login') }}" class="up-submit-btn">Đăng nhập lại</a>
+    </div>
+@endauth
 
 <style>
 :root {

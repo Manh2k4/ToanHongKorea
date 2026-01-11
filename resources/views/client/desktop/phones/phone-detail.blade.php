@@ -142,5 +142,6 @@
         }
     </script>
 @endsection
+@include('client.desktop.phones.zoom-thumbnail')
 @include('client.desktop.phones.lib-detail')
 @include('client.desktop.phones.phone-post')

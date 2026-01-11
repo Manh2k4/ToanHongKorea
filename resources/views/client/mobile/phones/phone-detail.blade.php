@@ -124,7 +124,7 @@
     // Đảm bảo dữ liệu variant luôn có sẵn cho cả 2 bản script
     const VARIANT_DATA = @json($variants);
 </script>
-
+@include('client.mobile.phones.zoom-thumbnail')
 @include('client.mobile.phones.lib-detail')
 
 @if ($isAndroid)

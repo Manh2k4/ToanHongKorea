@@ -3,7 +3,7 @@
         <div class="top-selling-container shadow-sm">
             <!-- Header đỏ rực rỡ -->
             <div class="top-selling-header">
-                <h2 class="header-title">TOP SẢN PHẨM BÁN CHẠY</h2>
+                <h2 class="header-title">SẢN PHẨM BÁN CHẠY</h2>
             </div>
 
             <div class="top-selling-body">
@@ -11,11 +11,14 @@
                 <div class="top-category-tabs">
                     <a href="#" class="top-tab-item active">Tất cả</a>
 
-                    @foreach ($categories as $cat)
-                        <a href="#" class="top-tab-item">
-                            {{ $cat->name }}
-                        </a>
-                    @endforeach
+                        @foreach ($categories_iphone as $cat)
+                            <a href="{{ route('category.show', $cat->slug) }}"
+                                class="tab-item {{ request()->is('category/' . $cat->slug) ? 'active' : '' }}"
+                                data-filter="cat-{{ $cat->id }}">
+                                {{ $cat->name }}
+                            </a>
+                        @endforeach
+                    
                 </div>
 
                 <!-- Lưới sản phẩm (4 cái 1 dòng trên màn hình lớn) -->
@@ -56,6 +59,11 @@
                                     <div class="card-price-sub">
                                         <span class="old-price">{{ number_format($oldPrice, 0, ',', '.') }}w</span>
                                         <span class="sale-percent">-{{ $salePercent }}%</span>
+                                        <button class="spc-heart-btn {{ $phone->isFavorited() ? 'active' : '' }}"
+                                            data-id="{{ $phone->id }}" data-type="phone" style="padding-left: 10px !important">
+                                            <i
+                                                class="{{ $phone->isFavorited() ? 'fa-solid' : 'fa-regular' }} fa-heart"></i>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -72,15 +80,16 @@
         /* Bọc toàn bộ section */
         .top-selling-container {
             background: #fff;
-            border-radius: 12px;
+            border-radius: 12px !important;
             overflow: hidden;
             border: 1px solid #e0e0e0;
         }
 
         /* Header màu đỏ rực rỡ */
         .top-selling-header {
-            background: linear-gradient(180deg, #1E293C 30%, #e56583 100%);
+            background:  #1E293C;
             padding: 15px;
+            border-radius: 12px;
             text-align: center;
             border-bottom: 3px solid #efeef2;
         }

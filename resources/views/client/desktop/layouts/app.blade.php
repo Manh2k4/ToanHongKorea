@@ -36,6 +36,10 @@
     <link href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bootstrap-4/bootstrap-4.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
 
     @stack('styles')
 </head>
@@ -50,6 +54,7 @@
     @include('client.desktop.partials.footer')
     @include('layouts.lib.wishlist')
     @stack('scripts')
+    @include('sweetalert::alert')
 </body>
 
 </html>
