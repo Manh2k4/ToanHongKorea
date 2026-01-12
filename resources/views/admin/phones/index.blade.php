@@ -6,138 +6,149 @@
 
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800 font-weight-bold">Quản lý sản phẩm Điện thoại</h1>
         <div>
-            <a href="{{ route('admin.phones.create') }}" class="btn btn-sm btn-primary shadow-sm border-0"
-                style="border-radius: 8px;">
-                <i class="fas fa-plus fa-sm text-white-50"></i> Thêm sản phẩm mới
+            <h1 class="h3 mb-1 text-gray-800 font-weight-bold">Kho Sản Phẩm</h1>
+            <p class="text-muted small">Quản lý kho hàng và trạng thái hiển thị của các dòng điện thoại.</p>
+        </div>
+        <div>
+            <a href="{{ route('admin.phones.trash') }}" class="btn btn-sm btn-light border text-danger mr-2">
+                <i class="fas fa-trash-alt mr-1"></i> Thùng rác ({{ $trashedCount }})
             </a>
-            <a href="{{ route('admin.phones.trash') }}" class="btn btn-sm btn-outline-danger shadow-sm border-0"
-                style="border-radius: 8px;">
-                <i class="fas fa-trash-alt fa-sm"></i> Thùng rác ({{ $trashedCount }})
+            <a href="{{ route('admin.phones.create') }}" class="btn btn-sm btn-primary shadow-sm px-3"
+                style="border-radius: 10px; background: #1a222d; border: none;">
+                <i class="fas fa-plus-circle mr-1"></i> Thêm sản phẩm mới
             </a>
         </div>
     </div>
 
-    {{-- Thông báo --}}
-    @if (session('success'))
-        <div class="alert alert-success alert-dismissible fade show border-0 shadow-sm" role="alert">
-            <i class="fas fa-check-circle mr-2"></i> {{ session('success') }}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    @endif
-
-    <!-- Bộ lọc tìm kiếm -->
+    {{-- Bộ lọc (Đảm bảo file filter cũng được làm lại cho gọn) --}}
     @include('admin.phones.filter')
-    <!-- Bảng danh sách -->
-    <div class="card shadow-sm mb-4 border-0">
-        <div class="card-header py-3 bg-white border-bottom">
-            <h6 class="m-0 font-weight-bold text-primary">Danh sách sản phẩm</h6>
-        </div>
-        <div class="card-body">
+
+    <div class="card shadow-sm border-0">
+        <div class="card-body p-0">
             <div class="table-responsive">
-                <table class="table table-hover align-middle" id="dataTable" width="100%" cellspacing="0">
-                    <thead class="bg-light">
-                        <tr class="text-secondary small text-uppercase">
-                            <th width="5%">STT</th>
-                            <th width="10%">Hình ảnh</th>
-                            <th width="25%">Sản phẩm</th>
-                            <th width="20%">Khoảng giá</th>
-                            <th width="15%">Kho hàng</th>
-                            <th width="10%">Tình trạng</th>
-                            <th width="10%" class="text-center">Hiển thị</th>
-                            <th width="15%" class="text-center">Thao tác</th>
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th class="text-center">STT</th>
+                            <th>Sản phẩm</th>
+                            <th class="text-center">Thống kê</th>
+                            <th>Giá niêm yết</th>
+                            <th>Kho hàng</th>
+                            <th>Phân loại</th>
+                            <th class="text-center">Hiển thị</th>
+                            <th class="text-center">Nổi bật</th>
+                            <th class="text-center">Thao tác</th>
                         </tr>
                     </thead>
                     <tbody>
                         @forelse ($phones as $phone)
                             <tr>
-                                <td class="align-middle font-weight-bold">#{{ $loop->iteration }}</td>
-                                <td class="align-middle text-center">
-                                    @if ($phone->main_image)
-                                        <img src="{{ Storage::url($phone->main_image) }}" alt="{{ $phone->name }}"
-                                            width="60" class="rounded shadow-sm">
-                                    @else
-                                        <div class="bg-light rounded d-flex align-items-center justify-content-center"
-                                            style="width:60px; height:60px;">
-                                            <i class="fas fa-image text-muted"></i>
+                                <td class="text-center text-muted small">#{{ $loop->iteration }}</td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="img-container mr-3 shadow-sm">
+                                            <img src="{{ $phone->main_image ? Storage::url($phone->main_image) : asset('images/default-phone.png') }}"
+                                                class="w-100 h-100 object-fit-cover">
                                         </div>
-                                    @endif
+                                        <div>
+                                            <div class="font-weight-bold text-dark">{{ $phone->name }}</div>
+                                            <span class="text-muted" style="font-size: 11px;">
+                                                <i class="fas fa-tag mr-1"></i>{{ $phone->category->name ?? 'N/A' }}
+                                            </span>
+                                        </div>
+                                    </div>
                                 </td>
-                                <td class="align-middle">
-                                    <div class="font-weight-bold text-dark mb-0">{{ $phone->name }}</div>
-                                    <small
-                                        class="badge badge-light border text-muted">{{ $phone->category->name ?? 'N/A' }}</small>
+                                <td class="text-center">
+                                    <div class="small font-weight-bold text-primary">
+                                        <i class="fas fa-eye mr-1"></i>{{ number_format($phone->views_count ?? 0) }}
+                                    </div>
+                                    <div class="small text-muted" style="font-size: 10px;">Lượt xem</div>
                                 </td>
-                                <td class="align-middle">
+                                <td>
                                     @if ($phone->variants->count() > 0)
-                                        <span class="text-danger font-weight-bold">
-                                            {{ number_format($phone->variants->min('price'), 0, ',', '.') }} w
-                                        </span>
+                                        <div class="price-text text-danger">
+                                            {{ number_format($phone->variants->min('price'), 0, ',', '.') }}
+                                            <small>w</small>
+                                        </div>
                                         @if ($phone->variants->min('price') != $phone->variants->max('price'))
-                                            <small class="text-muted">-
-                                                {{ number_format($phone->variants->max('price'), 0, ',', '.') }} w</small>
+                                            <div class="text-muted small" style="font-size: 10px;">đến
+                                                {{ number_format($phone->variants->max('price'), 0, ',', '.') }} w</div>
                                         @endif
                                     @else
-                                        <span class="text-muted small italic">Chưa có giá</span>
+                                        <span class="text-muted small"><em>Liên hệ</em></span>
                                     @endif
                                 </td>
-                                <td class="align-middle">
-                                    {{-- Sử dụng biến total_stock đã tính từ query --}}
+                                <td>
                                     @php $totalStock = $phone->total_stock ?? 0; @endphp
-                                    <div class="mb-1">Tổng: <strong>{{ $totalStock }}</strong></div>
-
+                                    <div class="small mb-1">Tồn kho: <strong>{{ $totalStock }}</strong></div>
                                     @if ($totalStock <= 0)
-                                        <span class="badge badge-danger">Hết hàng</span>
+                                        <span class="badge-pro badge-stock-out">Hết hàng</span>
                                     @elseif($totalStock <= 5)
-                                        <span class="badge badge-warning">Sắp hết hàng</span>
+                                        <span class="badge-pro badge-stock-low">Sắp hết</span>
                                     @else
-                                        <span class="badge badge-success">Còn hàng</span>
+                                        <span class="badge-pro badge-stock-in">Sẵn có</span>
                                     @endif
                                 </td>
-                                <td class="align-middle">
-                                    {{-- Hiển thị tóm tắt tình trạng máy --}}
+                                <td>
                                     @php
                                         $hasNew = $phone->variants->where('condition', 'new')->count();
                                         $hasUsed = $phone->variants->where('condition', 'used')->count();
                                     @endphp
-                                    @if ($hasNew)
-                                        <div class="small text-success"><i class="fas fa-check-circle"></i> Máy mới</div>
-                                    @endif
-                                    @if ($hasUsed)
-                                        <div class="small text-warning"><i class="fas fa-history"></i> Máy cũ</div>
-                                    @endif
-                                </td>
-
-                                <td class="align-middle text-center">
-                                    <div class="custom-control custom-switch">
-                                        <input type="checkbox" class="custom-control-input change-status"
-                                            id="customSwitch{{ $phone->id }}" data-id="{{ $phone->id }}"
-                                            {{ $phone->is_active ? 'checked' : '' }}>
-                                        <label class="custom-control-label" for="customSwitch{{ $phone->id }}"></label>
+                                    <div class="d-flex flex-column gap-1">
+                                        @if ($hasNew)
+                                            <span class="text-success" style="font-size: 11px;"><i
+                                                    class="fas fa-check-circle mr-1"></i>Máy mới</span>
+                                        @endif
+                                        @if ($hasUsed)
+                                            <span class="text-warning" style="font-size: 11px;"><i
+                                                    class="fas fa-history mr-1"></i>Máy cũ</span>
+                                        @endif
                                     </div>
                                 </td>
 
-                                <td class="align-middle text-center">
-                                    <div class="btn-group shadow-sm" role="group">
-                                        <button class="btn btn-white btn-sm view-phone-detail"
+                                <td class="text-center">
+                                    <div class="custom-control custom-switch">
+                                        <input type="checkbox" class="custom-control-input change-status"
+                                            id="status{{ $phone->id }}" data-id="{{ $phone->id }}"
+                                            {{ $phone->is_active ? 'checked' : '' }}>
+                                        <label class="custom-control-label" for="status{{ $phone->id }}"></label>
+                                    </div>
+                                </td>
+
+                                <td class="text-center">
+                                    <div class="custom-control custom-switch">
+                                        <input type="checkbox" class="custom-control-input toggle-featured"
+                                            id="feat{{ $phone->id }}" data-id="{{ $phone->id }}"
+                                            {{ $phone->is_featured ? 'checked' : '' }}>
+                                        <label class="custom-control-label" for="feat{{ $phone->id }}">
+                                            <i
+                                                class="fas fa-star {{ $phone->is_featured ? 'text-warning' : 'text-light' }}"></i>
+                                        </label>
+                                    </div>
+                                </td>
+
+                                <td class="text-center">
+                                    <div class="d-flex justify-content-center">
+                                        {{-- <button class="btn-action view-phone-detail" data-id="{{ $phone->id }}"
+                                            title="Xem nhanh" data-toggle="modal" data-target="#phoneDetailModal">
+                                            <i class="fas fa-eye text-info"></i>
+                                        </button> --}}
+                                        <button class="btn-action view-phone-detail"
                                             data-id="{{ $phone->id }}" title="Xem chi tiết" data-toggle="modal"
                                             data-target="#phoneDetailModal">
                                             <i class="fas fa-eye text-info"></i>
                                         </button>
-                                        <a href="{{ route('admin.phones.edit', $phone->id) }}" class="btn btn-white btn-sm"
-                                            title="Chỉnh sửa">
-                                            <i class="fas fa-edit text-warning"></i>
+                                        <a href="{{ route('admin.phones.edit', $phone->id) }}" class="btn-action"
+                                            title="Sửa">
+                                            <i class="fas fa-pen text-warning"></i>
                                         </a>
                                         <form action="{{ route('admin.phones.destroy', $phone->id) }}" method="POST"
                                             class="d-inline">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-white btn-sm" title="Xóa"
-                                                onclick="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này không?')">
-                                                <i class="fas fa-trash text-danger"></i>
+                                            @csrf @method('DELETE')
+                                            <button type="submit" class="btn-action" title="Xóa"
+                                                onclick="return confirm('Đưa sản phẩm vào thùng rác?')">
+                                                <i class="fas fa-trash-alt text-danger"></i>
                                             </button>
                                         </form>
                                     </div>
@@ -145,9 +156,9 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="7" class="text-center py-5 text-muted">
-                                    <i class="fas fa-box-open fa-3x mb-3"></i>
-                                    <p>Không tìm thấy sản phẩm nào.</p>
+                                <td colspan="9" class="text-center py-5">
+                                    <img src="{{ asset('images/empty-box.png') }}" width="80" class="mb-3 opacity-50">
+                                    <p class="text-muted">Chưa có sản phẩm nào được đăng tải.</p>
                                 </td>
                             </tr>
                         @endforelse
@@ -155,13 +166,13 @@
                 </table>
             </div>
 
-            <div class="mt-4">
-                {{ $phones->appends(request()->query())->links() }}
-            </div>
+            @if ($phones->hasPages())
+                <div class="card-footer bg-white border-0 py-4">
+                    {{ $phones->appends(request()->query())->links() }}
+                </div>
+            @endif
         </div>
     </div>
-
-    <!-- Modal Chi tiết -->
     <div class="modal fade" id="phoneDetailModal" tabindex="-1" role="dialog" aria-labelledby="phoneDetailModalLabel"
         aria-hidden="true">
         <div class="modal-dialog modal-xl modal-dialog-scrollable" style="max-width: 70%; min-height: 70%;"
@@ -188,66 +199,5 @@
             </div>
         </div>
     </div>
-
 @endsection
-
-@push('scripts')
-    <script>
-        $(document).ready(function() {
-            // Xử lý click xem chi tiết
-            $('.view-phone-detail').on('click', function() {
-                const phoneId = $(this).data('id');
-                const modalBody = $('#phoneDetailContent');
-
-                // Reset modal về trạng thái loading
-                modalBody.html(`
-                    <div class="text-center py-5">
-                        <div class="spinner-border text-primary" role="status"></div>
-                        <p class="mt-2 text-muted">Đang tải chi tiết sản phẩm...</p>
-                    </div>
-                `);
-
-                // Gọi AJAX
-                $.ajax({
-                    url: `/admin/phones/${phoneId}`,
-                    method: 'GET',
-                    success: function(response) {
-                        // Chèn HTML nhận được từ server vào modal body
-                        modalBody.html(response);
-                    },
-                    error: function(xhr) {
-                        modalBody.html(`
-                            <div class="alert alert-danger m-3">
-                                <i class="fas fa-exclamation-triangle mr-2"></i>
-                                Không thể tải thông tin. Lỗi: ${xhr.status} - ${xhr.statusText}
-                            </div>
-                        `);
-                    }
-                });
-            });
-            $('.change-status').on('change', function() {
-                const phoneId = $(this).data('id');
-                const isChecked = $(this).is(':checked');
-
-                $.ajax({
-                    url: `/admin/phones/${phoneId}/change-status`,
-                    method: 'PATCH',
-                    data: {
-                        _token: '{{ csrf_token() }}'
-                    },
-                    success: function(response) {
-                        if (response.success) {
-                            // Hiển thị thông báo nhỏ (Toast) nếu muốn
-                            console.log(response.message);
-                        }
-                    },
-                    error: function() {
-                        alert('Không thể cập nhật trạng thái. Vui lòng thử lại!');
-                        // Trả lại trạng thái cũ nếu lỗi
-                        $(this).prop('checked', !isChecked);
-                    }
-                });
-            });
-        });
-    </script>
-@endpush
+@include('admin.phones.index-lib')

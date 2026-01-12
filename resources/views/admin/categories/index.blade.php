@@ -8,10 +8,12 @@
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800 font-weight-bold">Quản lý Chuyên mục</h1>
         <div>
-            <a href="{{ route('admin.categories.create') }}" class="btn btn-sm btn-primary shadow-sm border-0" style="border-radius: 8px;">
+            <a href="{{ route('admin.categories.create') }}" class="btn btn-sm btn-primary shadow-sm border-0"
+                style="border-radius: 8px;">
                 <i class="fas fa-plus fa-sm text-white-50"></i> Thêm mới chuyên mục
             </a>
-            <a href="{{ route('admin.categories.trash') }}" class="btn btn-sm btn-outline-danger shadow-sm border-0" style="border-radius: 8px;">
+            <a href="{{ route('admin.categories.trash') }}" class="btn btn-sm btn-outline-danger shadow-sm border-0"
+                style="border-radius: 8px;">
                 <i class="fas fa-trash-alt fa-sm"></i> Thùng rác ({{ $trashedCount }})
             </a>
         </div>
@@ -37,24 +39,7 @@
     @endif
 
     <!-- Bộ lọc tìm kiếm (Đồng bộ với trang Phones) -->
-    <div class="card shadow-sm mb-4 border-0">
-        <div class="card-body">
-            <form action="{{ route('admin.categories.index') }}" method="GET" class="row g-3">
-                <div class="col-md-10">
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text bg-white border-right-0"><i class="fas fa-search text-muted"></i></span>
-                        </div>
-                        <input type="text" name="search" class="form-control border-left-0"
-                            placeholder="Tìm kiếm theo tên chuyên mục hoặc slug..." value="{{ request('search') }}">
-                    </div>
-                </div>
-                <div class="col-md-2">
-                    <button type="submit" class="btn btn-primary btn-block shadow-sm">Tìm kiếm</button>
-                </div>
-            </form>
-        </div> 
-    </div>
+    @include('admin.categories.filter')
 
     <!-- Bảng danh sách Chuyên mục -->
     <div class="card shadow-sm mb-4 border-0">
@@ -79,10 +64,11 @@
                                 <td class="align-middle font-weight-bold">#{{ $loop->iteration }}</td>
                                 <td class="align-middle">
                                     <div class="font-weight-bold text-dark mb-0">{{ $category->name }}</div>
-                                    <small class="text-muted"><i class="fas fa-link fa-xs"></i> /{{ $category->slug }}</small>
+                                    <small class="text-muted"><i class="fas fa-link fa-xs"></i>
+                                        /{{ $category->slug }}</small>
                                 </td>
                                 <td class="align-middle">
-                                    @if($category->parent)
+                                    @if ($category->parent)
                                         <span class="badge badge-light border px-2 py-1">
                                             <i class="fas fa-level-up-alt fa-rotate-90 text-primary mr-1"></i>
                                             {{ $category->parent->name }}
@@ -105,9 +91,8 @@
                                 <td class="align-middle text-center">
                                     <div class="btn-group shadow-sm" role="group">
                                         {{-- Nút Xem chi tiết --}}
-                                        <button type="button" class="btn btn-white btn-sm" 
-                                            data-toggle="modal" data-target="#categoryDetailModal" 
-                                            data-name="{{ $category->name }}"
+                                        <button type="button" class="btn btn-white btn-sm" data-toggle="modal"
+                                            data-target="#categoryDetailModal" data-name="{{ $category->name }}"
                                             data-slug="{{ $category->slug }}"
                                             data-description="{{ $category->description ?? 'Không có mô tả.' }}"
                                             data-parent="{{ $category->parent->name ?? '—' }}"
@@ -124,8 +109,8 @@
                                         </a>
 
                                         {{-- Nút Xóa --}}
-                                        <form action="{{ route('admin.categories.destroy', $category->id) }}" method="POST"
-                                            class="d-inline"
+                                        <form action="{{ route('admin.categories.destroy', $category->id) }}"
+                                            method="POST" class="d-inline"
                                             onsubmit="return confirm('Bạn có chắc chắn muốn xóa chuyên mục này không?');">
                                             @csrf
                                             @method('DELETE')
@@ -167,16 +152,17 @@
                 var button = $(event.relatedTarget);
                 var modal = $(this);
 
-                modal.find('.modal-title').html('<i class="fas fa-folder-open mr-2"></i> Chi tiết: ' + button.data('name'));
+                modal.find('.modal-title').html('<i class="fas fa-folder-open mr-2"></i> Chi tiết: ' +
+                    button.data('name'));
                 modal.find('#modal-name').text(button.data('name'));
                 modal.find('#modal-slug').text(button.data('slug'));
                 modal.find('#modal-description').html(button.data('description').replace(/\n/g, '<br>'));
                 modal.find('#modal-parent').text(button.data('parent'));
-                
+
                 var statusHTML = button.data('status') === 'Hoạt động' ?
                     '<span class="badge badge-success px-3 py-2" style="border-radius:20px;">Hoạt động</span>' :
                     '<span class="badge badge-secondary px-3 py-2" style="border-radius:20px;">Tạm ẩn</span>';
-                
+
                 modal.find('#modal-status').html(statusHTML);
                 modal.find('#modal-created').text(button.data('created'));
             });

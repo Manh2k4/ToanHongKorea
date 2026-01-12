@@ -28,37 +28,25 @@ class HomeController extends Controller
             ->take(5)
             ->get();
 
-        // 2. Lấy danh sách sản phẩm NỔI BẬT
-        // Điều kiện: Phone phải is_active = true VÀ có ít nhất một Variant có status = 'còn_hàng'
-        $featuredPhones = Phone::where('is_active', true)
+        // 2. Lấy danh sách sản phẩm NỔI BẬT (Featured)
+        $featuredPhones = Phone::active()
+            ->featured() // Chỉ lấy sản phẩm có is_featured = true
             ->whereHas('variants', function ($query) {
-                $query->where('status', 'còn_hàng'); // Chỉ lấy Phone có biến thể còn hàng
+                $query->where('status', 'còn_hàng')->where('stock', '>', 0);
             })
-            ->with([
-                'variants' => function ($query) {
-                    $query
-                        ->where('status', 'còn_hàng') // Chỉ load các biến thể còn hàng lên view
-                        ->orderBy('price', 'asc'); // Sắp xếp để lấy giá thấp nhất làm giá đại diện
-                },
-            ])
+            ->withMin('variants as min_price', 'price') // Lấy giá thấp nhất ngay trong SQL
+            ->with(['category']) // Chỉ load category, không cần load hết variants
             ->latest()
-            ->take(20)
+            ->take(12) // Thường trang chủ lấy 8 hoặc 12 (chia hết cho 4 cột)
             ->get();
 
-        // 3. Top sản phẩm XEM NHIỀU (Top Selling)
-        // Điều kiện: Phone is_active = true VÀ Variant status = 'còn_hàng'
-        $topSellingPhones = Phone::where('is_active', true)
-            ->join('variants', 'phones.id', '=', 'variants.phone_id')
-            ->where('variants.status', 'còn_hàng') // Chỉ tính lượt view của các biến thể đang hoạt động
-            ->select('phones.*', DB::raw('SUM(variants.view) as total_views')) // Sử dụng cột 'view' như bạn mô tả
-            ->groupBy('phones.id', 'phones.category_id', 'phones.name', 'phones.slug', 'phones.short_description', 'phones.is_active', 'phones.main_image', 'phones.created_at', 'phones.updated_at', 'phones.deleted_at')
-            ->orderBy('total_views', 'asc')
-            ->with([
-                'variants' => function ($query) {
-                    $query->where('status', 'còn_hàng'); // Chỉ load các biến thể còn hàng
-                },
-            ])
-            ->inRandomOrder()
+        // 3. Top sản phẩm XEM NHIỀU (Dựa trên views_count thay vì random)
+        $topSellingPhones = Phone::active()
+            ->whereHas('variants', function ($query) {
+                $query->where('status', 'còn_hàng');
+            })
+            ->withMin('variants as min_price', 'price')
+            ->mostViewed() // Sắp xếp theo views_count desc (đã viết trong model)
             ->take(8)
             ->get();
 
@@ -114,5 +102,4 @@ class HomeController extends Controller
             ),
         );
     }
-
 }

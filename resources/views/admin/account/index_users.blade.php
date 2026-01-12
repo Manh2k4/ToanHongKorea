@@ -105,8 +105,7 @@
                                         data-avatar-text="{{ strtoupper(substr($user->name, 0, 1)) }}"
                                         data-phone="{{ $user->phone ?? 'Chưa cập nhật' }}"
                                         data-bio="{{ $user->bio ?? 'Chưa có tiểu sử.' }}"
-                                        data-role="{{ $user->role->name ?? 'N/A' }}"
-                                        data-status="{{ $user->is_active }}"
+                                        data-role="{{ $user->role->name ?? 'N/A' }}" data-status="{{ $user->is_active }}"
                                         data-created="{{ $user->created_at->format('H:i:s d/m/Y') }}">
                                         <i class="fas fa-eye"></i>
                                     </button>
@@ -163,34 +162,60 @@
 @endsection
 
 @push('scripts')
-    {{-- Tái sử dụng script của modal chi tiết tài khoản --}}
     <script>
         $('#accountDetailModal').on('show.bs.modal', function(event) {
             var button = $(event.relatedTarget);
             var modal = $(this);
+
             var name = button.data('name');
             var avatarUrl = button.data('avatar');
             var avatarText = button.data('avatar-text');
-            modal.find('.modal-title').text('Chi tiết tài khoản: ' + name);
+
+            // Gán các thông tin văn bản cơ bản
+            modal.find('#modal-display-name').text(name);
             modal.find('#modal-account-id').text(button.data('id'));
-            modal.find('#modal-account-name').text(name);
             modal.find('#modal-account-email').text(button.data('email'));
             modal.find('#modal-account-phone').text(button.data('phone'));
             modal.find('#modal-account-bio').text(button.data('bio'));
-            modal.find('#modal-account-role').text(button.data('role'));
             modal.find('#modal-account-created').text(button.data('created'));
-            if (avatarUrl) {
-                modal.find('#modal-avatar-img').attr('src', avatarUrl).show();
-                modal.find('#modal-avatar-text').hide();
+
+            // --- XỬ LÝ AVATAR RIÊNG BIỆT ---
+            var $imgObj = modal.find('#custom-avatar-image');
+            var $txtObj = modal.find('#custom-avatar-placeholder');
+
+            // Reset trạng thái trước khi kiểm tra (ẩn cả hai)
+            $imgObj.attr('style', 'display: none !important; width: 150px; height: 150px; object-fit: cover;');
+            $txtObj.attr('style',
+                'display: none !important; width: 150px; height: 150px; font-size: 60px; font-weight: bold; align-items: center; justify-content: center;'
+                );
+
+            // Kiểm tra logic hiển thị
+            if (avatarUrl && avatarUrl.trim() !== "" && !avatarUrl.endsWith('/storage/')) {
+                // Trường hợp: CÓ ẢNH
+                $imgObj.attr('src', avatarUrl);
+                $imgObj.css('cssText',
+                'display: block !important; width: 150px; height: 150px; object-fit: cover;');
             } else {
-                modal.find('#modal-avatar-img').hide();
-                modal.find('#modal-avatar-text').text(avatarText).show();
+                // Trường hợp: KHÔNG CÓ ẢNH (Dùng placeholder)
+                $txtObj.text(avatarText);
+                // Dùng display: flex để căn giữa chữ cái
+                $txtObj.css('cssText',
+                    'display: flex !important; width: 150px; height: 150px; font-size: 60px; font-weight: bold; align-items: center; justify-content: center;'
+                    );
             }
+
+            // --- CÁC PHẦN KHÁC ---
             var status = button.data('status');
-            var statusBadge = status ?
+            var statusHtml = status ?
                 '<span class="badge badge-success">Hoạt động</span>' :
                 '<span class="badge badge-secondary">Bị khóa</span>';
-            modal.find('#modal-account-status').html(statusBadge);
+            modal.find('#modal-account-status').html(statusHtml);
+
+            var role = button.data('role');
+            var roleBadge = (role === 'Quản trị viên') ?
+                '<span class="badge badge-danger">Quản trị viên</span>' :
+                '<span class="badge badge-info">Người dùng</span>';
+            modal.find('#modal-account-role-badge').html(roleBadge);
         });
     </script>
 @endpush

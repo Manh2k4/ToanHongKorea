@@ -1,121 +1,158 @@
-<div class="container-fluid">
-    <div class="row">
-        <!-- Cột bên trái: Ảnh chính và thông tin cơ bản -->
-        <div class="col-md-4 text-center border-right">
-            @if ($phone->main_image)
-                <img src="{{ Storage::url($phone->main_image) }}" class="img-fluid rounded shadow-sm mb-3"
-                    alt="{{ $phone->name }}" style="max-height: 250px; object-fit: contain;">
-            @else
-                <img src="https://via.placeholder.com/250x250?text=No+Image" class="img-fluid rounded mb-3" alt="No Image">
-            @endif
-            <h5 class="font-weight-bold text-primary">{{ $phone->name }}</h5>
-            <span class="badge badge-info p-2 mb-3">{{ $phone->category->name ?? 'Không có danh mục' }}</span>
-            
-            <div class="text-left mt-3">
-                <p><strong>Mô tả ngắn:</strong><br> <span class="text-muted">{{ $phone->short_description ?? 'N/A' }}</span></p>
+<div class="phone-detail-wrapper">
+    <div class="row no-gutters"> <!-- Thêm no-gutters để khít hơn -->
+        <!-- Bên trái: Thông tin tổng quan (Cố định) -->
+        <div class="col-lg-4 col-md-5 border-right sticky-left-column">
+            <div class="product-main-preview text-center p-3">
+                <div class="main-image-container mb-4">
+                    @if ($phone->main_image)
+                        <img src="{{ Storage::url($phone->main_image) }}"
+                            class="img-fluid rounded-lg shadow-sm main-img-zoom clickable-img" alt="{{ $phone->name }}"
+                            onclick="openLightbox(this.src)">
+                    @else
+                        <div class="no-image-placeholder">
+                            <i class="fas fa-image fa-4x text-light"></i>
+                        </div>
+                    @endif
+                </div>
+
+                <h4 class="font-weight-bold text-dark mb-1">{{ $phone->name }}</h4>
+                <div class="mb-3">
+                    <span class="badge badge-soft-primary px-3 py-2">{{ $phone->category->name ?? 'N/A' }}</span>
+                </div>
+
+                <div class="info-card bg-white border rounded-lg p-3 text-left shadow-xs">
+                    <h6 class="text-uppercase small font-weight-bold text-muted mb-2">Mô tả tóm tắt</h6>
+                    <p class="small text-secondary mb-0" style="line-height: 1.6;">
+                        {{ $phone->short_description ?: 'Chưa có mô tả cho sản phẩm này.' }}
+                    </p>
+                </div>
+
+                <div class="mt-4 d-flex justify-content-around">
+                    <div class="text-center">
+                        <div class="h5 mb-0 font-weight-bold">{{ $phone->views_count ?? 0 }}</div>
+                        <div class="small text-muted">Lượt xem</div>
+                    </div>
+                    <div class="divider-vertical"></div>
+                    <div class="text-center">
+                        <div class="h5 mb-0 font-weight-bold text-danger">{{ $phone->variants->count() }}</div>
+                        <div class="small text-muted">Phiên bản</div>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <!-- Cột bên phải: Biến thể và Thư viện ảnh -->
-        <div class="col-md-8">
-            <h6 class="font-weight-bold"><i class="fas fa-list"></i> Danh sách biến thể:</h6>
-            @if ($phone->variants->isNotEmpty())
-                <div class="table-responsive">
-                    <table class="table table-hover table-bordered table-sm" style="font-size: 0.85rem;">
-                        <thead class="bg-primary text-white text-center">
-                            <tr>
-                                <th>Ảnh</th>
-                                <th>Tình trạng</th>
-                                <th>Cấu hình (Specs)</th>
-                                <th>Giá & Kho</th>
-                                <th>Thông tin máy cũ</th>
-                            </tr>
-                        </thead>
-                        <tbody>
+        <!-- Bên phải: Biến thể & Gallery (Có thanh cuộn) -->
+        <div class="col-lg-8 col-md-7 bg-white right-scrollable-content">
+            <div class="p-3">
+                <ul class="nav nav-pills nav-justified mb-4 sticky-top bg-white py-2" id="pills-tab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active font-weight-bold" id="pills-variants-tab" data-toggle="pill"
+                            href="#pills-variants">
+                            <i class="fas fa-layer-group mr-2"></i>Các phiên bản giá
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link font-weight-bold" id="pills-gallery-tab" data-toggle="pill"
+                            href="#pills-gallery">
+                            <i class="fas fa-images mr-2"></i>Thư viện ảnh phụ
+                        </a>
+                    </li>
+                </ul>
+
+                <div class="tab-content" id="pills-tabContent">
+                    <!-- Tab Biến thể -->
+                    <div class="tab-pane fade show active" id="pills-variants">
+                        @if ($phone->variants->isNotEmpty())
                             @foreach ($phone->variants as $variant)
-                                <tr>
-                                    <!-- Ảnh biến thể -->
-                                    <td class="text-center">
-                                        @if ($variant->image_path)
-                                            <img src="{{ Storage::url($variant->image_path) }}" width="50" class="img-thumbnail">
-                                        @else
-                                            <small class="text-muted">No Image</small>
-                                        @endif
-                                    </td>
-
-                                    <!-- Tình trạng -->
-                                    <td class="text-center">
-                                        @if($variant->condition == 'used')
-                                            <span class="badge badge-warning">Máy cũ</span>
-                                        @else
-                                            <span class="badge badge-success">Máy mới</span>
-                                        @endif
-                                        <div class="mt-1 small text-muted">SKU: {{ $variant->sku ?? 'N/A' }}</div>
-                                    </td>
-
-                                    <!-- Cấu hình chung -->
-                                    <td>
-                                        <div><strong>{{ $variant->size->name ?? '' }} | {{ $variant->color->name ?? '' }}</strong></div>
-                                        <div class="small">
-                                            <i class="fas fa-microchip"></i> RAM: {{ $variant->general_specs['ram'] ?? 'N/A' }} <br>
-                                            <i class="fas fa-hdd"></i> Bộ nhớ: {{ $variant->general_specs['storage'] ?? 'N/A' }} <br>
-                                            <i class="fas fa-mobile-alt"></i> Màn hình: {{ $variant->general_specs['screen_size'] ?? 'N/A' }}
+                                <div
+                                    class="variant-item-card border rounded-lg p-3 mb-3 transition-hover {{ $variant->is_default ? 'border-primary bg-light-primary' : '' }}">
+                                    <div class="row align-items-center">
+                                        <div class="col-auto">
+                                            <div class="variant-img">
+                                                <img src="{{ $variant->image_path ? Storage::url($variant->image_path) : 'https://via.placeholder.com/60' }}"
+                                                    class="rounded border clickable-img" width="60"
+                                                    onclick="openLightbox(this.src)">
+                                            </div>
                                         </div>
-                                    </td>
-
-                                    <!-- Giá & Kho -->
-                                    <td>
-                                        <div class="text-danger font-weight-bold">{{ number_format($variant->price, 0, ',', '.') }} w</div>
-                                        <div class="small text-muted">Kho: {{ $variant->stock }}</div>
-                                        @if($variant->is_default) <span class="badge badge-dark">Mặc định</span> @endif
-                                    </td>
-
-                                    @if($variant->condition == 'used')
-                                    <!-- Thông tin máy cũ -->
-                                    <td class="bg-light">
-                                        @if($variant->condition == 'used' && $variant->used_details)
-                                            <div class="small">
-                                                <div><i class="fas fa-battery-three-quarters"></i> Pin: {{ $variant->used_details['battery_health'] ?? 'N/A' }}%</div>
-                                                <div><i class="fas fa-plug"></i> Sạc: {{ $variant->used_details['charging_cycles'] ?? 'N/A' }} lần</div>
-                                                <div class="text-italic border-top mt-1" style="font-size: 0.75rem;">
-                                                    {{ $variant->used_details['description'] ?? '' }}
+                                        <div class="col">
+                                            <div class="d-flex justify-content-between align-items-start">
+                                                <div>
+                                                    <h6 class="font-weight-bold mb-1">
+                                                        {{ $variant->size->name ?? '' }} |
+                                                        {{ $variant->color->name ?? '' }}
+                                                    </h6>
+                                                    <div class="small text-muted">
+                                                        <span class="mr-2"><i
+                                                                class="fas fa-microchip mr-1"></i>{{ $variant->general_specs['ram'] ?? 'N/A' }}
+                                                            RAM</span>
+                                                        <span><i
+                                                                class="fas fa-hdd mr-1"></i>{{ $variant->general_specs['storage'] ?? 'N/A' }}</span>
+                                                    </div>
+                                                </div>
+                                                <div class="text-right">
+                                                    <div class="h5 font-weight-bold text-danger mb-0">
+                                                        {{ number_format($variant->price, 0, ',', '.') }}
+                                                        <small>w</small>
+                                                    </div>
+                                                    <div
+                                                        class="small {{ $variant->stock > 0 ? 'text-success' : 'text-danger' }}">
+                                                        Kho: {{ $variant->stock }}
+                                                    </div>
                                                 </div>
                                             </div>
-                                        @else
-                                            <small class="text-muted">-</small>
-                                        @endif
-                                    </td>
-                                    @else
-                                    <td class="bg-light text-center">Không có thông tin</td>
-                                    @endif
-                                </tr>
+                                            <!-- ... (các phần cũ giữ nguyên) ... -->
+                                            @if ($variant->condition == 'used')
+                                                <div class="used-info-box mt-2 p-2 rounded bg-white border">
+                                                    <div class="row no-gutters text-center">
+                                                        <div class="col-4 border-right">
+                                                            <div class="small text-muted">Tình trạng</div>
+                                                            <span class="badge badge-warning">Máy cũ</span>
+                                                        </div>
+                                                        <div class="col-4 border-right">
+                                                            <div class="small text-muted">Pin</div>
+                                                            <strong
+                                                                class="text-dark">{{ $variant->used_details['battery_health'] ?? 'N/A' }}%</strong>
+                                                        </div>
+                                                        <div class="col-4">
+                                                            <div class="small text-muted">Lần sạc</div>
+                                                            <strong
+                                                                class="text-dark">{{ $variant->used_details['charging_cycles'] ?? 'N/A' }}</strong>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
                             @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            @else
-                <p class="text-center">Không có biến thể nào.</p>
-            @endif
+                        @endif
+                    </div>
 
-            <hr>
-
-            <!-- Thư viện hình ảnh phụ -->
-            <h6 class="font-weight-bold"><i class="fas fa-images"></i> Thư viện ảnh phụ:</h6>
-            @if ($phone->images->isNotEmpty())
-                <div class="row no-gutters">
-                    @foreach ($phone->images as $image)
-                        <div class="col-md-3 p-1">
-                            <div class="border rounded p-1">
-                                <img src="{{ Storage::url($image->image_path) }}" class="img-fluid rounded"
-                                    style="height: 150px; width: 100%; object-fit: cover;" alt="Gallery">
+                    <!-- Tab Gallery -->
+                    <div class="tab-pane fade" id="pills-gallery">
+                        @if ($phone->images->isNotEmpty())
+                            <div class="row mx-n1">
+                                @foreach ($phone->images as $image)
+                                    <div class="col-4 col-md-3 p-1">
+                                        <div class="gallery-item rounded overflow-hidden border">
+                                            <img src="{{ Storage::url($image->image_path) }}"
+                                                class="img-fluid gallery-img clickable-img"
+                                                onclick="openLightbox(this.src)">
+                                        </div>
+                                    </div>
+                                @endforeach
                             </div>
-                        </div>
-                    @endforeach
+                        @endif
+                    </div>
                 </div>
-            @else
-                <p class="small text-muted italic">Sản phẩm này không có ảnh phụ.</p>
-            @endif
-
+            </div>
         </div>
     </div>
 </div>
+
+<!-- Lightbox Modal (Phóng to ảnh) -->
+<div id="imageLightbox" class="custom-lightbox" onclick="closeLightbox()">
+    <span class="close-lightbox">&times;</span>
+    <img class="lightbox-content" id="lightboxImg">
+</div>
+@include('admin.phones.show_modal_lib')

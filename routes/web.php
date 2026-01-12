@@ -103,6 +103,8 @@ Route::prefix('admin')
         Route::delete('phones/{id}/force-delete', [PhoneController::class, 'forceDelete'])->name('phones.forceDelete');
         Route::get('phones/get-variant-form-fields', [PhoneController::class, 'getVariantFormFields'])->name('phones.getVariantFormFields');
         Route::patch('phones/{phone}/change-status', [PhoneController::class, 'changeStatus'])->name('phones.changeStatus');
+        Route::patch('/phones/{phone}/toggle-featured', [PhoneController::class, 'toggleFeatured'])
+        ->name('phones.toggle-featured');
         Route::resource('phones', PhoneController::class);
 
         // --- Quản lý Gói cước (Packages) ---
