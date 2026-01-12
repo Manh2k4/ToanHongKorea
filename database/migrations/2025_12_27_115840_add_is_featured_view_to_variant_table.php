@@ -12,8 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('variants', function (Blueprint $table) {
-            // Thêm trường view: mặc định là 0, đặt sau trường condition vừa tạo
-        $table->unsignedInteger('view')->default(0)->after('condition'); 
+        $table->unsignedInteger('view')->default(0); 
 
         // Thêm trường is_featured: mặc định là false (0), đặt sau trường view
         $table->boolean('is_featured')->default(false)->after('view');

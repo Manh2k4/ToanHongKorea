@@ -25,12 +25,18 @@
             <div class="adm-fl-grid">
                 <!-- Danh mục -->
                 <div class="adm-fl-item">
-                    <label>Danh mục</label>
-                    <select name="category_id">
+                    <label>Danh mục sản phẩm</label>
+                    <select name="category_id" class="select2-filter"> {{-- Thêm class nếu bạn dùng Select2 --}}
                         <option value="">Tất cả danh mục</option>
                         @foreach ($categories as $cat)
                             <option value="{{ $cat->id }}"
-                                {{ request('category_id') == $cat->id ? 'selected' : '' }}>{{ $cat->name }}</option>
+                                {{ request('category_id') == $cat->id ? 'selected' : '' }}>
+                                @if ($cat->parent)
+                                    {{ $cat->parent->name }} &raquo; {{ $cat->name }}
+                                @else
+                                    {{ $cat->name }}
+                                @endif
+                            </option>
                         @endforeach
                     </select>
                 </div>

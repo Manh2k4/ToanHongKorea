@@ -10,14 +10,7 @@ class Category extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillable = [
-        'name',
-        'slug',
-        'parent_id',
-        'description',
-        'is_active',
-        'order',
-    ];
+    protected $fillable = ['name', 'slug', 'parent_id', 'description', 'is_active', 'order'];
 
     /**
      * Kiểu dữ liệu tự động casts
@@ -37,7 +30,6 @@ class Category extends Model
     {
         return $this->hasMany(Package::class);
     }
-
 
     /**
      * Quan hệ: Category con → Category cha.

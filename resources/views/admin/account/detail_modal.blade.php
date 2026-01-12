@@ -1,10 +1,11 @@
 {{-- resources/views/admin/account/detail_modal.blade.php --}}
 <div class="modal fade" id="accountDetailModal" tabindex="-1" role="dialog" aria-labelledby="accountDetailModalLabel"
     aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title font-weight-bold text-primary" id="accountDetailModalLabel">Chi tiết tài khoản
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document"> {{-- Thêm modal-dialog-centered để căn giữa màn hình --}}
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header bg-light">
+                <h5 class="modal-title font-weight-bold text-primary" id="accountDetailModalLabel">
+                    <i class="fas fa-user-circle mr-2"></i>Chi tiết tài khoản
                 </h5>
                 <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
@@ -12,65 +13,65 @@
             </div>
             <div class="modal-body">
                 <div class="row">
-                    <div class="col-md-4 text-center">
-                        {{-- Vùng hiển thị Avatar --}}
-                        <img id="modal-avatar-img" src="" alt="Avatar" class="img-fluid rounded-circle mb-3"
-                            style="width: 150px; height: 150px; object-fit: cover;">
-                        <div id="modal-avatar-text"
-                            class="img-placeholder rounded-circle bg-primary text-white d-flex align-items-center justify-content-center mx-auto mb-3"
-                            style="width: 150px; height: 150px; font-size: 50px; font-weight: bold;">
+                    <!-- Cột bên trái: Avatar & Thông tin cơ bản -->
+                    <div class="col-md-4 text-center border-right">
+                        <div class="avatar-container mb-3 d-flex align-items-center justify-content-center"
+                            style="height: 160px;">
+                            {{-- 1. Thẻ ảnh: Mặc định ẩn --}}
+                            <img id="modal-avatar-img" src="" alt="Avatar"
+                                class="rounded-circle shadow-sm border"
+                                style="width: 150px; height: 150px; object-fit: cover; display: none;">
+
+                            {{-- 2. Thẻ Placeholder: Mặc định ẩn --}}
+                                                      <div id="custom-avatar-placeholder" class="rounded-circle bg-primary text-white shadow-sm"
+                                style="width: 150px; height: 150px; font-size: 60px; font-weight: bold; display: none !important; align-items: center; justify-content: center;">
+                            </div>
                         </div>
+                        <h5 id="modal-display-name" class="font-weight-bold mb-1"></h5>
+                        <div id="modal-account-role-badge"></div>
                     </div>
+
+                    <!-- Cột bên phải: Chi tiết -->
                     <div class="col-md-8">
-                        <table class="table table-bordered">
+                        <table class="table table-sm table-borderless">
                             <tbody>
                                 <tr>
-                                    <th style="width: 150px;">ID</th>
-                                    <td id="modal-account-id"></td>
+                                    <th class="text-muted" style="width: 140px;">ID hệ thống:</th>
+                                    <td id="modal-account-id" class="font-weight-bold text-dark"></td>
                                 </tr>
                                 <tr>
-                                    <th>Họ và tên</th>
-                                    <td id="modal-account-name"></td>
-                                </tr>
-                                <tr>
-                                    <th>Email</th>
+                                    <th class="text-muted">Email:</th>
                                     <td id="modal-account-email"></td>
                                 </tr>
                                 <tr>
-                                    <th>Số điện thoại</th>
+                                    <th class="text-muted">Số điện thoại:</th>
                                     <td id="modal-account-phone"></td>
                                 </tr>
                                 <tr>
-                                    <th>Vai trò</th>
-                                    <td id="modal-account-role"></td>
-                                </tr>
-                                <tr>
-                                    <th>Trạng thái</th>
+                                    <th class="text-muted">Trạng thái:</th>
                                     <td id="modal-account-status"></td>
                                 </tr>
                                 <tr>
-                                    <th>Ngày tạo</th>
+                                    <th class="text-muted">Ngày tạo:</th>
                                     <td id="modal-account-created"></td>
                                 </tr>
                                 <tr>
-                                    <th>Mật khẩu</th>
-                                    <td><em>(Đã mã hóa)</em></td>
-                                </tr>
-                                <tr>
-                                    <th colspan="2">Tiểu sử (Bio)</th>
-                                </tr>
-                                <tr>
-                                    <td colspan="2">
-                                        <p id="modal-account-bio" class="mb-0"></p>
-                                    </td>
+                                    <th class="text-muted">Mật khẩu:</th>
+                                    <td class="text-italic text-secondary"><small>(Đã mã hóa bảo mật)</small></td>
                                 </tr>
                             </tbody>
                         </table>
+
+                        <div class="mt-3 p-3 bg-light rounded">
+                            <h6 class="font-weight-bold text-primary mb-2"><i class="fas fa-info-circle mr-1"></i> Tiểu
+                                sử (Bio)</h6>
+                            <p id="modal-account-bio" class="mb-0 text-dark" style="white-space: pre-wrap;"></p>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">Đóng</button>
+            <div class="modal-footer bg-light">
+                <button class="btn btn-secondary px-4" type="button" data-dismiss="modal">Đóng</button>
             </div>
         </div>
     </div>

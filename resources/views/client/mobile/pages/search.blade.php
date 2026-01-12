@@ -9,7 +9,7 @@
             <h3>Điện thoại ({{ $phones->count() }})</h3>
             <div class="row mt-4">
                 @forelse($phones as $phone)
-                    <div class="col-6 col-md-4 col-lg-3 product-item">
+                    <div class="col-6 col-md-4 col-lg-3 product-item mb-4">
                         <div class="product-card">
                             <div class="product-badge">
                                 <button class="spc-heart-btn {{ $phone->isFavorited() ? 'active' : '' }}"
@@ -26,8 +26,8 @@
                             </div>
 
                             <div class="product-content">
-                                <div class="ss-tag" style="color: #b11c44">{{ $phone->category->name }}</div>
-                                <h3 class="ss-name">
+                                {{-- <div class="ss-tag" style="color: #b11c44">{{ $phone->category->name }}</div> --}}
+                                <h3 class="ss-name" style="min-height: 45px !important;">
                                     <a href="{{ route('phone.detail', $phone->slug) }}"
                                         style="text-decoration: none; color: inherit; font-size: 18px !important;">
                                         {{ $phone->name }}

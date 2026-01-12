@@ -31,7 +31,10 @@ class PhoneController extends Controller
         $query = Phone::with('category', 'variants.size', 'variants.color')->withSum('variants as total_stock', 'stock')->withMin('variants as min_price', 'price');
 
         $trashedCount = Phone::onlyTrashed()->count();
-        $categories = Category::all();
+        // LẤY DANH MỤC CẤP CUỐI:
+        // - whereDoesntHave('children'): Không có con
+        // - where('name', 'NOT LIKE', '%gói cước%'): Loại trừ gói cước (có thể dùng slug tùy bạn)
+        $categories = Category::whereDoesntHave('children')->where('name', 'NOT LIKE', '%gói cước%')->orderBy('name', 'asc')->get();
 
         // 2. Tìm kiếm theo tên/danh mục
         if ($request->filled('search')) {
@@ -41,6 +44,16 @@ class PhoneController extends Controller
                     $q->where('name', 'like', "%$search%");
                 });
             });
+        }
+
+        // 3. Lọc theo Danh mục (Nâng cấp để lọc được cả con nếu chọn cha)
+        if ($request->filled('category_id')) {
+            $category = Category::find($request->category_id);
+            if ($category) {
+                // Lấy tất cả ID của chính nó và các con (đề phòng sau này bạn đổi ý hiện danh mục cha)
+                $categoryIds = $category->getAllChildIds();
+                $query->whereIn('category_id', $categoryIds);
+            }
         }
 
         // 3. Lọc theo Danh mục & Trạng thái
@@ -421,6 +434,31 @@ class PhoneController extends Controller
         }
     }
 
+    public function toggleFeatured(Phone $phone)
+    {
+        try {
+            // Cách 1: Đảo ngược giá trị hiện tại
+            $phone->is_featured = !$phone->is_featured;
+            $phone->save();
+
+            // Hoặc Cách 2: Lấy giá trị từ request gửi lên (an toàn hơn)
+            // $phone->update(['is_featured' => request('is_featured')]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Cập nhật trạng thái nổi bật thành công!',
+                'is_featured' => (bool) $phone->is_featured,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json(
+                [
+                    'success' => false,
+                    'message' => 'Lỗi: ' . $e->getMessage(),
+                ],
+                500,
+            );
+        }
+    }
     /**
      * Remove the specified resource from storage.
      */
