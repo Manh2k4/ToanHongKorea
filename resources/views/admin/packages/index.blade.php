@@ -22,25 +22,7 @@
     {{-- Hiển thị thông báo --}}
 
     <!-- Bộ lọc tìm kiếm -->
-    <div class="card shadow-sm mb-4 border-0">
-        <div class="card-body">
-            <form action="{{ route('admin.packages.index') }}" method="GET" class="row g-3">
-                <div class="col-md-10">
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text bg-white border-right-0"><i
-                                    class="fas fa-search text-muted"></i></span>
-                        </div>
-                        <input type="text" name="search" class="form-control border-left-0"
-                            placeholder="Tìm kiếm theo tên gói cước hoặc nhà mạng..." value="{{ request('search') }}">
-                    </div>
-                </div>
-                <div class="col-md-2">
-                    <button type="submit" class="btn btn-primary btn-block shadow-sm">Tìm kiếm</button>
-                </div>
-            </form>
-        </div>
-    </div>
+    @include('admin.packages.filter')
 
     <!-- Bảng danh sách gói cước -->
     <div class="card shadow-sm mb-4 border-0">

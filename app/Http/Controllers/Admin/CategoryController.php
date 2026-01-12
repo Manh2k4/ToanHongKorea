@@ -18,17 +18,32 @@ class CategoryController extends Controller
     public function index(Request $request)
     {
         $query = Category::query();
-        $trashedCount = Category::onlyTrashed()->count(); // Đếm số lượng bài trong thùng rác
+        $trashedCount = Category::onlyTrashed()->count();
 
-        // Xử lý tìm kiếm
+        // 1. Xử lý tìm kiếm theo tên hoặc mô tả
         if ($search = $request->input('search')) {
-            $query->where('name', 'like', '%' . $search . '%')
-                ->orWhere('description', 'like', '%' . $search . '%');
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', '%' . $search . '%')->orWhere('description', 'like', '%' . $search . '%');
+            });
         }
 
-        $categories = $query->latest()->paginate(10); // Phân trang và sắp xếp mới nhất
+        // 2. Lọc theo cấp bậc (Chuyên mục cha)
+        if ($request->has('parent_id') && $request->parent_id !== null) {
+            if ($request->parent_id == 'root') {
+                $query->whereNull('parent_id'); // Lấy các chuyên mục gốc
+            } else {
+                $query->where('parent_id', $request->parent_id);
+            }
+        }
 
-        return view('admin.categories.index', compact('categories', 'trashedCount'));
+        // Eager load 'parent' để tránh N+1 query khi hiển thị bảng
+        $categories = $query->with('parent')->latest()->paginate(10);
+
+        // 3. Lấy danh sách chuyên mục để làm bộ lọc (Dùng đệ quy nhẹ hoặc lấy tất cả để xử lý)
+        // Ở đây ta lấy các chuyên mục có thể làm cha (thường là cấp 1 và cấp 2)
+        $filterCategories = Category::whereNull('parent_id')->with('children')->get();
+
+        return view('admin.categories.index', compact('categories', 'trashedCount', 'filterCategories'));
     }
 
     /**
@@ -45,16 +60,13 @@ class CategoryController extends Controller
      */
     public function store(StoreCategoryRequest $request)
     {
-
         // Lấy dữ liệu đã được validate từ Form Request
         $validatedData = $request->validated();
-
 
         // Tự động tạo slug từ name nếu slug không được nhập
         if (empty($validatedData['slug'])) {
             $validatedData['slug'] = Str::slug($validatedData['name']);
         }
-
 
         // Tạo mới category
         Category::create($validatedData);
