@@ -79,10 +79,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
     Route::get('/chat/messages/{userId}', [ChatController::class, 'getMessages']);
     Route::post('/chat/send', [ChatController::class, 'sendMessage']);
-});
-
-Route::get('/test-config', function () {
-    return config('broadcasting.connections.pusher.options.cluster');
+    Route::post('/chat/read/{userId}', [ChatController::class, 'markAsRead']);
 });
 
 /*
