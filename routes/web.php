@@ -81,7 +81,6 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/chat/send', [ChatController::class, 'sendMessage']);
     Route::post('/chat/read/{userId}', [ChatController::class, 'markAsRead']);
 });
-
 /*
 |--------------------------------------------------------------------------
 | 4. ADMIN & STAFF ROUTES (Roles 1 & 2)
