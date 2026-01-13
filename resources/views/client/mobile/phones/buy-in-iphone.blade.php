@@ -10,19 +10,17 @@
         const phoneName = "{{ $phone->name }}";
         const currentUrl = window.location.href;
 
-        // Các phần tử DOM
         const priceEl = document.getElementById('ss-pd-main-price');
         const stockEl = document.getElementById('ss-pd-stock-status');
         const skuEl = document.getElementById('ss-pd-sku');
         const usedInfo = document.getElementById('ss-pd-used-info');
 
-        // --- 2. HÀM TẠO MÃ REF (Tracking cho iOS) ---
+        // --- 2. HÀM TẠO MÃ REF ---
         function generateRefCode(variant) {
             const nameSlug = "{{ Str::slug($phone->name, '_') }}";
             const sizeText = document.querySelector(`.ss-pd-v-item[data-type="size"].active`)?.innerText.trim()
                 .replace(/\s+/g, '') || '0';
             const vId = variant ? variant.id : 'IPHONE_REQ';
-            // Tiền tố I_ để nhận diện khách đến từ iPhone
             return `I_MUA_${vId}_${nameSlug}_${sizeText}`.toUpperCase();
         }
 
@@ -104,7 +102,6 @@
                 return;
             }
 
-            // XỬ LÝ NÚT MUA QUA MESSENGER
             const buyBtn = e.target.closest('#btn-add-to-cart');
             if (buyBtn) {
                 e.preventDefault();
@@ -124,30 +121,45 @@
                 let colorText = document.querySelector('.ss-pd-v-item.active[data-type="color"]')?.innerText
                     .trim() || "";
                 const conditionLabel = selectedCondition === 'new' ? 'Máy mới 100%' : 'Like New/99%';
+                const finalPrice = priceEl ? priceEl.innerText : 'Liên hệ';
 
                 const refCode = generateRefCode(currentVariant);
                 let message = `Chào Shop, mình muốn tư vấn mua máy:\n`;
                 message += `- Sản phẩm: ${phoneName}\n`;
                 message += `- Tình trạng: ${conditionLabel}\n`;
                 message += `- Cấu hình: ${sizeText} - ${colorText}\n`;
-                message += `- Giá: ${priceEl ? priceEl.innerText : 'Liên hệ'}\n`;
+                message += `- Giá: ${finalPrice}\n`;
                 message += `- Link: ${currentUrl}`;
 
                 const messengerUrl =
                     `https://m.me/${pageUsername}?ref=${refCode}&text=${encodeURIComponent(message)}`;
 
+                // --- CẢI THIỆN THÔNG BÁO THEO CÁCH 1 ---
                 Swal.fire({
-                    title: 'Kết nối Messenger',
-                    html: `Mở chat để nhận tư vấn cho bản <b>${sizeText}</b> nhé!`,
+                    title: 'Gửi yêu cầu tư vấn',
+                    html: `
+                        <div style="text-align: left; background: #f8f9fa; padding: 15px; border-radius: 10px; border: 1px solid #e9ecef; font-size: 0.95em;">
+                            <p style="margin: 0 0 8px 0;"><strong>Sản phẩm:</strong> ${phoneName}</p>
+                            <p style="margin: 0 0 8px 0;"><strong>Cấu hình:</strong> ${sizeText} - ${colorText}</p>
+                            <p style="margin: 0 0 8px 0;"><strong>Tình trạng:</strong> ${conditionLabel}</p>
+                            <p style="margin: 0; color: #0084FF;"><strong>Giá dự kiến:</strong> <span style="font-size: 1.1em; font-weight: bold;">${finalPrice}</span></p>
+                        </div>
+                        <p style="margin-top: 15px; font-size: 0.85em; color: #666;">
+                           Shop sẽ tư vấn chi tiết cho bạn qua Messenger ngay!
+                        </p>
+                    `,
                     icon: 'info',
                     showCancelButton: true,
                     confirmButtonColor: '#0084FF',
-                    confirmButtonText: 'Mở Messenger',
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: 'Mở Messenger ngay',
                     cancelButtonText: 'Để sau',
-                    reverseButtons: true
+                    reverseButtons: true,
+                    showClass: {
+                        popup: 'animated fadeInDown faster'
+                    }
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        // --- GỬI THỐNG KÊ LÊN SERVER (QUAN TRỌNG) ---
                         fetch("{{ route('track.messenger') }}", {
                             method: "POST",
                             headers: {
@@ -165,15 +177,12 @@
                                 price: currentVariant ? currentVariant.price : 0
                             })
                         });
-
-                        // Deep Link cho iOS
                         window.location.href = messengerUrl;
                     }
                 });
             }
         });
 
-        // Khởi tạo
         if (document.readyState === 'complete') {
             selectDefaultVariant();
         } else {

@@ -30,7 +30,7 @@
         function selectDefaultVariant() {
             if (typeof VARIANT_DATA !== 'undefined' && VARIANT_DATA.length > 0) {
                 const cheapest = VARIANT_DATA.reduce((min, v) => v.price < min.price ? v : min, VARIANT_DATA[
-                0]);
+                    0]);
 
                 document.querySelector(
                     `.ss-pd-v-item[data-type="condition"][data-value="${cheapest.condition}"]`)?.click();
@@ -62,7 +62,7 @@
                 if (selectedCondition !== 'new' && usedInfo) {
                     usedInfo.style.display = 'flex';
                     document.getElementById('val-pin').innerText = (currentVariant.battery_health || '9x') +
-                    '%';
+                        '%';
                     document.getElementById('val-sac').innerText = currentVariant.charging_count || 'Ít';
                 } else if (usedInfo) {
                     usedInfo.style.display = 'none';
@@ -122,13 +122,30 @@
                     `https://m.me/${pageId}?ref=${refCode}&text=${encodeURIComponent(message)}`;
 
                 Swal.fire({
-                    title: 'Đang kết nối...',
-                    html: `Mở Messenger để tư vấn bản <b>${sizeText}</b> nhé!`,
+                    title: 'Gửi yêu cầu tư vấn',
+                    html: `
+        <div style="text-align: left; background: #f8f9fa; padding: 15px; border-radius: 10px; border: 1px solid #e9ecef;">
+            <p style="margin: 0 0 8px 0;"><strong>Sản phẩm:</strong> {{ $phone->name }}</p>
+            <p style="margin: 0 0 8px 0;"><strong>Cấu hình:</strong> ${sizeText} - ${colorText}</p>
+            <p style="margin: 0 0 8px 0;"><strong>Tình trạng:</strong> ${selectedCondition == 'new' ? 'Mới 100%' : 'Like New'}</p>
+            <p style="margin: 0; color: #0084FF;"><strong>Giá dự kiến:</strong> <span style="font-size: 1.1em; font-weight: bold;">${priceEl.innerText}</span></p>
+        </div>
+        <p style="margin-top: 15px; font-size: 0.9em; color: #666;">
+            <i class="fas fa-info-circle"></i> Shop sẽ tư vấn chi tiết cho bạn qua Messenger ngay!
+        </p>
+    `,
                     icon: 'info',
                     showCancelButton: true,
                     confirmButtonColor: '#0084FF',
-                    confirmButtonText: 'Mở Messenger',
-                    cancelButtonText: 'Đóng'
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: '<i class="fab fa-facebook-messenger"></i> Mở Messenger ngay',
+                    cancelButtonText: 'Để sau',
+                    showClass: {
+                        popup: 'animated fadeInDown faster'
+                    },
+                    hideClass: {
+                        popup: 'animated fadeOutUp faster'
+                    }
                 }).then((result) => {
                     if (result.isConfirmed) {
                         // --- GỬI THỐNG KÊ LÊN SERVER TRƯỚC KHI ĐI ---
