@@ -10,20 +10,27 @@
         const phoneName = "{{ $phone->name }}";
         const currentUrl = window.location.href;
 
-        // Các phần tử DOM cần tương tác
+        // Các phần tử DOM
         const priceEl = document.getElementById('ss-pd-main-price');
         const stockEl = document.getElementById('ss-pd-stock-status');
         const skuEl = document.getElementById('ss-pd-sku');
         const usedInfo = document.getElementById('ss-pd-used-info');
 
-        // --- 2. HÀM TỰ ĐỘNG CHỌN BIẾN THỂ RẺ NHẤT (UX iPhone) ---
+        // --- 2. HÀM TẠO MÃ REF (Tracking cho iOS) ---
+        function generateRefCode(variant) {
+            const nameSlug = "{{ Str::slug($phone->name, '_') }}";
+            const sizeText = document.querySelector(`.ss-pd-v-item[data-type="size"].active`)?.innerText.trim()
+                .replace(/\s+/g, '') || '0';
+            const vId = variant ? variant.id : 'IPHONE_REQ';
+            // Tiền tố I_ để nhận diện khách đến từ iPhone
+            return `I_MUA_${vId}_${nameSlug}_${sizeText}`.toUpperCase();
+        }
+
+        // --- 3. HÀM TỰ ĐỘNG CHỌN BIẾN THỂ RẺ NHẤT ---
         function selectDefaultVariant() {
             if (typeof VARIANT_DATA !== 'undefined' && VARIANT_DATA.length > 0) {
-                // Tìm biến thể giá thấp nhất trong mảng dữ liệu
                 const cheapest = VARIANT_DATA.reduce((min, v) => v.price < min.price ? v : min, VARIANT_DATA[0]);
 
-                // Giả lập click vào các nút tương ứng
-                // Sử dụng setTimeout để đảm bảo DOM đã render hoàn toàn trên Safari
                 setTimeout(() => {
                     const btnCond = document.querySelector(
                         `.ss-pd-v-item[data-type="condition"][data-value="${cheapest.condition}"]`);
@@ -35,15 +42,14 @@
                     if (btnCond) btnCond.click();
                     if (btnSize) btnSize.click();
                     if (btnColor) btnColor.click();
-                }, 100);
+                }, 150);
             }
         }
 
-        // --- 3. CẬP NHẬT GIAO DIỆN (Xử lý hàng ảo/Hàng đặt trước) ---
+        // --- 4. CẬP NHẬT GIAO DIỆN ---
         function updateDisplay() {
             if (typeof VARIANT_DATA === 'undefined') return;
 
-            // Tìm biến thể khớp trong DB
             currentVariant = VARIANT_DATA.find(v =>
                 v.condition === selectedCondition &&
                 v.size_id == selectedSize &&
@@ -51,7 +57,6 @@
             );
 
             if (currentVariant) {
-                // Trường hợp CÓ hàng trong dữ liệu
                 const formattedPrice = new Intl.NumberFormat('vi-VN').format(currentVariant.price) + 'w';
                 if (priceEl) priceEl.innerText = formattedPrice;
                 if (skuEl) skuEl.innerText = currentVariant.sku || 'N/A';
@@ -60,20 +65,15 @@
                     stockEl.style.color = currentVariant.stock > 0 ? '#27ae60' : '#f39c12';
                 }
 
-                // Hiển thị info máy cũ (Pin/Sạc)
                 if (selectedCondition !== 'new' && usedInfo) {
                     usedInfo.style.display = 'flex';
-                    const pin = document.getElementById('val-pin');
-                    const sac = document.getElementById('val-sac');
-                    if (pin) pin.innerText = (currentVariant.battery_health || '9x') + '%';
-                    if (sac) sac.innerText = currentVariant.charging_count || 'Ít';
+                    document.getElementById('val-pin').innerText = (currentVariant.battery_health || '9x') + '%';
+                    document.getElementById('val-sac').innerText = currentVariant.charging_count || 'Ít';
                 } else if (usedInfo) {
                     usedInfo.style.display = 'none';
                 }
             } else {
-                // TRƯỜNG HỢP KHÁCH CHỌN BIẾN THỂ KHÔNG CÓ TRONG DB (Hàng đặt trước theo yêu cầu)
                 if (priceEl) priceEl.innerText = "Giá: Liên hệ";
-                if (skuEl) skuEl.innerText = "Custom Order";
                 if (stockEl) {
                     stockEl.innerText = "Hàng đặt riêng (Vui lòng chat)";
                     stockEl.style.color = "#3498db";
@@ -82,7 +82,7 @@
             }
         }
 
-        // --- 4. LẮNG NGHE SỰ KIỆN (Event Delegation) ---
+        // --- 5. LẮNG NGHE SỰ KIỆN ---
         document.addEventListener('click', function(e) {
             const item = e.target.closest('.ss-pd-v-item');
             if (item) {
@@ -104,12 +104,11 @@
                 return;
             }
 
-            // Xử lý nút MUA NGAY
+            // XỬ LÝ NÚT MUA QUA MESSENGER
             const buyBtn = e.target.closest('#btn-add-to-cart');
             if (buyBtn) {
                 e.preventDefault();
 
-                // Chỉ yêu cầu chọn đủ 3 thuộc tính, không cần currentVariant phải tồn tại
                 if (!selectedCondition || !selectedSize || !selectedColor) {
                     Swal.fire({
                         icon: 'warning',
@@ -120,53 +119,61 @@
                     return;
                 }
 
-                // Lấy thông tin text thực tế từ nút đang Active
-                let sizeText = "";
-                let colorText = "";
-                document.querySelectorAll('.ss-pd-v-item.active').forEach(el => {
-                    if (el.getAttribute('data-type') === 'size') sizeText = el.innerText.trim();
-                    if (el.getAttribute('data-type') === 'color') colorText = el.innerText.trim();
-                });
-
+                let sizeText = document.querySelector('.ss-pd-v-item.active[data-type="size"]')?.innerText
+                    .trim() || "";
+                let colorText = document.querySelector('.ss-pd-v-item.active[data-type="color"]')?.innerText
+                    .trim() || "";
                 const conditionLabel = selectedCondition === 'new' ? 'Máy mới 100%' : 'Like New/99%';
-                const priceText = priceEl ? priceEl.innerText : "Liên hệ";
-                const orderType = currentVariant ? (currentVariant.stock > 0 ? "Mua sẵn" : "Đặt hàng") :
-                    "Đặt hàng theo yêu cầu";
 
-                // Tạo nội dung tin nhắn chuyên nghiệp
-                let message = `ToanHong Korean, mình muốn tư vấn mua máy:\n`;
-                message += `Model: ${phoneName}\n`;
-                message += `Tình trạng: ${conditionLabel}\n`;
-                message += `Cấu hình: ${sizeText} - ${colorText}\n`;
-                message += `Giá hiện tại: ${priceText}\n`;
-                message += `Loại đơn: ${orderType}\n`;
-                message += `Link: ${currentUrl}`;
+                const refCode = generateRefCode(currentVariant);
+                let message = `Chào Shop, mình muốn tư vấn mua máy:\n`;
+                message += `- Sản phẩm: ${phoneName}\n`;
+                message += `- Tình trạng: ${conditionLabel}\n`;
+                message += `- Cấu hình: ${sizeText} - ${colorText}\n`;
+                message += `- Giá: ${priceEl ? priceEl.innerText : 'Liên hệ'}\n`;
+                message += `- Link: ${currentUrl}`;
 
-                const messengerUrl = `https://m.me/${pageUsername}?text=${encodeURIComponent(message)}`;
+                const messengerUrl =
+                    `https://m.me/${pageUsername}?ref=${refCode}&text=${encodeURIComponent(message)}`;
 
-                // Hiển thị thông báo xác nhận theo phong cách iOS
                 Swal.fire({
-                    title: 'Xác nhận tư vấn',
-                    html: `Bạn đang quan tâm bản <b>${sizeText}</b> màu <b>${colorText}</b>.<br>Hệ thống sẽ kết nối bạn tới Messenger!`,
+                    title: 'Kết nối Messenger',
+                    html: `Mở chat để nhận tư vấn cho bản <b>${sizeText}</b> nhé!`,
                     icon: 'info',
                     showCancelButton: true,
                     confirmButtonColor: '#0084FF',
                     confirmButtonText: 'Mở Messenger',
                     cancelButtonText: 'Để sau',
-                    reverseButtons: true, // iPhone thường để nút Confirm bên phải
-                    showClass: {
-                        popup: 'animated fadeInDown faster'
-                    }
+                    reverseButtons: true
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        // Trên iOS, window.location.href hoạt động ổn định nhất để kích hoạt Deep Link
+                        // --- GỬI THỐNG KÊ LÊN SERVER (QUAN TRỌNG) ---
+                        fetch("{{ route('track.messenger') }}", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                                "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                            },
+                            body: JSON.stringify({
+                                type: 'phone',
+                                product_id: "{{ $phone->id }}",
+                                variant_id: currentVariant ? currentVariant.id :
+                                    null,
+                                product_name: "{{ $phone->name }}",
+                                product_slug: "{{ $phone->slug }}",
+                                variant_info: `${conditionLabel} | ${sizeText} | ${colorText}`,
+                                price: currentVariant ? currentVariant.price : 0
+                            })
+                        });
+
+                        // Deep Link cho iOS
                         window.location.href = messengerUrl;
                     }
                 });
             }
         });
 
-        // Tự động chạy chọn mặc định khi load
+        // Khởi tạo
         if (document.readyState === 'complete') {
             selectDefaultVariant();
         } else {
