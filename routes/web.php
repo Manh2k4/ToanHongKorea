@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AccountController;
+use App\Http\Controllers\Admin\ColorController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Admin\CategoryController;
@@ -111,6 +112,9 @@ Route::prefix('admin')
         Route::patch('phones/{phone}/change-status', [PhoneController::class, 'changeStatus'])->name('phones.changeStatus');
         Route::patch('/phones/{phone}/toggle-featured', [PhoneController::class, 'toggleFeatured'])->name('phones.toggle-featured');
         Route::resource('phones', PhoneController::class);
+
+        // --- Quản lý biến thể
+        Route::resource('colors', ColorController::class)->except(['create', 'show', 'edit']); 
 
         // --- Quản lý Gói cước (Packages) ---
         Route::get('packages/trash', [PackageController::class, 'trash'])->name('packages.trash');

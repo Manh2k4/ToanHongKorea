@@ -14,4 +14,12 @@ class Color extends Model
     {
         return $this->hasMany(Variant::class);
     }
+
+    /**
+     * Scope để tìm kiếm nhanh
+     */
+    public function scopeSearch($query, $keyword)
+    {
+        return $query->where('name', 'like', "%$keyword%")->orWhere('hex_code', 'like', "%$keyword%");
+    }
 }
