@@ -88,7 +88,7 @@
     </div>
 
     <div class="mf-bottom">
-        <p>© 2025 <span>Toanhong Korea</span>. Thiết kế bởi MobiTech</p>
+        <p>© 2025 <span>Toanhong Korea</span>. Thiết kế bởi ManhDev</p>
     </div>
 
     <!-- Nút quay lại đầu trang mượt mà -->
