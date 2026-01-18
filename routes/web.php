@@ -76,6 +76,7 @@ Route::prefix('auth')
         Route::post('/delete-user-data', [AuthController::class, 'deleteFacebookData']);
         Route::get('google', 'redirectToGoogle')->name('google.login');
         Route::get('google/callback', 'handleGoogleCallback');
+        Route::post('/google/one-tap', [AuthController::class, 'handleGoogleOneTap']);
     });
 
 /*

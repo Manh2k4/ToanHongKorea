@@ -220,6 +220,50 @@ class AuthController extends Controller
         ]);
     }
 
+    use Google_Client;
+
+    public function handleGoogleOneTap(Request $request)
+    {
+    $idToken = $request->input('credential');
+    
+    if (!$idToken) {
+        return redirect('/auth/login')->with('error', 'Không nhận được thông tin từ Google');
+    }
+
+    $client = new Google_Client(['client_id' => env('GOOGLE_CLIENT_ID')]);
+    $payload = $client->verifyIdToken($idToken);
+
+    if ($payload) {
+        $googleId = $payload['sub'];
+        $email = $payload['email'];
+        $name = $payload['name'];
+
+        // Logic giống hệt hàm handleGoogleCallback của bạn
+        $user = User::where('google_id', $googleId)->orWhere('email', $email)->first();
+
+        if ($user) {
+            if (empty($user->google_id)) {
+                $user->update(['google_id' => $googleId]);
+            }
+            Auth::login($user);
+        } else {
+            $user = User::create([
+                'name' => $name,
+                'email' => $email,
+                'google_id' => $googleId,
+                'password' => Hash::make(Str::random(16)),
+                'role_id' => 3,
+                'is_active' => true,
+            ]);
+            Auth::login($user);
+        }
+
+        return redirect('/');
+        } else {
+            return redirect('/auth/login')->with('error', 'Xác thực Google thất bại');
+        }
+    }
+
     // Hàm hỗ trợ giải mã dữ liệu từ Facebook (Copy nguyên xi đoạn này)
     private function parseSignedRequest($signed_request)
     {

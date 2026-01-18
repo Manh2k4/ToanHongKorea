@@ -13,5 +13,6 @@ class VerifyCsrfToken extends Middleware
      */
     protected $except = [
         '/delete-user-data',
+        '/auth/google/one-tap',
     ];
 }
