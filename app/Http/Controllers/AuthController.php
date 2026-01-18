@@ -7,6 +7,7 @@ use App\Http\Requests\LoginRequest; // Import LoginRequest
 use App\Http\Requests\RegisterRequest; // Import RegisterRequest
 use App\Models\User;
 use Exception;
+use Google_Client;
 use GrahamCampbell\ResultType\Success;
 use Log;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -220,7 +221,6 @@ class AuthController extends Controller
         ]);
     }
 
-    use Google_Client;
 
     public function handleGoogleOneTap(Request $request)
     {
