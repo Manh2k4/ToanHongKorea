@@ -10,10 +10,14 @@
                 cho cộng đồng người Việt tại Hàn Quốc.
             </p>
             <div class="mf-socials">
-                <a href="https://www.facebook.com/anhtoan270189/" class="mf-social-btn fb"><i class="fab fa-facebook-f"></i></a>
-                <a href="https://www.facebook.com/anhtoan270189/" class="mf-social-btn tt"><i class="fab fa-tiktok"></i></a>
-                <a href="https://www.facebook.com/anhtoan270189/" class="mf-social-btn yt"><i class="fab fa-youtube"></i></a>
-                <a href="https://www.facebook.com/anhtoan270189/" class="mf-social-btn ig"><i class="fab fa-instagram"></i></a>
+                <a href="https://www.facebook.com/anhtoan270189/" class="mf-social-btn fb"><i
+                        class="fab fa-facebook-f"></i></a>
+                <a href="https://www.facebook.com/anhtoan270189/" class="mf-social-btn tt"><i
+                        class="fab fa-tiktok"></i></a>
+                <a href="https://www.facebook.com/anhtoan270189/" class="mf-social-btn yt"><i
+                        class="fab fa-youtube"></i></a>
+                <a href="https://www.facebook.com/anhtoan270189/" class="mf-social-btn ig"><i
+                        class="fab fa-instagram"></i></a>
             </div>
         </div>
 
@@ -25,10 +29,10 @@
                     <i class="fa-solid fa-chevron-down"></i>
                 </div>
                 <ul class="mf-acc-content">
-                    <li><a href="#">Đăng ký Sim trả sau</a></li>
-                    <li><a href="#">Gia hạn gói cước data</a></li>
-                    <li><a href="#">Nạp tiền thẻ quốc tế</a></li>
-                    <li><a href="#">Hỗ trợ trả góp 0%</a></li>
+                    <li><a href="{{ route('sim.guide') }}">Đăng ký Sim (Trả trước/sau)</a></li>
+                    <li><a href="{{ route('service.support') }}">Gia hạn gói cước data</a></li>
+                    <li><a href="{{ route('service.support') }}">Nạp tiền điện thoại</a></li>
+                    <li><a href="{{ route('faqs') }}">Câu hỏi thường gặp</a></li>
                 </ul>
             </div>
 
@@ -38,10 +42,10 @@
                     <i class="fa-solid fa-chevron-down"></i>
                 </div>
                 <ul class="mf-acc-content">
-                    <li><a href="#">Chính sách bảo hành vàng</a></li>
-                    <li><a href="#">Quy định đổi trả máy cũ</a></li>
-                    <li><a href="#">Chính sách bảo mật thông tin</a></li>
-                    <li><a href="#">Vận chuyển hỏa tốc toàn Hàn</a></li>
+                    <li><a href="{{ route('terms') }}">Điều khoản sử dụng</a></li>
+                    <li><a href="{{ route('warranty') }}">Quy định đổi trả máy cũ</a></li>
+                    <li><a href="{{ route('privacy') }}">Chính sách bảo mật</a></li>
+                    <li><a href="{{ route('shipping') }}">Vận chuyển toàn Hàn - Việt</a></li>
                 </ul>
             </div>
         </div>
@@ -99,6 +103,6 @@
     <button id="backToTop" class="mf-back-to-top">
         <i class="fa-solid fa-arrow-up"></i>
     </button>
-    
+
 </footer>
 @include('client.mobile.partials.footer-lib')

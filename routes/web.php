@@ -53,9 +53,15 @@ Route::post('/wishlist/toggle', [FavoriteController::class, 'toggle'])->name('wi
 
 Route::post('/track-messenger-click', [MessengerTrackingController::class, 'trackClick'])->name('track.messenger');
 
-Route::get('pages/chinh-sach-bao-mat', [PageController::class, 'privacy'])->name('privacy');
-Route::get('pages/dieu-khoan-su-dung', [PageController::class, 'terms'])->name('terms');
-
+Route::controller(PageController::class)->group(function () {
+    Route::get('pages/chinh-sach-bao-mat', 'privacy')->name('privacy');
+    Route::get('pages/dieu-khoan-su-dung', 'terms')->name('terms');
+    Route::get('pages/huong-dan-dang-ky-sim', 'simGuide')->name('sim.guide');
+    Route::get('pages/ho-tro-dich-vu', 'support')->name('service.support');
+    Route::get('pages/cau-hoi-thuong-gap', 'faqs')->name('faqs');
+    Route::get('pages/quy-dinh-bao-hanh', 'warranty')->name('warranty');
+    Route::get('pages/chinh-sach-giao-hang', 'shipping')->name('shipping');
+});
 /*
 |--------------------------------------------------------------------------
 | 2. AUTH ROUTES (Đăng nhập, đăng ký, social)
@@ -73,7 +79,7 @@ Route::prefix('auth')
         // Social Login
         Route::get('facebook', 'redirectToFacebook')->name('facebook.login');
         Route::get('facebook/callback', 'handleFacebookCallback');
-        Route::post('/delete-user-data', [AuthController::class, 'deleteFacebookData']);
+        Route::post('/delete-user-data', action: [AuthController::class, 'deleteFacebookData']);
         Route::get('google', 'redirectToGoogle')->name('google.login');
         Route::get('google/callback', 'handleGoogleCallback');
         Route::post('/google/one-tap', [AuthController::class, 'handleGoogleOneTap']);

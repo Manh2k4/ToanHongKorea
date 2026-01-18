@@ -11,22 +11,32 @@
                     Quốc. Chúng tôi cam kết mang đến giá trị thực, dịch vụ tận tâm và trải nghiệm mua sắm hoàn hảo nhất.
                 </p>
                 <div class="df-socials">
-                    <a href="https://www.facebook.com/anhtoan270189/" class="df-social-link fb"><i class="fab fa-facebook-f"></i></a>
-                    <a href="https://www.facebook.com/anhtoan270189/" class="df-social-link tt"><i class="fab fa-tiktok"></i></a>
-                    <a href="https://www.facebook.com/anhtoan270189/" class="df-social-link yt"><i class="fab fa-youtube"></i></a>
-                    <a href="https://www.facebook.com/anhtoan270189/" class="df-social-link ig"><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.facebook.com/anhtoan270189/" class="df-social-link fb"><i
+                            class="fab fa-facebook-f"></i></a>
+                    <a href="https://www.facebook.com/anhtoan270189/" class="df-social-link tt"><i
+                            class="fab fa-tiktok"></i></a>
+                    <a href="https://www.facebook.com/anhtoan270189/" class="df-social-link yt"><i
+                            class="fab fa-youtube"></i></a>
+                    <a href="https://www.facebook.com/anhtoan270189/" class="df-social-link ig"><i
+                            class="fab fa-instagram"></i></a>
                 </div>
             </div>
 
             <!-- Cột 2: Hỗ trợ khách hàng -->
+            <!-- Cột 2: Hỗ trợ khách hàng -->
             <div class="df-col">
                 <h4 class="df-title">DỊCH VỤ KHÁCH HÀNG</h4>
                 <ul class="df-links">
-                    <li><a href="#"><i class="fa-solid fa-chevron-right"></i> Hướng dẫn đăng ký Sim</a></li>
-                    <li><a href="#"><i class="fa-solid fa-chevron-right"></i> Kiểm tra gói cước Data</a></li>
-                    <li><a href="#"><i class="fa-solid fa-chevron-right"></i> Nạp tiền điện thoại</a></li>
-                    <li><a href="#"><i class="fa-solid fa-chevron-right"></i> Hỗ trợ trả trước</a></li>
-                    <li><a href="#"><i class="fa-solid fa-chevron-right"></i> Câu hỏi thường gặp</a></li>
+                    <li><a href="{{ route('sim.guide') }}"><i class="fa-solid fa-chevron-right"></i> Hướng dẫn đăng ký
+                            Sim</a></li>
+                    <li><a href="{{ route('service.support') }}"><i class="fa-solid fa-chevron-right"></i> Kiểm tra gói
+                            cước Data</a></li>
+                    <li><a href="{{ route('service.support') }}"><i class="fa-solid fa-chevron-right"></i> Nạp tiền điện
+                            thoại</a></li>
+                    <li><a href="{{ route('service.support') }}"><i class="fa-solid fa-chevron-right"></i> Hỗ trợ trả
+                            trước</a></li>
+                    <li><a href="{{ route('faqs') }}"><i class="fa-solid fa-chevron-right"></i> Câu hỏi thường gặp</a>
+                    </li>
                 </ul>
             </div>
 
@@ -34,11 +44,16 @@
             <div class="df-col">
                 <h4 class="df-title">CHÍNH SÁCH CHUNG</h4>
                 <ul class="df-links">
-                    <li><a href="#"><i class="fa-solid fa-chevron-right"></i> Chính sách bảo hành</a></li>
-                    <li><a href="#"><i class="fa-solid fa-chevron-right"></i> Quy định đổi trả máy</a></li>
-                    <li><a href="#"><i class="fa-solid fa-chevron-right"></i> Bảo mật thông tin</a></li>
-                    <li><a href="#"><i class="fa-solid fa-chevron-right"></i> Điều khoản sử dụng</a></li>
-                    <li><a href="#"><i class="fa-solid fa-chevron-right"></i> Giao hàng toàn Hàn Quốc</a></li>
+                    <li><a href="{{ route('terms') }}"><i class="fa-solid fa-chevron-right"></i> Điều khoản sử dụng</a>
+                    </li>
+                    <li><a href="{{ route('warranty') }}"><i class="fa-solid fa-chevron-right"></i> Quy định đổi trả
+                            máy</a></li>
+                    <li><a href="{{ route('privacy') }}"><i class="fa-solid fa-chevron-right"></i> Bảo mật thông tin</a>
+                    </li>
+                    <li><a href="{{ route('privacy') }}"><i class="fa-solid fa-chevron-right"></i> Chính sách bảo
+                            mật</a></li>
+                    <li><a href="{{ route('shipping') }}"><i class="fa-solid fa-chevron-right"></i> Giao hàng toàn Hàn
+                            Quốc</a></li>
                 </ul>
             </div>
 
