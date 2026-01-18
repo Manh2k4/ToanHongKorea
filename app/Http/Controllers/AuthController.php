@@ -7,7 +7,8 @@ use App\Http\Requests\LoginRequest; // Import LoginRequest
 use App\Http\Requests\RegisterRequest; // Import RegisterRequest
 use App\Models\User;
 use Exception;
-use Google_Client;
+// use Google_Client;
+use Google\Client as Google_Client;
 use GrahamCampbell\ResultType\Success;
 use Log;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -222,15 +223,19 @@ class AuthController extends Controller
     }
 
 
-    public function handleGoogleOneTap(Request $request)
-    {
+
+public function handleGoogleOneTap(Request $request)
+{
     $idToken = $request->input('credential');
     
     if (!$idToken) {
         return redirect('/auth/login')->with('error', 'Không nhận được thông tin từ Google');
     }
 
-    $client = new Google_Client(['client_id' => env('GOOGLE_CLIENT_ID')]);
+    // Khởi tạo Client với ID của bạn
+    $client = new Google_Client(['client_id' => '479761304566-lv0pgsc1tfgpfd9u0u34uok23jdo9jcn.apps.googleusercontent.com']);
+    
+    // Xác thực ID Token
     $payload = $client->verifyIdToken($idToken);
 
     if ($payload) {
@@ -238,33 +243,33 @@ class AuthController extends Controller
         $email = $payload['email'];
         $name = $payload['name'];
 
-        // Logic giống hệt hàm handleGoogleCallback của bạn
+        // Tìm hoặc tạo User
         $user = User::where('google_id', $googleId)->orWhere('email', $email)->first();
 
         if ($user) {
             if (empty($user->google_id)) {
                 $user->update(['google_id' => $googleId]);
             }
-            Auth::login($user);
         } else {
             $user = User::create([
                 'name' => $name,
                 'email' => $email,
                 'google_id' => $googleId,
-                'password' => Hash::make(Str::random(16)),
+                'password' => \Hash::make(\Str::random(16)),
                 'role_id' => 3,
                 'is_active' => true,
             ]);
-            Auth::login($user);
         }
 
-        return redirect('/');
-        } else {
-            return redirect('/auth/login')->with('error', 'Xác thực Google thất bại');
-        }
+        \Auth::login($user);
+        
+        // Quan trọng: Phải dùng return redirect() vì đây là request POST từ Google
+        return redirect()->intended('/'); 
+    } else {
+        return redirect('/auth/login')->with('error', 'Xác thực Google thất bại');
     }
+}
 
-    // Hàm hỗ trợ giải mã dữ liệu từ Facebook (Copy nguyên xi đoạn này)
     private function parseSignedRequest($signed_request)
     {
         [$encoded_sig, $payload] = explode('.', $signed_request, 2);
