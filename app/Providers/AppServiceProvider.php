@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\View;
+use URL;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -26,6 +27,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        if (config('app.env') === 'production') {
+        URL::forceScheme('https');
+    }
         Paginator::useBootstrapFive();
         // Sử dụng View Composer để chia sẻ dữ liệu category cho toàn bộ các view
         // Nếu bạn chỉ muốn chia sẻ cho file header, hãy thay '*' thành 'layouts.header' (tên file blade của bạn)

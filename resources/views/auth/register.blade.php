@@ -7,12 +7,10 @@
     <div class="auth-form-column">
         <h2>Tạo tài khoản mới</h2>
         <p class="social-prompt">Đăng ký nhanh bằng tài khoản mạng xã hội</p>
-        <div class="social-login">
-            <a href="{{ route('facebook.login') }}" class="facebook">
-                <i class="fab fa-facebook-f"></i>
-            </a>
-            <a href="{{ route('google.login') }}" class="google">
-                <i class="fab fa-google-plus-g"></i>
+        <div class="social-login-wrapper">
+            <a href="{{ route('google.login') }}" class="btn-google-login">
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google Logo">
+                <span>Tiếp tục với Google</span>
             </a>
         </div>
         <div class="divider">Hoặc</div>
@@ -71,8 +69,8 @@
         <img src="{{ asset('logo/logo_remove.png') }}" alt="ToanHongKorea Interior">
         <h3>Kết nối thông minh cho cuộc sống số</h3>
         <p>Giải pháp trọn gói từ điện thoại, sim đến gói cước – đơn giản, nhanh gọn, tiết kiệm chi phí.</p>
-
     </div>
+    @include('auth.auth-lib')
 @endsection
 
 @push('scripts')
