@@ -66,7 +66,7 @@
                 <div class="policy-card">
                     <p class="text-muted mb-5 italic">
                         Chào mừng bạn đến với <strong>Toàn Hồng Korea</strong>. Việc bạn truy cập và sử dụng website
-                        <a href="https://toanhongkorean.com" class="text-decoration-none">toanhongkorean.com</a>
+                        <a href="https://toanhongkorea.com" class="text-decoration-none">toanhongkorea.com</a>
                         đồng nghĩa với việc bạn chấp nhận các điều khoản và điều kiện dưới đây:
                     </p>
 
