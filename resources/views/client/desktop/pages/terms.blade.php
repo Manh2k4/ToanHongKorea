@@ -111,7 +111,7 @@
                                 <p class="mb-1"><i class="bi bi-map"></i> <strong>Địa chỉ:</strong> 19 Jangrimsijang
                                     4-gil, Saha-gu, Busan.</p>
                                 <p class="mb-0"><i class="bi bi-telephone"></i> <strong>Hotline:</strong> 010-6565-2999 /
-                                    010-8282-6868</p>
+                                    010-2528-2999</p>
                             </div>
                         </div>
                     </div>

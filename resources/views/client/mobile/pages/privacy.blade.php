@@ -165,7 +165,7 @@
                                 </div>
                                 <div class="contact-item">
                                     <i class="bi bi-phone"></i>
-                                    <span>010-6565-2999 / 010-8282-6868</span>
+                                    <span>010-6565-2999 / 010-2528-2999</span>
                                 </div>
                                 <div class="contact-item">
                                     <i class="bi bi-envelope"></i>
