@@ -41,8 +41,7 @@
                     <div class="alert alert-info border-0 shadow-sm">
                         <p class="mb-1">🚀 <strong>Giao hàng toàn Hàn Quốc:</strong> Nhận sim trong vòng 1-2 ngày làm
                             việc.</p>
-                        <p class="mb-0">✈️ <strong>Hỗ trợ gửi sim về Việt Nam:</strong> Cho khách hàng chuẩn bị sang Hàn
-                            Quốc.</p>
+
                     </div>
 
                     <div class="text-center mt-4">
