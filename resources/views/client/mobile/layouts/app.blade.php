@@ -47,6 +47,9 @@
 
     @include('client.mobile.partials.footer')
     @include('layouts.lib.wishlist')
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
     @stack('scripts')
     @include('sweetalert::alert')
 </body>

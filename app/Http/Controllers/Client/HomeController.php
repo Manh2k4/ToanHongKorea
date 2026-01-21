@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Package;
 use App\Models\Phone;
+use App\Models\ReviewVideo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -85,6 +86,14 @@ class HomeController extends Controller
             ->latest()
             ->get();
 
+        $videos = ReviewVideo::with(['phones' => function ($query) {
+            $query->with('variants');
+        }])
+            ->where('is_active', true)
+            ->orderBy('sort_order', 'asc')
+            ->take(8)
+            ->get();
+
         // 6. Lấy danh sách gói cước (Chỉ lấy các gói đang hoạt động)
         $packages = Package::active()->latest()->get();
 
@@ -98,6 +107,7 @@ class HomeController extends Controller
                 'iphones',
                 'samsungs',
                 'categories_samsung',
+                'videos',
                 'packages', // Đẩy biến packages ra view
             ),
         );

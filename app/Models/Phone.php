@@ -93,4 +93,11 @@ class Phone extends Model
         $sessionFavs = session()->get('favorites', []);
         return isset($sessionFavs['phone_' . $this->id]);
     }
+
+    public function reviewVideos()
+    {
+        return $this->belongsToMany(ReviewVideo::class, 'phone_review_video')
+            ->where('is_active', true)
+            ->orderBy('sort_order', 'asc');
+    }
 }

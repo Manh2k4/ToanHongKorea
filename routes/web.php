@@ -12,6 +12,7 @@ use App\Http\Controllers\Client\FavoriteController;
 use App\Http\Controllers\Client\HomeController;
 use App\Http\Controllers\Admin\PackageController;
 use App\Http\Controllers\Admin\PhoneController;
+use App\Http\Controllers\Admin\ReviewVideoController;
 use App\Http\Controllers\Client\PackageClientController;
 use App\Http\Controllers\Client\PageController;
 use App\Http\Controllers\Client\PhoneClientController;
@@ -131,7 +132,7 @@ Route::prefix('admin')
         Route::resource('phones', PhoneController::class);
 
         // --- Quản lý biến thể
-        Route::resource('colors', ColorController::class)->except(['create', 'show', 'edit']); 
+        Route::resource('colors', ColorController::class)->except(['create', 'show', 'edit']);
         Route::resource('sizes', SizeController::class)->except(['create', 'show', 'edit']);
 
         // --- Quản lý Gói cước (Packages) ---
@@ -140,6 +141,11 @@ Route::prefix('admin')
         Route::delete('packages/{id}/force-delete', [PackageController::class, 'forceDelete'])->name('packages.forceDelete');
         Route::patch('packages/{package}/toggle-active', [PackageController::class, 'toggleActive'])->name('packages.toggleActive');
         Route::resource('packages', PackageController::class);
+
+        // Quản lý Video Reviews
+        Route::resource('videos', ReviewVideoController::class);
+        Route::post('videos/{id}/toggle-status', [ReviewVideoController::class, 'toggleStatus'])->name('videos.toggle-status');
+
 
         /*
         |--------------------------------------------------------------------------

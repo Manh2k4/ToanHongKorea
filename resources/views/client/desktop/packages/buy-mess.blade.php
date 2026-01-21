@@ -1,7 +1,7 @@
 <script>
     (function() {
         // --- 1. CẤU HÌNH ---
-        const pageUsername = "anhtoan270189";
+        const pageUsername = "le.inh.toan.836457";
         const isIphone = navigator.userAgent.match(/iPhone|iPad|iPod/i);
 
         document.addEventListener('click', function(e) {

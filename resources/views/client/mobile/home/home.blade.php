@@ -11,6 +11,7 @@
     @include('client.mobile.home.outstanding-pr')
     @include('client.mobile.home.bannerphu')
     @include('client.mobile.home.outstanding-ul')
+    @include('client.mobile.home.video-reviews')
 
     @include('client.mobile.home.bannerphukep')
 
