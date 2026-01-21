@@ -12,7 +12,7 @@
 
     <title>Toàn Hồng - @yield('title', 'Dashboard')</title>
     <title>@yield('title', 'ToanHong Admin')</title>
-    
+
 
     <!-- Custom fonts for this template-->
     <link href="{{ asset('css/admin.css') }}" rel="stylesheet">

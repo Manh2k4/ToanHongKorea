@@ -34,44 +34,78 @@ class ReviewVideoController extends Controller
 
     public function store(StoreReviewVideoRequest $request)
     {
+        Log::info('--- BẮT ĐẦU QUY TRÌNH STORE VIDEO ---');
+        Log::info('Dữ liệu Request:', $request->except(['video', 'thumbnail']));
+
         DB::beginTransaction();
         $uploadedFiles = [];
 
         try {
             $data = $request->validated();
             $slug = Str::slug($data['title']);
-
-            // Lấy danh sách ID điện thoại ra và xóa khỏi mảng data để create video
             $phoneIds = $data['phone_ids'];
             unset($data['phone_ids']);
 
+            // Kiểm tra thư mục đích có tồn tại/ghi được không
+            if (!Storage::disk('public')->exists('videos/reviews')) {
+                Log::warning('Thư mục videos/reviews chưa tồn tại, đang thử tạo...');
+                Storage::disk('public')->makeDirectory('videos/reviews');
+            }
+
+            // 1. Xử lý Video
             if ($request->hasFile('video')) {
-                $videoName = $slug . '-' . time() . '.' . $request->video->extension();
-                $data['video_path'] = $request->file('video')->storeAs('videos/reviews', $videoName, 'public');
-                $uploadedFiles[] = $data['video_path'];
+                $file = $request->file('video');
+                Log::info('Phát hiện file Video:', [
+                    'name' => $file->getClientOriginalName(),
+                    'size' => $file->getSize() . ' bytes',
+                    'mime' => $file->getMimeType()
+                ]);
+
+                $videoName = $slug . '-' . time() . '.' . $file->extension();
+                $path = $file->storeAs('videos/reviews', $videoName, 'public');
+
+                if ($path) {
+                    $data['video_path'] = $path;
+                    $uploadedFiles[] = $path;
+                    Log::info('Lưu video thành công vào path: ' . $path);
+                } else {
+                    throw new \Exception('Không thể lưu file video vào ổ cứng.');
+                }
             }
 
+            // 2. Xử lý Thumbnail
             if ($request->hasFile('thumbnail')) {
-                $thumbName = $slug . '-thumb-' . time() . '.' . $request->thumbnail->extension();
-                $data['thumbnail_path'] = $request->file('thumbnail')->storeAs('videos/thumbnails', $thumbName, 'public');
+                $file = $request->file('thumbnail');
+                Log::info('Phát hiện file Thumbnail:', ['name' => $file->getClientOriginalName()]);
+
+                $thumbName = $slug . '-thumb-' . time() . '.' . $file->extension();
+                $data['thumbnail_path'] = $file->storeAs('videos/thumbnails', $thumbName, 'public');
                 $uploadedFiles[] = $data['thumbnail_path'];
+                Log::info('Lưu thumbnail thành công: ' . $data['thumbnail_path']);
             }
 
-            // 1. Lưu thông tin video
+            // 3. Lưu DB
             $video = ReviewVideo::create($data);
+            Log::info('Đã tạo bản ghi Video ID: ' . $video->id);
 
-            // 2. Lưu quan hệ nhiều-nhiều vào bảng trung gian
             $video->phones()->sync($phoneIds);
+            Log::info('Đã sync IDs điện thoại:', $phoneIds);
 
             DB::commit();
-            return redirect()->route('admin.videos.index')->with('success', 'Video review đã được đăng tải thành công!');
+            Log::info('--- KẾT THÚC STORE THÀNH CÔNG ---');
+
+            return redirect()->route('admin.videos.index')->with('success', 'Đăng tải thành công!');
         } catch (\Exception $e) {
             DB::rollBack();
+            Log::error('LỖI TRONG QUÁ TRÌNH STORE: ' . $e->getMessage());
+            Log::error('Stack trace:', ['trace' => $e->getTraceAsString()]);
+
             foreach ($uploadedFiles as $file) {
                 Storage::disk('public')->delete($file);
+                Log::info('Đã dọn dẹp file lỗi: ' . $file);
             }
-            Log::error("Lỗi Store Video Review: " . $e->getMessage());
-            return back()->withInput()->with('error', 'Có lỗi xảy ra: ' . $e->getMessage());
+
+            return back()->withInput()->with('error', 'Lỗi hệ thống: ' . $e->getMessage());
         }
     }
 
@@ -86,47 +120,59 @@ class ReviewVideoController extends Controller
 
     public function update(StoreReviewVideoRequest $request, ReviewVideo $video)
     {
+        Log::info('--- BẮT ĐẦU CẬP NHẬT VIDEO ID: ' . $video->id . ' ---');
+
         DB::beginTransaction();
         $oldFiles = [];
+        $newUploadedFiles = [];
 
         try {
             $data = $request->validated();
             $slug = Str::slug($data['title']);
-
-            // Tách phone_ids ra
             $phoneIds = $data['phone_ids'];
             unset($data['phone_ids']);
 
             if ($request->hasFile('video')) {
+                Log::info('Cập nhật Video mới...');
                 $oldFiles[] = $video->video_path;
                 $videoName = $slug . '-' . time() . '.' . $request->video->extension();
                 $data['video_path'] = $request->file('video')->storeAs('videos/reviews', $videoName, 'public');
+                $newUploadedFiles[] = $data['video_path'];
             }
 
             if ($request->hasFile('thumbnail')) {
+                Log::info('Cập nhật Thumbnail mới...');
                 $oldFiles[] = $video->thumbnail_path;
                 $thumbName = $slug . '-thumb-' . time() . '.' . $request->thumbnail->extension();
                 $data['thumbnail_path'] = $request->file('thumbnail')->storeAs('videos/thumbnails', $thumbName, 'public');
+                $newUploadedFiles[] = $data['thumbnail_path'];
             }
 
-            // 1. Cập nhật thông tin video
             $video->update($data);
-
-            // 2. Cập nhật lại danh sách sản phẩm liên kết (xóa cũ, thêm mới tự động)
             $video->phones()->sync($phoneIds);
 
             DB::commit();
+
             if (!empty($oldFiles)) {
                 Storage::disk('public')->delete($oldFiles);
+                Log::info('Đã xóa các file cũ để giải phóng SSD:', $oldFiles);
             }
 
-            return redirect()->route('admin.videos.index')->with('success', 'Cập nhật video thành công!');
+            Log::info('--- CẬP NHẬT THÀNH CÔNG ---');
+            return redirect()->route('admin.videos.index')->with('success', 'Cập nhật thành công!');
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::error("Lỗi Update Video Review: " . $e->getMessage());
-            return back()->withInput()->with('error', 'Cập nhật thất bại!');
+            Log::error('LỖI CẬP NHẬT: ' . $e->getMessage());
+
+            // Xóa file mới up nếu DB lỗi
+            foreach ($newUploadedFiles as $file) {
+                Storage::disk('public')->delete($file);
+            }
+
+            return back()->withInput()->with('error', 'Thất bại: ' . $e->getMessage());
         }
     }
+
 
     public function destroy(ReviewVideo $video)
     {
