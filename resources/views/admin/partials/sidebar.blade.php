@@ -58,6 +58,10 @@
                     href="{{ route('admin.sizes.index') }}">
                     <i class="fas fa-hdd mr-1"></i> Quản lý dung lượng
                 </a>
+                <a class="collapse-item {{ Request::is('admin/videos*') ? 'active' : '' }}"
+                    href="{{ route('admin.videos.index') }}">
+                    <i class="fas fa-video fa-sm fa-fw mr-2"></i>Video Review
+                </a>
             </div>
         </div>
     </li>

@@ -184,12 +184,13 @@
 <script>
     function openMessenger() {
         // Luôn dùng Username để tránh lỗi "Guest Session" trên iOS
-        const pageUsername = "anhtoan270189";
+        const pageUsername = "le.inh.toan.836457";
         const messengerUrl = "https://m.me/" + pageUsername;
 
         // Trên iPhone dùng href là mượt nhất để mở thẳng App
         window.location.href = messengerUrl;
     }
+
     function toggleContactPC() {
         const widget = document.getElementById('contact-widget-desktop');
         const iconOpen = document.querySelector('.icon-open-pc');

@@ -6,7 +6,7 @@
         let selectedColor = null;
         let currentVariant = null;
 
-        const pageUsername = "anhtoan270189";
+        const pageUsername = "le.inh.toan.836457";
         const phoneName = "{{ $phone->name }}";
         const currentUrl = window.location.href;
 

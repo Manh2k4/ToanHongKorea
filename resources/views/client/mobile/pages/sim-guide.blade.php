@@ -43,7 +43,6 @@
                             việc.</p>
 
                     </div>
-
                     <div class="text-center mt-4">
                         <a href="tel:01065652999" class="btn btn-primary btn-lg px-5">Liên hệ đăng ký ngay:
                             010.6565.2999</a>

@@ -178,7 +178,7 @@
             transform: translate(-100%, -100%);
             /* Giấu ở góc trái trên */
             transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-            pointer-events: none !important; 
+            pointer-events: none !important;
         }
 
         /* Lớp mờ 2: Góc phải dưới */

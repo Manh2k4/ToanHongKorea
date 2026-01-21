@@ -40,7 +40,7 @@
                 if (selectedCondition !== 'new' && usedInfo) {
                     usedInfo.style.display = 'flex';
                     document.getElementById('val-pin').innerText = (currentVariant.battery_health || '98') +
-                    '%';
+                        '%';
                     document.getElementById('val-sac').innerText = (currentVariant.charging_count || 'Ít') +
                         ' lần';
                 } else if (usedInfo) {
@@ -111,7 +111,7 @@
                 message += `Mã SP: ${skuEl ? skuEl.innerText : 'N/A'}\n`;
                 message += `Link: ${window.location.href}`;
 
-                const pageUsername = "anhtoan270189";
+                const pageUsername = "le.inh.toan.836457";
                 const messengerUrl =
                     `https://m.me/${pageUsername}?ref=${refCode}&text=${encodeURIComponent(message)}`;
 
@@ -169,7 +169,7 @@
             document.querySelector(`.ss-pd-v-item[data-type="condition"][data-value="${cheapest.condition}"]`)
                 ?.click();
             document.querySelector(`.ss-pd-v-item[data-type="size"][data-value="${cheapest.size_id}"]`)
-        ?.click();
+                ?.click();
             document.querySelector(`.ss-pd-v-item[data-type="color"][data-value="${cheapest.color_id}"]`)
                 ?.click();
         }
