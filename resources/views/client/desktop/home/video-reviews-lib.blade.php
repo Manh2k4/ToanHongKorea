@@ -261,6 +261,7 @@
         margin-right: auto;
     }
 
+    /* Chương trình Swiper cơ bản */
     .swiper-slide {
         height: auto;
         /* Đảm bảo các slide có chiều cao bằng nhau */
