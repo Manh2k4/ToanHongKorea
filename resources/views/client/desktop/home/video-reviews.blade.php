@@ -73,4 +73,5 @@
         </div>
     </div>
 </div>
+
 @include('client.desktop.home.video-reviews-lib')
