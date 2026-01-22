@@ -247,10 +247,16 @@
     }
 
     .videoSwiper {
-        padding-bottom: 20px;
-        /* Tạo khoảng trống cho bóng đổ không bị cắt */
-        overflow: visible !important;
-        /* Cho phép nhìn thấy các slide lờ mờ ở 2 cạnh */
+        padding: 10px 5px 30px 5px;
+        /* Thêm padding 2 bên để không bị cắt mất bóng đổ (shadow) khi hover */
+        overflow: hidden !important;
+        /* Đổi từ visible sang hidden để cắt phần thừa ngoài 1200px */
+    }
+
+    .swiper {
+        width: 100%;
+        margin-left: auto;
+        margin-right: auto;
     }
 
     .swiper-slide {

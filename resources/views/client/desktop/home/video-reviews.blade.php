@@ -1,8 +1,8 @@
 <!-- Thêm Swiper CSS để slide mượt -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 
-<section class="video-review-section py-5">
-    <div class="container">
+<section class="video-review-section py-5" style="overflow: hidden;"> <!-- Thêm overflow hidden ở đây để chắc chắn -->
+    <div class="container" style="max-width: 1200px !important; padding: 0 15px;">
         <div class="d-flex align-items-center justify-content-between mb-4">
             <div>
                 <h2 class="vip-title mb-1">Góc Review Siêu Phẩm</h2>
