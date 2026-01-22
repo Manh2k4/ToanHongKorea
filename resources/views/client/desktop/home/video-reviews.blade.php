@@ -75,3 +75,4 @@
 </div>
 
 @include('client.desktop.home.video-reviews-lib')
+{{-- Footer --}}
