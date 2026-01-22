@@ -32,7 +32,8 @@
 
                             <a href="{{ route('phone.detail', $phone->slug) }}" class="product-img">
                                 <img src="{{ asset('storage/' . $phone->main_image) }}" alt="{{ $phone->name }}"
-                                    onerror="this.src='#'">
+                                    width="300" height="300" loading="lazy"
+                                    onerror="this.src='{{ asset('images/no-image.png') }}'" style="object-fit: cover;">
                             </a>
 
                             <div class="product-info">

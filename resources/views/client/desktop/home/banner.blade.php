@@ -11,17 +11,20 @@
                         <!-- Slides -->
                         <div class="swiper-slide">
                             <a href="phone/iphone-16-pro-max">
-                                <img src="{{ asset('images/banner_1.png') }}" alt="Banner 1">
+                                <img src="{{ asset('images/banner_1.png') }}" alt="Banner 1" width="1200" height="600"
+                                    fetchpriority="high">
                             </a>
                         </div>
                         <div class="swiper-slide">
                             <a href="phone/samsung-galaxy-s24-ultra">
-                                <img src="{{ asset('images/banner_2.png') }}" alt="Banner 2">
+                                <img src="{{ asset('images/banner_2.png') }}" alt="Banner 2" width="1200"
+                                    height="600" fetchpriority="high">
                             </a>
                         </div>
                         <div class="swiper-slide">
                             <a href="phone/samsung-galaxy-z-flip-6">
-                                <img src="{{ asset('images/banner_3.png') }}" alt="Banner 3">
+                                <img src="{{ asset('images/banner_3.png') }}" alt="Banner 3" width="1200"
+                                    height="600" fetchpriority="high">
                             </a>
                         </div>
                     </div>
@@ -43,7 +46,7 @@
                     <!-- Khối chứa ảnh -->
                     <div class="x-aside-img-box" style="border-radius: 5px !important;">
                         <img src="{{ asset('images/banner_right.png') }}" alt="iPhone 17 Pro Max"
-                            style="border-radius: 5px !important;">
+                            style="border-radius: 5px !important;" fetchpriority="high">
                         <!-- Lớp phủ ánh sáng (Shine Effect) -->
                         <div class="x-aside-glint"></div>
                     </div>
@@ -63,7 +66,7 @@
                     <!-- Khối chứa ảnh -->
                     <div class="x-aside-img-box" style="width: 310px; height: 146px; margin-top: 7px;">
                         <img src="{{ asset('images/maxresdefault 10.png') }}" alt="iPhone 17 Pro Max"
-                            style="border-radius: 5px !important;">
+                            style="border-radius: 5px !important;" fetchpriority="high">
                     </div>
 
                     <!-- Lớp nội dung bổ trợ (Glassmorphism) -->
