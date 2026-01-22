@@ -253,6 +253,8 @@
         /* Đổi từ visible sang hidden để cắt phần thừa ngoài 1200px */
     }
 
+    /* Tạo chương trình Swiper */
+
     .swiper {
         width: 100%;
         margin-left: auto;
