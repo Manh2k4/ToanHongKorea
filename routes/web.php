@@ -20,6 +20,7 @@ use App\Http\Controllers\Client\ProfileController;
 use App\Http\Controllers\HTTPStatusController;
 use App\Http\Controllers\MessengerTrackingController;
 use App\Http\Controllers\SearchController;
+use App\Http\Controllers\SitemapController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -29,6 +30,8 @@ use Illuminate\Support\Facades\Route;
 | 1. GUEST ROUTES (Ai cũng có thể truy cập)
 |--------------------------------------------------------------------------
 */
+// Route cho sitemap
+Route::get('/sitemap.xml', [SitemapController::class, 'index']);
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/search/products', [SearchController::class, 'index'])->name('search');

@@ -37,9 +37,11 @@
                             </div>
 
                             <div class="product-image">
-                                <a href="{{ route('phone.detail', $samsung->slug) }}">
+                                <a href="{{ route('phone.detail', $samsung->slug) }}" class="product-img">
                                     <img src="{{ asset('storage/' . $samsung->main_image) }}" alt="{{ $samsung->name }}"
-                                        onerror="this.src=#">
+                                        width="300" height="300" loading="lazy"
+                                        onerror="this.src='{{ asset('images/no-image.png') }}'"
+                                        style="object-fit: cover;">
                                 </a>
                             </div>
 
